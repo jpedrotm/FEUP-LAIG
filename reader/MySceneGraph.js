@@ -64,7 +64,7 @@ MySceneGraph.prototype.parseGlobalsExample= function(rootElement) {
 
 	console.log("Scene read from file: {root=" + this.root + ", axis_length=" + this.axis_length "}");
 
-	// TODO: read the rest of the elements
+	// TODO: Elements read so far - scene | the rest needed to be added
 
 	var tempList=rootElement.getElementsByTagName('list');
 
