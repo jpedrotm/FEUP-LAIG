@@ -10,8 +10,10 @@ function MySceneGraph(filename, scene) {
 	this.reader = new CGFXMLreader();
 
 	//Estruturas de dados necessárias para o parser-----------------------------------------------------------
-	this.perspectives=[];
 	this.viewDefault;
+	this.perspectives=[];
+	this.textures=[].fill(new Array(3));;//[id][0...1...2] 0-file 1-length_s 2-length_t
+	//this.materials=[];
 
 
 
@@ -109,6 +111,30 @@ MySceneGraph.prototype.parser=function(rootElement){
 	parserToViews(views, this.perspectives); //Falta acrescentar os parametros para guardar a informação toda
 	                                         //uma vez que o this.perspectives ainda não está a ser usado.
 
+var allTextures = rootElement.getElementsByTagName('textures');
+
+if (allTextures == null) {
+	return "Views are missing.";
+}
+
+if (allTextures.length != 1) {
+	return "Either zero or more than one 'textures' element found.";
+}
+
+	parserToTextures(allTextures);
+
+	var allMaterials=rootElement.getElementsByTagName('materials');
+
+	if(allMaterials == null)
+	{
+		return "Materials are missing.";
+	}
+
+	if(allMaterials.length!=1){
+		return "Either zero or more than one 'materials' element found.";
+	}
+
+	parserToMaterials(allMaterials);
 
 };
 
@@ -152,6 +178,53 @@ MySceneGraph.prototype.parserToViews=function(views,perspectives){
 	this.viewDefault=perspectives[defaultCamera]; //Definir a perspetiva indicada como default
 
 };
+
+MySceneGraph.prototype.parserToTextures=function(allTextures){
+
+	var texts=allTextures[0].getElementsByTagName('texture');
+
+	if(texts==null)
+	{
+		return "Textures are missing.";
+	}
+
+		for(var i = 0; i < texts.length; i++){
+
+			var id=this.reader.getString(texts,'id',true);
+			var file=this.reader.getString(texts,'file',true);
+			var l_s=this.reader.getFloat(texts,'length_s',true);
+			var l_t=this.reader.getFloat(texts,'length_t',true);
+
+			//Guardar para cada textura identificada pelo id, o file,o length_s e o length_t
+			//Não tenho a certeza se podemos gravar tudo no mesmo array uma vez que o file e uma string
+			//e o l_s e l_t e float, verifica quando testares
+			this.textures[id][0]=file;
+			this.textures[id][1]=l_s;
+			this.textures[id][2]=l_t;
+
+		}
+
+};
+
+//Ainda não guarda nada, não sei ainda como guardar tudo de forma correta, apenas le os valores
+//falta acabar TODO
+MySceneGraph.prototype.parserToMaterials=function(allMaterials){
+
+	var mats=allMaterials[0].getElementsByTagName('material');
+
+	if(mats==null)
+	{
+		return "Mats are missing.";
+	}
+
+	/*for(var i=0;i<mats.length;i++)
+	{
+		var
+	}*/
+
+};
+
+
 
 
 
