@@ -12,6 +12,7 @@ function MySceneGraph(filename, scene) {
 	//Estruturas de dados necessárias para o parser-----------------------------------------------------------
 	this.viewDefault;
 	this.perspectives=[];
+	this.cfgCameras=[];
 	this.textures=[].fill(new Array(3));;//[id][0...1...2] 0-file 1-length_s 2-length_t
 	//this.materials=[];
 
@@ -35,7 +36,7 @@ MySceneGraph.prototype.onXMLReady=function()
 	var rootElement = this.reader.xmlDoc.documentElement;
 
 	// Here should go the calls for different functions to parse the various blocks
-	var error = this.parseGlobalsExample(rootElement);
+	var error = this.parser(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -49,67 +50,10 @@ MySceneGraph.prototype.onXMLReady=function()
 };
 
 
-
-/*
- * Example of method that parses elements of one block and stores information in a specific data structure
- */
-MySceneGraph.prototype.parseGlobalsExample= function(rootElement) {
-
-	var elems =  rootElement.getElementsByTagName('globals');
-	if (elems == null) {
-		return "globals element is missing.";
-	}
-
-	if (elems.length != 1) {
-		return "either zero or more than one 'globals' element found.";
-	}
-
-	// various examples of different types of access
-
-	var globals = elems[0];
-	this.background = this.reader.getRGBA(globals, 'background');
-	this.drawmode = this.reader.getItem(globals, 'drawmode', ["fill","line","point"]);
-	this.cullface = this.reader.getItem(globals, 'cullface', ["back","front","none", "frontandback"]);
-	this.cullorder = this.reader.getItem(globals, 'cullorder', ["ccw","cw"]);
-
-	console.log("Globals read from file: {background=" + this.background + ", drawmode=" + this.drawmode + ", cullface=" + this.cullface + ", cullorder=" + this.cullorder + "}");
-
-	var tempList=rootElement.getElementsByTagName('list');
-
-	if (tempList == null  || tempList.length==0) {
-		return "list element is missing.";
-	}
-
-	this.list=[];
-	// iterate over every element
-	var nnodes=tempList[0].children.length;
-	for (var i=0; i< nnodes; i++)
-	{
-		var e=tempList[0].children[i];
-
-		// process each element and store its information
-		this.list[e.id]=e.attributes.getNamedItem("coords").value;
-		console.log("Read list item id "+ e.id+" with value "+this.list[e.id]);
-	};
-
-};
-
-//Parser principal
 MySceneGraph.prototype.parser=function(rootElement){
 
-	var views = rootElement.getElementsByTagName('views')[0];
-
-	if (views == null) {
-		return "Views are missing.";
-	}
-
-	if (views.length != 1) {
-		return "Either zero or more than one 'view' element found.";
-	}
-
-
-	parserToViews(views, this.perspectives); //Falta acrescentar os parametros para guardar a informação toda
-	                                         //uma vez que o this.perspectives ainda não está a ser usado.
+this.parserToViews(rootElement); //Falta acrescentar os parametros para guardar a informação toda
+	                                         		//uma vez que o this.perspectives ainda não está a ser usado.
 
 var allTextures = rootElement.getElementsByTagName('textures');
 
@@ -121,7 +65,7 @@ if (allTextures.length != 1) {
 	return "Either zero or more than one 'textures' element found.";
 }
 
-	parserToTextures(allTextures);
+	this.parserToTextures(allTextures);
 
 	var allMaterials=rootElement.getElementsByTagName('materials');
 
@@ -134,49 +78,59 @@ if (allTextures.length != 1) {
 		return "Either zero or more than one 'materials' element found.";
 	}
 
-	parserToMaterials(allMaterials);
+	this.parserToMaterials(allMaterials);
 
 };
 
 
 //TODO A partir daqui começar a fazer funcoes para cada um dos elementos (scene,views...)
 //Cada função recebe os elementos correspondentes (elems) e as estruturas necessárias para o armazenamento da materia
-MySceneGraph.prototype.parserToViews=function(views,perspectives){
+MySceneGraph.prototype.parserToViews=function(rootElement){
 
-	var defaultCamera=this.reader.getString(views,'default',true);
+	var views;
+	views = rootElement.getElementsByTagName('views');
 
-	var tempPersp=views[0].getElementsByTagName('perspective');
+	if (views == null) {
+		return "Views are missing.";
+	}
 
-	if(tempPersp == null)
+	if (views.length != 1) {
+		return "Either zero or more than one 'view' element found.";
+	}
+
+	this.defaultCamera=views[0].attributes.getNamedItem("default").value;
+
+
+	this.perspectives=views[0].getElementsByTagName('perspective');
+
+	if(this.perspectives == null)
 	{
 		return "Perspectives are missing.";
 	}
 
 
 
-	for(var i = 0; i < tempPersp.length; i++){
+	for(var i = 0; i < this.perspectives.length; i++){
 
 
 		//Obter os valores da perspective
-		var id=this.reader.getString(tempPersp, 'id',true); //Ainda não estou a guardar o id ainda não encontrei uma maneira boa de o fazer. TODO
-		var near=this.reader.getFloat(tempPersp, 'near',true);
-		var far=this.reader.getFloat(tempPersp, 'far',true);
-		var angle=this.reader.getFloat(tempPersp, 'angle',true);
+		var id=this.perspectives[i].attributes.getNamedItem("id").value;
+		var near=this.perspectives[i].attributes.getNamedItem("near").value;
+		var far=this.perspectives[i].attributes.getNamedItem("far").value;
+		var angle=this.perspectives[i].attributes.getNamedItem("angle").value;
 
 		//Obter o que está definido dentro de cada perspective (from e to) e obter os valores de estes
-		var from =perspective.getElementsByTagName('from')[0];
-		var vectorF=this.parseVec3(from);
+		var from = this.perspectives[i].getElementsByTagName('from');
+		var vectorF=[from[0].attributes.getNamedItem("x").value,from[0].attributes.getNamedItem("y").value,from[0].attributes.getNamedItem("z").value];
 
-		var to =perspective.getElementsByTagName('to')[0];
-		var vectorT=this.parseVec3(to);
+		var to =this.perspectives[i].getElementsByTagName('to');
+		var vectorT=[to[0].attributes.getNamedItem("x").value,to[0].attributes.getNamedItem("y").value,to[0].attributes.getNamedItem("z").value]
 
-		perspectives.push(new CGFCamera(angle,near,far,vectorF,vectorT)); //Já guardamos a perspetiva (camera) menos o id TODO
+		//Vale mesmo a pena criar no parser a camera? o parser devia guardar só a informação e esta ser usada no XMLScene para criar os objectos/camaras/etc..
+		//this.cfgCameras.push(new CGFCamera(angle,near,far,vectorF,vectorT));
+
 
 	}
-
-
-	this.viewDefault=perspectives[defaultCamera]; //Definir a perspetiva indicada como default
-
 };
 
 MySceneGraph.prototype.parserToTextures=function(allTextures){
