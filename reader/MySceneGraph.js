@@ -12,6 +12,8 @@ function MySceneGraph(filename, scene) {
     this.viewDefault;
     this.perspectives = [];
     this.cfgCameras = [];
+		this.ambientIllumination=[];
+		this.backgroundIllumination = [];
     this.textures = [].fill(new Array(3));; //[id][0...1...2] 0-file 1-length_s 2-length_t
     this.materials = [];
     //--------------------------------------------------------------------------------------------------------
@@ -51,12 +53,11 @@ MySceneGraph.prototype.onXMLReady = function() {
 MySceneGraph.prototype.parser = function(rootElement) {
 
     this.parserToViews(rootElement); //completed
+		this.parserToIllumination(rootElement);
+		this.parserToLights(rootElement);
     this.parserToTextures(rootElement);
+		this.parserToTransformations(rootElement);
     this.parserToMaterials(rootElement);
-    this.parserToLights(rootElement);
-    this.parserToTransformations(rootElement);
-    this.parserToIllumination(rootElement);
-
 
 };
 
@@ -111,7 +112,37 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
     }
 };
 
-//TODO: parse materials
+//TODO: parse illumination
+MySceneGraph.prototype.parserToIllumination = function(rootElement) {
+
+
+    var illumination = rootElement.getElementsByTagName('illumination');
+
+    if (illumination == null) {
+        return "Illumination not defined.";
+    }
+
+    if (illumination.length != 1) {
+        return "Either zero or more than one 'illumination' element found.";
+    }
+
+
+
+};
+
+//TODO: parse lights
+MySceneGraph.prototype.parserToLights = function(rootElement) {
+
+
+    var lights = rootElement.getElementsByTagName('lights');
+
+    if (lights == null) {
+        return "lights not defined.";
+    }
+
+};
+
+//TODO: parse textures
 MySceneGraph.prototype.parserToTextures = function(rootElement) {
 
 
@@ -148,33 +179,7 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
 };
 
-//TODO: parse illumination
-MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 
-
-    var illumination = rootElement.getElementsByTagName('illumination');
-
-    if (illumination == null) {
-        return "Illumination not defined.";
-    }
-
-    if (illumination.length != 1) {
-        return "Either zero or more than one 'illumination' element found.";
-    }
-
-};
-
-//TODO: parse lights
-MySceneGraph.prototype.parserToLights = function(rootElement) {
-
-
-    var lights = rootElement.getElementsByTagName('lights');
-
-    if (lights == null) {
-        return "lights not defined.";
-    }
-
-};
 
 //TODO: parse transformations
 MySceneGraph.prototype.parserToTransformations = function(rootElement) {
