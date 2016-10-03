@@ -38,7 +38,7 @@
     <illumination doublesided="0" local="0" >
 
         <ambient r="1.0" g="0.4" b="0.4" a="1.0" />
-        <background r="ff" g="ff" b="ff" a="ff" />
+        <background r="1.0" g="1.0" b="0" a="0.8" />
 
     </illumination>
 
@@ -125,11 +125,11 @@
             <!--     rectangle, triangle, cylinder, sphere, torus -->
             <!-- os parametros devem ser interpretados, genericamente como-->
             <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
-            <rectangle x1="ff" y1="ff" x2="ff" y2="ff" />
-            <triangle x1="ff" y1="ff" z1="ff" x2="ff" y2="ff" z2="ff" x3="ff" y3="ff" z3="ff" />
+            <rectangle x1="1.0" y1="1.0" x2="2.0" y2="2.0" />
+            <!--<triangle x1="ff" y1="ff" z1="ff" x2="ff" y2="ff" z2="ff" x3="ff" y3="ff" z3="ff" />
             <cylinder base="ff" top="ff" height="ff" slices="ii" stacks="ii" />
             <sphere radius="ff" slices="ii" stacks="ii" />
-            <torus inner="ff" outer="ff" slices="ii" loops="ii" />
+            <torus inner="ff" outer="ff" slices="ii" loops="ii" />-->
 
         </primitive>
 

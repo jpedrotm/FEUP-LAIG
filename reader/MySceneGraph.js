@@ -12,10 +12,12 @@ function MySceneGraph(filename, scene) {
     this.viewDefault;
     this.perspectives = [];
     this.cfgCameras = [];
-		this.ambientIllumination=[];
-		this.backgroundIllumination = [];
     this.textures = [].fill(new Array(3));; //[id][0...1...2] 0-file 1-length_s 2-length_t
     this.materials = [];
+
+    //Parser illumination
+    this.background=[];
+    this.ambient=[];
     //--------------------------------------------------------------------------------------------------------
 
 
@@ -53,11 +55,12 @@ MySceneGraph.prototype.onXMLReady = function() {
 MySceneGraph.prototype.parser = function(rootElement) {
 
     this.parserToViews(rootElement); //completed
-		this.parserToIllumination(rootElement); //almost completed
+		this.parserToIllumination(rootElement); //completed
 		this.parserToLights(rootElement); //almost completed
     this.parserToTextures(rootElement); //almost completed
     this.parserToMaterials(rootElement);//almost completed
 		this.parserToTransformations(rootElement);//almost completed
+    this.parserToPrimitives(rootElement);//almost completed
 
 };
 
@@ -112,7 +115,6 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
     }
 };
 
-//TODO: colocar a guardar
 MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 
 
@@ -129,17 +131,17 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
     var ds=illumination[0].attributes.getNamedItem("doublesided");
     var local=illumination[0].attributes.getNamedItem("local");
 
-    var ambient=illumination[0].getElementsByTagName("ambient");
-    var ra=ambient[0].attributes.getNamedItem("r").value;
-    var ga=ambient[0].attributes.getNamedItem("g").value;
-    var ba=ambient[0].attributes.getNamedItem("b").value;
-    var aa=ambient[0].attributes.getNamedItem("a").value;
+    var ambientTemp=illumination[0].getElementsByTagName("ambient");
+    this.ambient['r']=ambientTemp[0].attributes.getNamedItem("r").value;
+    this.ambient['g']=ambientTemp[0].attributes.getNamedItem("g").value;
+    this.ambient['b']=ambientTemp[0].attributes.getNamedItem("b").value;
+    this.ambient['a']=ambientTemp[0].attributes.getNamedItem("a").value;
 
-    var background=illumination[0].getElementsByTagName("background");
-    var rb=background[0].attributes.getNamedItem("r").value;
-    var gb=background[0].attributes.getNamedItem("g").value;
-    var bb=background[0].attributes.getNamedItem("b").value;
-    var ab=background[0].attributes.getNamedItem("a").value;
+    var backgroundTemp=illumination[0].getElementsByTagName("background");
+    this.background['r']=backgroundTemp[0].attributes.getNamedItem("r").value;
+    this.background['g']=backgroundTemp[0].attributes.getNamedItem("g").value;
+    this.background['b']=backgroundTemp[0].attributes.getNamedItem("b").value;
+    this.background['a']=backgroundTemp[0].attributes.getNamedItem("a").value;
 
 
 };
@@ -334,13 +336,11 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
 };
 
-
-
 //TODO: guardar a informação
 MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
 
-    var transformations = rootElement.getElementsByTagName('lights');
+    var transformations = rootElement.getElementsByTagName('transformations');
 
     if (transformations == null) {
         return "transformations not defined.";
@@ -352,7 +352,7 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
     var transformation=transformations[0].getElementsByTagName('tranformation');
 
-    for(var i=0;i<tranformation.length;i++)
+    for(var i=0;i<transformation.length;i++)
     {
       var id=transformation[i].attributes.getNamedItem("id").value;
 
@@ -371,6 +371,85 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
       var sz=scale[0].attributes.getNamedItem("z").value;
 
     }
+
+};
+
+MySceneGraph.prototype.parserToPrimitives=function(rootElement){
+
+  var primitives=rootElement.getElementsByTagName("primitives");
+
+  if(primitives==null){
+    return "transformations not defined.";
+  }
+
+  if(primitives.length!=1){
+    return "Either zero or more than one 'illumination' element found.";
+  }
+
+  var primitive=primitives[0].getElementsByTagName("primitive");
+
+  for(var i=0;i<primitive.length;i++)
+  {
+
+    if(primitive[i].length==1){
+      var id=primitive[i].attributes.getNamedItem("id").value;
+
+      var rectangle=primitive[i].getElementsByTagName("rectangle");
+
+      if(rectangle.length==1){
+        var rx1=rectangle[0].attributes.getNamedItem("x1").value;
+        var rx2=rectangle[0].attributes.getNamedItem("x2").value;
+        var ry1=rectangle[0].attributes.getNamedItem("y1").value;
+        var ry2=rectangle[0].attributes.getNamedItem("y2").value;
+
+        console.log(rx1+","+rx2+","+ry1+","+ry2);
+      }
+
+      var triangle=primitive[i].getElementsByTagName("triangle");
+
+      if(triangle.length==1){
+        var tx1=triangle[0].attributes.getNamedItem("x1").value;
+        var tx2=triangle[0].attributes.getNamedItem("x2").value;
+        var tx3=triangle[0].attributes.getNamedItem("x3").value;
+        var ty1=triangle[0].attributes.getNamedItem("y1").value;
+        var ty2=triangle[0].attributes.getNamedItem("y2").value;
+        var ty3=triangle[0].attributes.getNamedItem("y3").value;
+        var tz1=triangle[0].attributes.getNamedItem("z1").value;
+        var tz2=triangle[0].attributes.getNamedItem("z2").value;
+        var tz3=triangle[0].attributes.getNamedItem("z3").value;
+      }
+
+      var cylinder=primitive[i].getElementsByTagName("cylinder");
+
+      if(cylinder.length==1)
+      {
+        var base=cylinder[0].attributes.getNamedItem("base").value;
+        var top=cylinder[0].attributes.getNamedItem("top").value;
+        var height=cylinder[0].attributes.getNamedItem("height").value;
+        var slices=cylinder[0].attributes.getNamedItem("slices").value;
+        var stacks=cylinder[0].attributes.getNamedItem("stacks").value;
+      }
+
+      var sphere=primitive[i].getElementsByTagName("sphere");
+
+      if(sphere.length==1){
+        var radius=sphere[0].attributes.getNamedItem("radius").value;
+        var slices=sphere[0].attributes.getNamedItem("slices").value;
+        var stacks=sphere[0].attributes.getNamedItem("stacks").value;
+      }
+
+      var torus=primitive[i].getElementsByTagName("torus");
+
+      if(torus.length==1){
+        var inner=torus[0].attributes.getNamedItem("inner").value;
+        var outer=torus[0].attributes.getNamedItem("outer").value;
+        var slices=torus[0].attributes.getNamedItem("slices").value;
+        var loops=torus[0].attributes.getNamedItem("loops").value;
+      }
+
+    }
+
+  }
 
 };
 
