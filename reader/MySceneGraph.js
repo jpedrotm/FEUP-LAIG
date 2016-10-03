@@ -9,10 +9,13 @@ function MySceneGraph(filename, scene) {
     this.reader = new CGFXMLreader();
 
     //Estruturas de dados necessárias para o parser-----------------------------------------------------------
-    this.viewDefault;
-    this.perspectives = [];
-    this.cfgCameras = [];
+
+    //Parser views
+    this.cameraDefault;
+    this.cameras = [];
+
     this.textures = [].fill(new Array(3));; //[id][0...1...2] 0-file 1-length_s 2-length_t
+
     this.materials = [];
 
     //Parser illumination
@@ -77,39 +80,39 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
         return "Either zero or more than one 'view' element found.";
     }
 
-    this.defaultCamera = views[0].attributes.getNamedItem("default").value;
+    this.cameraDefault = views[0].attributes.getNamedItem("default").value;
+
+    console.log(this.viewDefault);
 
 
-    this.perspectives = views[0].getElementsByTagName('perspective');
+    var perspectives = views[0].getElementsByTagName('perspective');
 
-    if (this.perspectives == null) {
+    if (perspectives == null) {
         return "Perspectives are missing.";
     }
 
 
 
-    for (var i = 0; i < this.perspectives.length; i++) {
+    for (var i = 0; i < perspectives.length; i++) {
 
 
         //Obter os valores da perspective
-        var id = this.perspectives[i].attributes.getNamedItem("id").value;
-        var near = this.perspectives[i].attributes.getNamedItem("near").value;
-        var far = this.perspectives[i].attributes.getNamedItem("far").value;
-        var angle = this.perspectives[i].attributes.getNamedItem("angle").value;
+        var viewId = perspectives[i].attributes.getNamedItem("id").value;
+        var near = perspectives[i].attributes.getNamedItem("near").value;
+        var far = perspectives[i].attributes.getNamedItem("far").value;
+        var angle = perspectives[i].attributes.getNamedItem("angle").value;
 
         //Obter o que está definido dentro de cada perspective (from e to) e obter os valores de estes
-        var from = this.perspectives[i].getElementsByTagName('from');
-        var vectorF = [from[0].attributes.getNamedItem("x").value, from[0].attributes.getNamedItem("y").value, from[0].attributes.getNamedItem("z").value];
+        var from = perspectives[i].getElementsByTagName('from');
+        var vectorF = vec3.fromValues(from[0].attributes.getNamedItem("x").value,from[0].attributes.getNamedItem("y").value,from[0].attributes.getNamedItem("z").value);
 
-        var to = this.perspectives[i].getElementsByTagName('to');
-        var vectorT = [to[0].attributes.getNamedItem("x").value, to[0].attributes.getNamedItem("y").value, to[0].attributes.getNamedItem("z").value]
+        var to = perspectives[i].getElementsByTagName('to');
+        var vectorT = vec3.fromValues(to[0].attributes.getNamedItem("x").value,to[0].attributes.getNamedItem("y").value,to[0].attributes.getNamedItem("z").value);
 
-        //IDEA: Vale mesmo a pena criar no parser a camera?
-        /*
-             o parser devia guardar só a informação e esta ser
-        		 usada no XMLScene para criar os objectos/camaras/etc..
-        */
-        //this.cfgCameras.push(new CGFCamera(angle,near,far,vectorF,vectorT));
+        console.log(viewId+","+near+","+far+","+angle);
+
+
+        this.cameras[viewId]=new CGFcamera(0.4, 0.1, 500, vectorF, vectorT);
 
 
     }
