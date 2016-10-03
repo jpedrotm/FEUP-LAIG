@@ -35,9 +35,9 @@
     </views>
 
 
-    <illumination doublesided="tt" local="tt" >
+    <illumination doublesided="0" local="0" >
 
-        <ambient r="ff" g="ff" b="ff" a="ff" />
+        <ambient r="1.0" g="0.4" b="0.4" a="1.0" />
         <background r="ff" g="ff" b="ff" a="ff" />
 
     </illumination>
@@ -47,20 +47,20 @@
 
         <!-- Deve existir um ou mais blocos "omni" ou "spot" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
-        <omni id="ss" enabled="tt" >
-            <location x="ff" y="ff" z="ff" w="ff" />
-            <ambient r="ff" g="ff" b="ff" a="ff" />
-            <diffuse r="ff" g="ff" b="ff" a="ff" />
-            <specular r="ff" g="ff" b="ff" a="ff" />
+        <omni id="omni1" enabled="1" >
+            <location x="1.0" y="0.9" z="0.8" w="1.0" />
+            <ambient r="1.0" g="0.6" b="1.0" a="0.3" />
+            <diffuse r="0.1" g="0.4" b="0.8" a="1.0" />
+            <specular r="0.2" g="0.6" b="0.3" a="0.4" />
         </omni>
 
-        <spot id="ss" enabled="tt" angle="ff" exponent="ff">
+        <spot id="spot1" enabled="1" angle="30.0" exponent="1.0">
             <!-- atencao, "target" e' diferente de "direction" -->
             <target x="ff" y="ff" z="ff" />
             <location x="ff" y="ff" z="ff" />
-            <ambient r="ff" g="ff" b="ff" a="ff" />
-            <diffuse r="ff" g="ff" b="ff" a="ff" />
-            <specular r="ff" g="ff" b="ff" a="ff" />
+            <ambient r="1.0" g="0.6" b="1.0" a="0.3" />
+            <diffuse r="0.1" g="0.4" b="0.8" a="1.0" />
+            <specular r="0.2" g="0.6" b="0.3" a="0.4" />
         </spot>
     </lights>
 
@@ -79,7 +79,8 @@
         <!-- objetos respetivos podem a violar esta regra.         -->
         <!-- Nao necessario aplicar fatores de escala em  -->
         <!-- quadricas (esfera, ciclindro...) -->
-        <texture id="ss" file="ss" length_s="ff" length_t="ff" />
+        <texture id="texture1" file="file1" length_s="1.0" length_t="0.5" />
+        <texture id="texture2" file="file2" length_s="0.5" length_t="1.0" />
 
     </textures>
 
@@ -89,11 +90,11 @@
         <!-- Deve existir um ou mais blocos "material" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
         <material id="ss" >
-            <emission r="ff" g="ff" b="ff" a="ff" />
-            <ambient r="ff" g="ff" b="ff" a="ff" />
-            <diffuse r="ff" g="ff" b="ff" a="ff" />
-            <specular r="ff" g="ff" b="ff" a="ff" />
-            <shininess value="ff" />
+            <emission r="1.0" g="0.6" b="1.0" a="0.3" />
+            <ambient r="1.0" g="0.6" b="1.0" a="0.3" />
+            <diffuse r="0.1" g="0.4" b="0.8" a="1.0" />
+            <specular r="0.2" g="0.6" b="0.3" a="0.4" />
+            <shininess value="0.01" />
         </material>
 
     </materials>

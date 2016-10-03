@@ -53,11 +53,11 @@ MySceneGraph.prototype.onXMLReady = function() {
 MySceneGraph.prototype.parser = function(rootElement) {
 
     this.parserToViews(rootElement); //completed
-		this.parserToIllumination(rootElement);
-		this.parserToLights(rootElement);
-    this.parserToTextures(rootElement);
-		this.parserToTransformations(rootElement);
-    this.parserToMaterials(rootElement);
+		this.parserToIllumination(rootElement); //almost completed
+		this.parserToLights(rootElement); //almost completed
+    this.parserToTextures(rootElement); //almost completed
+    this.parserToMaterials(rootElement);//almost completed
+		this.parserToTransformations(rootElement);//almost completed
 
 };
 
@@ -112,7 +112,7 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
     }
 };
 
-//TODO: parse illumination
+//TODO: colocar a guardar
 MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 
 
@@ -126,11 +126,25 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
         return "Either zero or more than one 'illumination' element found.";
     }
 
+    var ds=illumination[0].attributes.getNamedItem("doublesided");
+    var local=illumination[0].attributes.getNamedItem("local");
+
+    var ambient=illumination[0].getElementsByTagName("ambient");
+    var ra=ambient[0].attributes.getNamedItem("r").value;
+    var ga=ambient[0].attributes.getNamedItem("g").value;
+    var ba=ambient[0].attributes.getNamedItem("b").value;
+    var aa=ambient[0].attributes.getNamedItem("a").value;
+
+    var background=illumination[0].getElementsByTagName("background");
+    var rb=background[0].attributes.getNamedItem("r").value;
+    var gb=background[0].attributes.getNamedItem("g").value;
+    var bb=background[0].attributes.getNamedItem("b").value;
+    var ab=background[0].attributes.getNamedItem("a").value;
 
 
 };
 
-//TODO: parse lights
+//TODO: colocar a guardar
 MySceneGraph.prototype.parserToLights = function(rootElement) {
 
 
@@ -140,9 +154,94 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         return "lights not defined.";
     }
 
+    if(lights.length!=1)
+    {
+      return "Either zero or more than one 'illumination' element found.";
+    }
+
+    var omnis=lights[0].getElementsByTagName("omni");
+
+    var location;
+    var ambient;
+    var diffuse;
+    var specular;
+    var lx,ly,lz,lw;
+    var ra,ga,ba,aa;
+    var rd,gd,bd,ad;
+    var rs,gs,bs,as;
+
+
+
+    for(var i=0;i<omnis.length;i++)
+    {
+
+      var idOmni=omnis[i].attributes.getNamedItem("id").value;
+      var enabledOmni=omnis[i].attributes.getNamedItem("enabled").value;
+
+      location=omnis[i].getElementsByTagName("location");
+      lx=location[0].attributes.getNamedItem("x").value;
+      ly=location[0].attributes.getNamedItem("y").value;
+      lz=location[0].attributes.getNamedItem("z").value;
+      lw=location[0].attributes.getNamedItem("w").value;
+
+      ambient=omnis[i].getElementsByTagName("ambient");
+      ra=ambient[0].attributes.getNamedItem("r").value;
+      ga=ambient[0].attributes.getNamedItem("g").value;
+      ba=ambient[0].attributes.getNamedItem("b").value;
+      aa=ambient[0].attributes.getNamedItem("a").value;
+
+      console.log(ra+","+ga+","+ba+","+aa)
+
+      diffuse=omnis[i].getElementsByTagName("diffuse");
+      rd=diffuse[0].attributes.getNamedItem("r").value;
+      gd=diffuse[0].attributes.getNamedItem("g").value;
+      bd=diffuse[0].attributes.getNamedItem("b").value;
+      ad=diffuse[0].attributes.getNamedItem("a").value;
+
+      specular=omnis[i].getElementsByTagName("specular");
+      rs=specular[0].attributes.getNamedItem("r").value;
+      gs=specular[0].attributes.getNamedItem("g").value;
+      bs=specular[0].attributes.getNamedItem("b").value;
+      as=specular[0].attributes.getNamedItem("a").value;
+
+    }
+
+    var spots=lights[0].getElementsByTagName("spot");
+
+    for(var i=0;i<spots.length;i++){
+
+      var idSpot=spots[i].attributes.getNamedItem("id").value;
+      var enabledSpot=spots[i].attributes.getNamedItem("enabled").value;
+      var angleSpot=spots[i].attributes.getNamedItem("angle").value;
+      var exponentSpot=spots[i].attributes.getNamedItem("exponent").value;
+
+      var target=spots[i].getElementsByTagName("target");
+      var tx=target[0].attributes.getNamedItem("x").value;
+      var ty=target[0].attributes.getNamedItem("y").value;
+      var tz=target[0].attributes.getNamedItem("z").value;
+
+      location=spots[i].getElementsByTagName("location");
+      lx=location[0].attributes.getNamedItem("x").value;
+      ly=location[0].attributes.getNamedItem("y").value;
+      lz=location[0].attributes.getNamedItem("z").value;
+
+      diffuse=spots[i].getElementsByTagName("diffuse");
+      rd=diffuse[0].attributes.getNamedItem("r").value;
+      gd=diffuse[0].attributes.getNamedItem("g").value;
+      bd=diffuse[0].attributes.getNamedItem("b").value;
+      ad=diffuse[0].attributes.getNamedItem("a").value;
+
+      specular=spots[i].getElementsByTagName("specular");
+      rs=specular[0].attributes.getNamedItem("r").value;
+      gs=specular[0].attributes.getNamedItem("g").value;
+      bs=specular[0].attributes.getNamedItem("b").value;
+      as=specular[0].attributes.getNamedItem("a").value;
+
+    }
+
 };
 
-//TODO: parse textures
+//TODO: colocar a guardar
 MySceneGraph.prototype.parserToTextures = function(rootElement) {
 
 
@@ -152,10 +251,26 @@ MySceneGraph.prototype.parserToTextures = function(rootElement) {
         return "Textures are missing.";
     }
 
+    if(allTextures.length!=1){
+      return "Either zero or more than one 'illumination' element found.";
+    }
+
     var texts = allTextures[0].getElementsByTagName('texture');
 
     if (texts == null) {
         return "Textures are missing.";
+    }
+
+    for(var i=0;i<texts.length;i++)
+    {
+
+      var id=texts[i].attributes.getNamedItem("id").value;
+      var file=texts[i].attributes.getNamedItem("file").value;
+      var length_s=texts[i].attributes.getNamedItem("length_s").value;
+      var length_t=texts[i].attributes.getNamedItem("length_t").value;
+
+      console.log(id+","+file+","+length_s+","+length_t+"\n");
+
     }
 
 };
@@ -170,10 +285,50 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
         return "Materials are missing.";
     }
 
+    console.log(allMaterials.length);
+
+    /*if(allMaterials.length!=1){//TODO está a dar dois materials não sei porque
+      return "Either zero or more than one 'illumination' element found.";
+    }*/
+
     var mats = allMaterials[0].getElementsByTagName('material');
 
     if (mats == null) {
         return "Mats are missing.";
+    }
+
+    for(var i=0;i<mats.length;i++){
+
+      var id=mats[i].attributes.getNamedItem("id").value;
+
+      var emission=mats[i].getElementsByTagName("emission");
+      var re=emission[0].attributes.getNamedItem("r").value;
+      var ge=emission[0].attributes.getNamedItem("g").value;
+      var be=emission[0].attributes.getNamedItem("b").value;
+      var ae=emission[0].attributes.getNamedItem("a").value;
+
+      var ambient=mats[i].getElementsByTagName("ambient");
+      var ra=ambient[0].attributes.getNamedItem("r").value;
+      var ga=ambient[0].attributes.getNamedItem("g").value;
+      var ba=ambient[0].attributes.getNamedItem("b").value;
+      var aa=ambient[0].attributes.getNamedItem("a").value;
+
+      var diffuse=mats[i].getElementsByTagName("diffuse");
+      var rd=diffuse[0].attributes.getNamedItem("r").value;
+      var gd=diffuse[0].attributes.getNamedItem("g").value;
+      var bd=diffuse[0].attributes.getNamedItem("b").value;
+      var ad=diffuse[0].attributes.getNamedItem("a").value;
+
+      var specular=mats[i].getElementsByTagName("specular");
+      var rs=specular[0].attributes.getNamedItem("r").value;
+      var gs=specular[0].attributes.getNamedItem("g").value;
+      var bs=specular[0].attributes.getNamedItem("b").value;
+      var as=specular[0].attributes.getNamedItem("a").value;
+
+      var shininess=mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
+
+      console.log("AQUI:"+shininess);
+
     }
 
 
@@ -181,7 +336,7 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
 
 
-//TODO: parse transformations
+//TODO: guardar a informação
 MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
 
@@ -189,6 +344,32 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
     if (transformations == null) {
         return "transformations not defined.";
+    }
+
+    if(transformations.length!=1){
+      return "Either zero or more than one 'illumination' element found.";
+    }
+
+    var transformation=transformations[0].getElementsByTagName('tranformation');
+
+    for(var i=0;i<tranformation.length;i++)
+    {
+      var id=transformation[i].attributes.getNamedItem("id").value;
+
+      var translate=tranformation[i].getElementsByTagName("translate");
+      var tx=translate[0].attributes.getNamedItem("x").value;
+      var ty=translate[0].attributes.getNamedItem("y").value;
+      var tz=translate[0].attributes.getNamedItem("z").value;
+
+      var rotate=tranformation[i].getElementsByTagName("rotate");
+      var axis=rotate[0].attributes.getNamedItem("axis").value;
+      var angle=rotate[0].attributes.getNamedItem("angle").value;
+
+      var scale=tranformation[i].getElementsByTagName("scale");
+      var sx=scale[0].attributes.getNamedItem("x").value;
+      var sy=scale[0].attributes.getNamedItem("y").value;
+      var sz=scale[0].attributes.getNamedItem("z").value;
+
     }
 
 };
