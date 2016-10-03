@@ -17,7 +17,7 @@ function Cylinder(scene, base, top, height, slices, stacks) {
     this.top = parseInt(top);
     this.height = parseInt(height);
     this.deltaHeight = this.height / this.stacks;
-    this.delta = (this.top-this.base) /this.stacks;
+    this.delta = (this.top - this.base) / this.stacks;
 
     this.initBuffers();
 };
@@ -41,10 +41,10 @@ Cylinder.prototype.initBuffers = function() {
     for (var q = 0; q < this.stacks + 1; q++) {
 
         var z = (q * this.deltaHeight / this.stacks);
-        var inc = ((q+1) * this.delta) + this.base;
+        var inc = ((q + 1) * this.delta) + this.base;
 
         for (var i = 0; i < sides; i++) {
-            this.vertices.push(inc*Math.cos(i*n),inc*Math.sin(i*n),q*this.deltaHeight);
+            this.vertices.push(inc * Math.cos(i * n), inc * Math.sin(i * n), q * this.deltaHeight);
             this.normals.push(Math.cos(i * n), Math.sin(i * n), 0);
             this.texCoords.push(0.5 * i / sides, 0.5 * i / sides, 0);
             this.texCoords.push(0.5 * i / sides, 0.5 * i / sides, z);

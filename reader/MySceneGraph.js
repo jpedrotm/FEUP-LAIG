@@ -415,7 +415,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
             var tz1 = triangle[0].attributes.getNamedItem("z1").value;
             var tz2 = triangle[0].attributes.getNamedItem("z2").value;
             var tz3 = triangle[0].attributes.getNamedItem("z3").value;
-            this.objects[id] = new Triangle(this.scene,tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3);
+            this.objects[id] = new Triangle(this.scene, tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3);
         }
 
         var cylinder = primitive[i].getElementsByTagName("cylinder");
@@ -461,8 +461,8 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
-    for(let object in this.objects) {
-      this.objects[object].display();
+    for (let object in this.objects) {
+        this.objects[object].display();
     }
 
     this.scene.popMatrix();
