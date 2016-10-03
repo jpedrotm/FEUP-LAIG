@@ -1,9 +1,6 @@
 
 function XMLscene() {
     CGFscene.call(this);
-
-    this.cameras=[];
-    this.defaultCamera;
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -20,7 +17,7 @@ XMLscene.prototype.init = function (application) {
 
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
-	  this.gl.enable(this.gl.CULL_FACE);
+	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
 	this.axis=new CGFaxis(this);
@@ -37,11 +34,6 @@ XMLscene.prototype.initCameras = function () {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
 
-//TODO talvez passar as camaras todas para XMLscene
-XMLscene.prototype.initXMLCameras=function(){
-
-}
-
 XMLscene.prototype.setDefaultAppearance = function () {
     this.setAmbient(0.2, 0.4, 0.8, 1.0);
     this.setDiffuse(0.2, 0.4, 0.8, 1.0);
@@ -55,14 +47,6 @@ XMLscene.prototype.onGraphLoaded = function ()
 {
   this.gl.clearColor(this.graph.background['r'],this.graph.background['g'],this.graph.background['b'],this.graph.background['a']);
   this.setGlobalAmbientLight(this.graph.ambient['r'],this.graph.ambient['g'],this.graph.ambient['b'],this.graph.ambient['a']);
-
-  console.log(this.graph.cameraDefault);
-
-  //Guardar as cameras no XMLScene
-  this.cameras=this.graph.cameras;
-  this.cameraDefault=this.graph.cameraDefault;
-
-
   this.lights[0].setVisible(true);
     this.lights[0].enable();
 };
@@ -94,5 +78,6 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk)
 	{
 		this.lights[0].update();
+    this.graph.display();
 	};
 };

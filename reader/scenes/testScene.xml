@@ -27,9 +27,9 @@
         <!-- primeira vista; de cada vez que se pressione a tecla v/V, -->
         <!-- a vista muda para a proxima da lista; da -->
         <!-- ultima vista da lista volta 'a primeira -->
-        <perspective id="view1" near="0.1" far="500.0" angle="0.4">
-            <from x="15" y="0" z="0" />
-            <to x="0" y="0" z="0" />
+        <perspective id="view1" near="0.1" far="500" angle="0">
+            <from x="0" y="0" z="0" />
+            <to x="10" y="10" z="10" />
         </perspective>
 
     </views>
@@ -119,20 +119,30 @@
 
         <!-- Deve existir um ou mais blocos "primitive" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
-        <primitive id="ss">
-
+        <primitive id="1">
             <!-- apenas pode existir UMA das seguintes tags: -->
             <!--     rectangle, triangle, cylinder, sphere, torus -->
             <!-- os parametros devem ser interpretados, genericamente como-->
             <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
             <rectangle x1="1.0" y1="1.0" x2="2.0" y2="2.0" />
-            <!--<triangle x1="ff" y1="ff" z1="ff" x2="ff" y2="ff" z2="ff" x3="ff" y3="ff" z3="ff" />
-            <cylinder base="ff" top="ff" height="ff" slices="ii" stacks="ii" />
-            <sphere radius="ff" slices="ii" stacks="ii" />
-            <torus inner="ff" outer="ff" slices="ii" loops="ii" />-->
-
         </primitive>
 
+        <primitive id="2">
+            <triangle x1="0" y1="0" z1="0" x2="1" y2="1" z2="0" x3="1" y3="1" z3="1" />
+        </primitive>
+
+        <primitive id="3">
+            <cylinder base="2" top="1" height="2" slices="100" stacks="6" />
+          </primitive>
+<!--
+        <primitive id="1">
+            <sphere radius="ff" slices="ii" stacks="ii" />
+          </primitive>
+
+        <primitive id="1">
+            <torus inner="ff" outer="ff" slices="ii" loops="ii" />
+          </primitive>
+ -->
     </primitives>
 
 
