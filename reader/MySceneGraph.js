@@ -106,14 +106,6 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
         var to = this.perspectives[i].getElementsByTagName('to');
         var vectorT = [to[0].attributes.getNamedItem("x").value, to[0].attributes.getNamedItem("y").value, to[0].attributes.getNamedItem("z").value]
 
-        //IDEA: Vale mesmo a pena criar no parser a camera?
-        /*
-             o parser devia guardar só a informação e esta ser
-        		 usada no XMLScene para criar os objectos/camaras/etc..
-        */
-        //this.cfgCameras.push(new CGFCamera(angle,near,far,vectorF,vectorT));
-
-
     }
 };
 
@@ -276,7 +268,7 @@ MySceneGraph.prototype.parserToTextures = function(rootElement) {
 
 };
 
-//TODO: parse materials
+
 MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
 
@@ -288,7 +280,8 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
     console.log(allMaterials.length);
 
-    /*if(allMaterials.length!=1){//TODO está a dar dois materials não sei porque
+//TODO está a dar dois materials não sei porque
+    /*if(allMaterials.length!=1){
       return "Either zero or more than one 'illumination' element found.";
     }*/
 
