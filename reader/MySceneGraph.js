@@ -10,10 +10,6 @@ function MySceneGraph(filename, scene) {
 
     //Estruturas de dados necessárias para o parser-----------------------------------------------------------
 
-    //Parser views
-    this.cameraDefault;
-    this.cameras = [];
-
     this.textures = [].fill(new Array(3));; //[id][0...1...2] 0-file 1-length_s 2-length_t
 
     this.materials = [];
@@ -80,7 +76,7 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
         return "Either zero or more than one 'view' element found.";
     }
 
-    this.cameraDefault = views[0].attributes.getNamedItem("default").value;
+    this.scene.defaultCamera = views[0].attributes.getNamedItem("default").value;
 
     console.log(this.viewDefault);
 
@@ -112,10 +108,13 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
         console.log(viewId+","+near+","+far+","+angle);
 
 
-        this.cameras[viewId]=new CGFcamera(0.4, 0.1, 500, vectorF, vectorT);
-
+        this.scene.cameras[viewId]=new CGFcamera(0.4, 0.1, 500, vectorF, vectorT);
 
     }
+
+    console.log("L:"+this.scene.cameras.length);
+
+    //this.scene.camera=this.scene.cameras[this.scene.defaultCamera];
 };
 
 MySceneGraph.prototype.parserToIllumination = function(rootElement) {
