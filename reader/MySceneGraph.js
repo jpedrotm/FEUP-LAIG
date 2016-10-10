@@ -19,6 +19,7 @@ function MySceneGraph(filename, scene) {
     this.ambient = [];
 
     this.objects = {};
+    this.composedObjects = {};
 
     //--------------------------------------------------------------------------------------------------------
 
@@ -63,6 +64,7 @@ MySceneGraph.prototype.parser = function(rootElement) {
     this.parserToMaterials(rootElement); //almost completed
     this.parserToTransformations(rootElement); //almost completed
     this.parserToPrimitives(rootElement); //almost completed
+    this.parserToComponents(rootElement);
 
 };
 
@@ -280,7 +282,7 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
     console.log(allMaterials.length);
 
-//TODO está a dar dois materials não sei porque
+    //TODO está a dar dois materials não sei porque
     /*if(allMaterials.length!=1){
       return "Either zero or more than one 'illumination' element found.";
     }*/
@@ -368,11 +370,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
     var primitives = rootElement.getElementsByTagName("primitives");
 
     if (primitives == null) {
-        return "transformations not defined.";
-    }
-
-    if (primitives.length != 1) {
-        return "Either zero or more than one 'illumination' element found.";
+        return "primitives not defined.";
     }
 
     var primitive = primitives[0].getElementsByTagName("primitive");
@@ -448,6 +446,112 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
     }
 
 };
+
+
+MySceneGraph.prototype.parserToComponents = function(rootElement) {
+    var components = rootElement.getElementsByTagName("components")[0];
+
+    if (components == null) {
+        return "components not defined.";
+    }
+
+    for (let component of components.children) {
+        let id = component.attributes.getNamedItem("id").value;
+        let transformationsFlag = 0;
+        let materialsFlag = 0;
+        let textureFlag = 0;
+        let childrenFlag = 0;
+
+        this.transformationsArray = new Array();
+        this.materialsArray = new Array();
+        this.componentTexture;
+        this.componentChildren = new Array();
+        this.primitiveChildren = new Array();
+
+        //this alows for the attributes of the component to not be ordered
+        for (let attribute of component.children) {
+            let attributeName = attribute.nodeName;
+            switch (attributeName) {
+                case 'transformation':
+                    this.transformationsFlag = 1;
+                    let transformations = attribute;
+
+                    //TODO: save transformations into a single matrix
+                    for (let transformation of transformations.children) {
+                        let type = transformation.nodeName;
+                        switch (type) {
+                            case 'transformationref':
+
+                                break;
+                            case 'tranlate':
+
+                                break;
+                            case 'rotate':
+
+                                break;
+                            case 'scale':
+
+                                break;
+                        }
+                    }
+                    break;
+                case 'materials':
+                    this.materialsFlag = 1;
+                    let materials = attribute;
+                    for (let material of materials.children) {
+                        this.materialsArray.push(material.attributes.getNamedItem("id").value);
+                    }
+                    break;
+                case 'texture':
+                    this.textureFlag = 1;
+                    let texture = attribute;
+                    this.componentTexture = (texture.attributes.getNamedItem("id").value);
+                    break;
+                case 'children':
+
+                    let childrens = attribute;
+                    for (let children of childrens.children) {
+                        let type = children.nodeName;
+                        switch (type) {
+                            case 'componentref':
+                                this.childrenFlag = 1;
+                                this.componentChildren.push(children.attributes.getNamedItem("id").value);
+                                break;
+                            case 'primitiveref':
+                                this.childrenFlag = 1;
+                                this.primitiveChildren.push(children.attributes.getNamedItem("id").value);
+                                break;
+                        }
+                    }
+                    break;
+            }
+
+
+        }
+
+        if (this.transformationsFlag) {
+            if (this.materialsFlag) {
+                if (this.textureFlag) {
+                    if (this.childrenFlag) {
+                        console.log("read all components");
+                        //TODO: create component
+
+                    } else {
+                        console.log("No children objects defined");
+                    }
+                } else {
+                    console.log("No texture defined");
+                }
+            } else {
+                console.log("No materials defined");
+            }
+        } else {
+            console.log("No transformation defined");
+        }
+
+    }
+
+}
 
 
 MySceneGraph.prototype.display = function() {

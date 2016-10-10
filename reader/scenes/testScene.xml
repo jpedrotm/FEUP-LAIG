@@ -82,7 +82,7 @@
 
         <!-- Deve existir um ou mais blocos "material" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
-        <material id="ss">
+        <material id="wood">
             <emission r="1.0" g="0.6" b="1.0" a="0.3"/>
             <ambient r="1.0" g="0.6" b="1.0" a="0.3"/>
             <diffuse r="0.1" g="0.4" b="0.8" a="1.0"/>
@@ -144,22 +144,22 @@
 
     <components>
 
-        <component id="ss">
+        <component id="table1">
 
             <!-- bloco "transformation" obrigatorio -->
             <transformation>
 
                 <!-- deve conter uma referencia a uma das "transformation" -->
                 <!-- declaradas anteriormente -->
-                <transformationref id="ss"/>
+                <transformationref id="transformation1"/>
 
                 <!-- ou, ALTERNATIVAMENTE, transformacoes explicitas, -->
                 <!-- usando zero ou mais das instrucoes seguintes, sem -->
                 <!-- limite nem ordem -->
                 <!-- ex: bloco transformation pode ficar sem conteudo -->
-                <translate x="ff" y="ff" z="ff"/>
-                <rotate axis="cc" angle="ff"/>
-                <scale x="ff" y="ff" z="ff"/>
+                <translate x="0" y="0" z="0"/>
+                <rotate axis="x" angle="0"/>
+                <scale x="1" y="1" z="1"/>
             </transformation>
 
             <!-- declaracao obrigatoria de pelo menos um material; -->
@@ -169,7 +169,7 @@
             <!-- o material muda para o proximo material da lista; do -->
             <!-- ultimo material da lista volta ao primeiro -->
             <materials>
-                <material id="ss"/>
+                <material id="wood"/>
             </materials>
 
             <!-- declaracao obrigatoria de texture -->
