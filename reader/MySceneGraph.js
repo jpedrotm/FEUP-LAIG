@@ -321,8 +321,6 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
         var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
 
-        console.log("AQUI:" + shininess);
-
     }
 
 
@@ -431,7 +429,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
             var slices = sphere[0].attributes.getNamedItem("slices").value;
             var stacks = sphere[0].attributes.getNamedItem("stacks").value;
 
-            this.objects[id] = new Sphere(this.scene,slices,stacks);
+            this.objects[id] = new Sphere(this.scene,radius,slices,stacks);
         }
 
         /*var torus = primitive[i].getElementsByTagName("torus");
