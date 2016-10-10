@@ -430,10 +430,11 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
             var radius = sphere[0].attributes.getNamedItem("radius").value;
             var slices = sphere[0].attributes.getNamedItem("slices").value;
             var stacks = sphere[0].attributes.getNamedItem("stacks").value;
-            this.objects[id] = [type, radius, slices, stacks];
+
+            this.objects[id] = new Sphere(this.scene,slices,stacks);
         }
 
-        var torus = primitive[i].getElementsByTagName("torus");
+        /*var torus = primitive[i].getElementsByTagName("torus");
 
         if (torus.length == 1) {
             var type = "torus";
@@ -442,7 +443,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
             var slices = torus[0].attributes.getNamedItem("slices").value;
             var loops = torus[0].attributes.getNamedItem("loops").value;
             this.objects[id] = [type, inner, outer, slices, loops];
-        }
+        }*/
 
 
 
@@ -455,6 +456,7 @@ MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
     for (let object in this.objects) {
+
         this.objects[object].display();
     }
 

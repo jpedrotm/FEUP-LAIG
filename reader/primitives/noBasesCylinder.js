@@ -30,8 +30,6 @@ noBasesCylinder.prototype.constructor = noBasesCylinder;
 
 noBasesCylinder.prototype.initBuffers = function() {
 
-    //TODO: add top and bottom face
-
     //Sets the number os sides;
     var sides = this.slices;
     var stacks = this.stacks;
