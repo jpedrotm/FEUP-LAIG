@@ -67,6 +67,12 @@ XMLscene.prototype.display = function() {
     // Draw axis
     this.axis.display();
 
+    this.torus=new Torus(this,1,2,20,5);
+    this.circle=new Circle(this,20,1);
+
+    this.torus.display();
+    //this.circle.display();
+
     this.setDefaultAppearance();
 
     // ---- END Background, camera and axis setup

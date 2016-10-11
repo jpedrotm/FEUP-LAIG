@@ -17,8 +17,8 @@ function Cylinder(scene, base, top, height, slices, stacks) {
 
     this.noBasesCylinder=new noBasesCylinder(scene, base, top, height, slices, stacks);
 
-    this.baseCircle= new circle(scene,slices,base);
-    this.topCirlce=new circle(scene,slices,top);
+    this.baseCircle= new Circle(scene,slices,base);
+    this.topCirlce=new Circle(scene,slices,top);
 
     this.initBuffers();
 };

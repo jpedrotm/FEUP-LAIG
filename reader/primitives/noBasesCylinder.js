@@ -19,9 +19,6 @@ function noBasesCylinder(scene, base, top, height, slices, stacks) {
     this.deltaHeight = this.height / this.stacks;
     this.delta = (this.top - this.base) / this.stacks;
 
-    this.baseCircle= new circle(scene,slices,base);
-    this.topCirlce=new circle(scene,slices,top);
-
     this.initBuffers();
 };
 
@@ -41,7 +38,7 @@ noBasesCylinder.prototype.initBuffers = function() {
     this.indices = [];
     this.texCoords = [];
 
-    //TODO corrigir o tamanho da base
+
     for (var q = 0; q < this.stacks + 1; q++) {
 
         var z = (q * this.deltaHeight / this.stacks);

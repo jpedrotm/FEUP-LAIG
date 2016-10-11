@@ -2,7 +2,7 @@
  * MyPrism
  * @constructor
  */
- function circle(scene, slices, size) {
+ function Circle(scene, slices, size) {
  	CGFobject.call(this,scene);
 
 	this.slices = slices;
@@ -11,10 +11,10 @@
  	this.initBuffers();
  };
 
- circle.prototype = Object.create(CGFobject.prototype);
- circle.prototype.constructor = circle;
+ Circle.prototype = Object.create(CGFobject.prototype);
+ Circle.prototype.constructor = Circle;
 
- circle.prototype.initBuffers = function() {
+ Circle.prototype.initBuffers = function() {
 
  	this.vertices = new Array();
  	this.indices = new Array();

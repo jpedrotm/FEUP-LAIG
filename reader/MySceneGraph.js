@@ -557,10 +557,10 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
-    for (let object in this.objects) {
+    /*for (let object in this.objects) {
 
         this.objects[object].display();
-    }
+    }*/
 
     this.scene.popMatrix();
 }
