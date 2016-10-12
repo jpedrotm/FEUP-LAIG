@@ -11,8 +11,10 @@ function MySceneGraph(filename, scene) {
     this.viewDefault;
     this.perspectives = [];
     this.cfgCameras = [];
-    this.textures = [].fill(new Array(3));; //[id][0...1...2] 0-file 1-length_s 2-length_t
-    this.materials = [];
+    this.textures = [];
+
+    //parser dos materials
+    this.materials = {};
 
     //Parser illumination
     this.background = [];
@@ -59,13 +61,13 @@ MySceneGraph.prototype.onXMLReady = function() {
 
 MySceneGraph.prototype.parser = function(rootElement) {
 
-    this.parserToViews(rootElement); //completed
-    this.parserToIllumination(rootElement); //completed
+    this.parserToViews(rootElement);
+    this.parserToIllumination(rootElement);
     this.parserToLights(rootElement); //almost completed
     this.parserToTextures(rootElement); //almost completed
-    this.parserToMaterials(rootElement); //almost completed
+    this.parserToMaterials(rootElement);
     this.parserToTransformations(rootElement); //almost completed
-    this.parserToPrimitives(rootElement); //almost completed
+    this.parserToPrimitives(rootElement);
     this.parserToComponents(rootElement);
 
 };
@@ -284,11 +286,6 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
     console.log(allMaterials.length);
 
-    //TODO está a dar dois materials não sei porque
-    /*if(allMaterials.length!=1){
-      return "Either zero or more than one 'illumination' element found.";
-    }*/
-
     var mats = allMaterials[0].getElementsByTagName('material');
 
     if (mats == null) {
@@ -299,31 +296,45 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
         var id = mats[i].attributes.getNamedItem("id").value;
 
-        var emission = mats[i].getElementsByTagName("emission");
-        var re = emission[0].attributes.getNamedItem("r").value;
-        var ge = emission[0].attributes.getNamedItem("g").value;
-        var be = emission[0].attributes.getNamedItem("b").value;
-        var ae = emission[0].attributes.getNamedItem("a").value;
+        if(this.materials[id]==null){
 
-        var ambient = mats[i].getElementsByTagName("ambient");
-        var ra = ambient[0].attributes.getNamedItem("r").value;
-        var ga = ambient[0].attributes.getNamedItem("g").value;
-        var ba = ambient[0].attributes.getNamedItem("b").value;
-        var aa = ambient[0].attributes.getNamedItem("a").value;
+          var emission = mats[i].getElementsByTagName("emission");
+          var re = emission[0].attributes.getNamedItem("r").value;
+          var ge = emission[0].attributes.getNamedItem("g").value;
+          var be = emission[0].attributes.getNamedItem("b").value;
+          var ae = emission[0].attributes.getNamedItem("a").value;
 
-        var diffuse = mats[i].getElementsByTagName("diffuse");
-        var rd = diffuse[0].attributes.getNamedItem("r").value;
-        var gd = diffuse[0].attributes.getNamedItem("g").value;
-        var bd = diffuse[0].attributes.getNamedItem("b").value;
-        var ad = diffuse[0].attributes.getNamedItem("a").value;
+          var ambient = mats[i].getElementsByTagName("ambient");
+          var ra = ambient[0].attributes.getNamedItem("r").value;
+          var ga = ambient[0].attributes.getNamedItem("g").value;
+          var ba = ambient[0].attributes.getNamedItem("b").value;
+          var aa = ambient[0].attributes.getNamedItem("a").value;
 
-        var specular = mats[i].getElementsByTagName("specular");
-        var rs = specular[0].attributes.getNamedItem("r").value;
-        var gs = specular[0].attributes.getNamedItem("g").value;
-        var bs = specular[0].attributes.getNamedItem("b").value;
-        var as = specular[0].attributes.getNamedItem("a").value;
+          var diffuse = mats[i].getElementsByTagName("diffuse");
+          var rd = diffuse[0].attributes.getNamedItem("r").value;
+          var gd = diffuse[0].attributes.getNamedItem("g").value;
+          var bd = diffuse[0].attributes.getNamedItem("b").value;
+          var ad = diffuse[0].attributes.getNamedItem("a").value;
 
-        var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
+          var specular = mats[i].getElementsByTagName("specular");
+          var rs = specular[0].attributes.getNamedItem("r").value;
+          var gs = specular[0].attributes.getNamedItem("g").value;
+          var bs = specular[0].attributes.getNamedItem("b").value;
+          var as = specular[0].attributes.getNamedItem("a").value;
+
+          var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
+
+          var tempMaterial = new CGFappearance(this);
+        	tempMaterial.setAmbient(ra,ga,ba,aa);
+        	tempMaterial.setDiffuse(rd,gd,bd,ad);
+        	tempMaterial.setSpecular(rs,gs,bs,as);
+        	tempMaterial.setShininess(shininess);
+
+          console.log("MATERIAL GRAVADO");
+
+          this.materials[id]=tempMaterial;
+
+        }
 
     }
 
@@ -432,7 +443,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
             this.objects[id] = new Sphere(this.scene, radius, slices, stacks);
         }
 
-        /*var torus = primitive[i].getElementsByTagName("torus");
+        var torus = primitive[i].getElementsByTagName("torus");
 
         if (torus.length == 1) {
             var type = "torus";
@@ -440,8 +451,9 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
             var outer = torus[0].attributes.getNamedItem("outer").value;
             var slices = torus[0].attributes.getNamedItem("slices").value;
             var loops = torus[0].attributes.getNamedItem("loops").value;
-            this.objects[id] = [type, inner, outer, slices, loops];
-        }*/
+
+            this.objects[id] = new Torus(this.scene,0.5,1,50,50);
+        }
 
 
 
@@ -556,12 +568,15 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 }
 
 MySceneGraph.prototype.displayComposedObjects = function(object) {
-    for (let primitive of this.composedObjects[object][4]) {
+    /*for (let primitive of this.composedObjects[object][4]) {
+      console.log(primitive);
         this.objects[primitive].display();
     }
     for (let composedObject of this.composedObjects[object][3]) {
         this.displayComposedObjects(composedObject);
-    }
+    }*/
+
+    this.objects[5].display();
 }
 
 

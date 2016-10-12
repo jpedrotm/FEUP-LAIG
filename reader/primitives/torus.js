@@ -26,6 +26,8 @@ Torus.prototype.initBuffers = function(){
 
   var ang_circle=(2*Math.PI)/this.slices;
   var ang_between_circles=(2*Math.PI)/this.loops;
+  var texS=1/this.loops;
+  var texT=1/this.slices;
 
 	for(var i=0;i<=this.loops;i++)
   {
@@ -38,8 +40,13 @@ Torus.prototype.initBuffers = function(){
       var y=(this.R+this.r*Math.cos(v))*Math.sin(u);
       var z=this.r*Math.sin(v);
 
+      var s=1-i*texS;
+      var t=1-j*texT;
+
       this.vertices.push(x,y,z);
       this.normals.push(x,y,z);
+
+      this.texCoords.push(s,t);
 
     }
 

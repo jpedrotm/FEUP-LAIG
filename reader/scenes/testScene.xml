@@ -130,6 +130,10 @@
           <sphere radius="1.0" slices="10" stacks="8"/>
         </primitive>
 
+        <primitive id="5">
+          <torus inner="0.5" outer="1.0" slices="20" loops="20"/>
+        </primitive>
+
 
         <!--
         <primitive id="1">

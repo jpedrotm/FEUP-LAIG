@@ -66,7 +66,11 @@ XMLscene.prototype.display = function() {
 
     // Draw axis
     this.axis.display();
-    //this.circle.display();
+
+    //var torus= new Torus(this,0.5,1,50,50);
+
+    //torus.display();
+
 
     this.setDefaultAppearance();
 
