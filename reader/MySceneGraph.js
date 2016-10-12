@@ -18,7 +18,9 @@ function MySceneGraph(filename, scene) {
     this.background = [];
     this.ambient = [];
 
+    //primitives
     this.objects = {};
+    //components
     this.composedObjects = {};
 
     //--------------------------------------------------------------------------------------------------------
@@ -427,7 +429,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
             var slices = sphere[0].attributes.getNamedItem("slices").value;
             var stacks = sphere[0].attributes.getNamedItem("stacks").value;
 
-            this.objects[id] = new Sphere(this.scene,radius,slices,stacks);
+            this.objects[id] = new Sphere(this.scene, radius, slices, stacks);
         }
 
         /*var torus = primitive[i].getElementsByTagName("torus");
@@ -534,7 +536,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                 if (this.textureFlag) {
                     if (this.childrenFlag) {
                         console.log("read all components");
-                        //TODO: create component
+                        this.composedObjects[id] = [this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren];
 
                     } else {
                         console.log("No children objects defined");
@@ -553,14 +555,22 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 
 }
 
+MySceneGraph.prototype.displayComposedObjects = function(object) {
+    for (let primitive of this.composedObjects[object][4]) {
+        this.objects[primitive].display();
+    }
+    for (let composedObject of this.composedObjects[object][3]) {
+        this.displayComposedObjects(composedObject);
+    }
+}
+
 
 MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
-    /*for (let object in this.objects) {
-
-        this.objects[object].display();
-    }*/
+    for (let object in this.composedObjects) {
+        this.displayComposedObjects(object);
+    }
 
     this.scene.popMatrix();
 }
