@@ -8,13 +8,19 @@ function MySceneGraph(filename, scene) {
     this.reader = new CGFXMLreader();
 
     //Estruturas de dados necessárias para o parser-----------------------------------------------------------
+
+    //Parser das views
     this.viewDefault;
     this.perspectives = [];
-    this.cfgCameras = [];
+
+    //Parser das textures
     this.textures = [];
 
-    //parser dos materials
+    //Parser dos materials
     this.materials = {};
+
+    //Parser das transformations
+    this.transformations={};
 
     //Parser illumination
     this.background = [];
@@ -61,17 +67,18 @@ MySceneGraph.prototype.onXMLReady = function() {
 
 MySceneGraph.prototype.parser = function(rootElement) {
 
-    this.parserToViews(rootElement);
+    this.parserToViews(rootElement); //almost completed
     this.parserToIllumination(rootElement);
     this.parserToLights(rootElement); //almost completed
     this.parserToTextures(rootElement); //almost completed
     this.parserToMaterials(rootElement);
-    this.parserToTransformations(rootElement); //almost completed
+    this.parserToTransformations(rootElement);
     this.parserToPrimitives(rootElement);
     this.parserToComponents(rootElement);
 
 };
 
+//TODO: Esta a dar erros quando se usa as camaras
 MySceneGraph.prototype.parserToViews = function(rootElement) {
 
     var views;
@@ -85,10 +92,10 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
         return "Either zero or more than one 'view' element found.";
     }
 
-    this.defaultCamera = views[0].attributes.getNamedItem("default").value;
+    this.viewDefault = views[0].attributes.getNamedItem("default").value;
 
 
-    this.perspectives = views[0].getElementsByTagName('perspective');
+    var perspective = views[0].getElementsByTagName('perspective');
 
     if (this.perspectives == null) {
         return "Perspectives are missing.";
@@ -96,23 +103,29 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
 
 
 
-    for (var i = 0; i < this.perspectives.length; i++) {
+    for (var i = 0; i < perspective.length; i++) {
 
 
         //Obter os valores da perspective
-        var id = this.perspectives[i].attributes.getNamedItem("id").value;
-        var near = this.perspectives[i].attributes.getNamedItem("near").value;
-        var far = this.perspectives[i].attributes.getNamedItem("far").value;
-        var angle = this.perspectives[i].attributes.getNamedItem("angle").value;
+        var id = perspective[i].attributes.getNamedItem("id").value;
+        var near = perspective[i].attributes.getNamedItem("near").value;
+        var far = perspective[i].attributes.getNamedItem("far").value;
+        var angle = perspective[i].attributes.getNamedItem("angle").value;
 
         //Obter o que está definido dentro de cada perspective (from e to) e obter os valores de estes
-        var from = this.perspectives[i].getElementsByTagName('from');
-        var vectorF = [from[0].attributes.getNamedItem("x").value, from[0].attributes.getNamedItem("y").value, from[0].attributes.getNamedItem("z").value];
+        var from = perspective[i].getElementsByTagName('from');
 
-        var to = this.perspectives[i].getElementsByTagName('to');
-        var vectorT = [to[0].attributes.getNamedItem("x").value, to[0].attributes.getNamedItem("y").value, to[0].attributes.getNamedItem("z").value]
+        var to = perspective[i].getElementsByTagName('to');
+
+        this.perspectives.push(new CGFcamera(angle, near, far,
+            vec3.fromValues(from.x, from.y, from.z),
+            vec3.fromValues(to.x, to.y, to.z)));
 
     }
+
+    console.log("perspectives: "+this.perspectives.length);
+
+
 };
 
 MySceneGraph.prototype.parserToIllumination = function(rootElement) {
@@ -341,7 +354,6 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
 };
 
-//TODO: guardar a informação
 MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
 
@@ -355,24 +367,76 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
         return "Either zero or more than one 'illumination' element found.";
     }
 
-    var transformation = transformations[0].getElementsByTagName('tranformation');
+    var transformation = transformations[0].getElementsByTagName('transformation');
+
+    console.log("TRANSFORMATIONS: "+transformation.length);
 
     for (var i = 0; i < transformation.length; i++) {
-        var id = transformation[i].attributes.getNamedItem("id").value;
 
-        var translate = tranformation[i].getElementsByTagName("translate");
-        var tx = translate[0].attributes.getNamedItem("x").value;
-        var ty = translate[0].attributes.getNamedItem("y").value;
-        var tz = translate[0].attributes.getNamedItem("z").value;
+      var id = transformation[i].attributes.getNamedItem("id").value;
 
-        var rotate = tranformation[i].getElementsByTagName("rotate");
-        var axis = rotate[0].attributes.getNamedItem("axis").value;
-        var angle = rotate[0].attributes.getNamedItem("angle").value;
+        var tranformationMatrix=mat4.create();
 
-        var scale = tranformation[i].getElementsByTagName("scale");
-        var sx = scale[0].attributes.getNamedItem("x").value;
-        var sy = scale[0].attributes.getNamedItem("y").value;
-        var sz = scale[0].attributes.getNamedItem("z").value;
+        var translate = transformation[i].getElementsByTagName("translate");
+
+        for(var j=0;j<translate.length;j++){
+          var tx = translate[j].attributes.getNamedItem("x").value;
+          var ty = translate[j].attributes.getNamedItem("y").value;
+          var tz = translate[j].attributes.getNamedItem("z").value;
+
+          var translateArray=[tx,ty,tz];
+
+          mat4.translate(tranformationMatrix,tranformationMatrix,translateArray);
+
+          console.log("tx: "+tx+", ty: "+ty+", tz: "+tz);
+
+        }
+
+
+        var rotate = transformation[i].getElementsByTagName("rotate");
+
+        for(var j=0;j<rotate.length;j++){
+
+          var axis = rotate[j].attributes.getNamedItem("axis").value;
+          var angle = rotate[j].attributes.getNamedItem("angle").value;
+
+          var rotationArray;
+
+          switch (axis) {
+            case 'x':
+              rotationArray=[1,0,0];
+              break;
+            case 'y':
+              rotationArray=[0,1,0];
+            case 'z':
+              rotationArray=[0,0,1];
+            default:
+              rotationArray=[1,0,0]; //Esta como default a rodar em x, não sei se é necessário mudar
+          }
+          angle=angle*2*Math.PI/360;
+
+          mat4.rotate(tranformationMatrix,tranformationMatrix,angle,rotationArray);
+
+          console.log("angle: "+angle);
+        }
+
+
+        var scale = transformation[i].getElementsByTagName("scale");
+
+        for(var j=0;j<scale.length;j++){
+          var sx = scale[j].attributes.getNamedItem("x").value;
+          var sy = scale[j].attributes.getNamedItem("y").value;
+          var sz = scale[j].attributes.getNamedItem("z").value;
+
+          var scaleArray=[sx,sy,sz];
+
+          mat4.scale(tranformationMatrix,tranformationMatrix,scaleArray);
+
+          console.log("sx: "+sx+", sy: "+sy+", sz: "+sz);
+
+        }
+
+        this.transformations[id]=tranformationMatrix;
 
     }
 
@@ -460,7 +524,6 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
     }
 
 };
-
 
 MySceneGraph.prototype.parserToComponents = function(rootElement) {
     var components = rootElement.getElementsByTagName("components")[0];
@@ -568,24 +631,24 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 }
 
 MySceneGraph.prototype.displayComposedObjects = function(object) {
-    /*for (let primitive of this.composedObjects[object][4]) {
+    for (let primitive of this.composedObjects[object][4]) {
       console.log(primitive);
         this.objects[primitive].display();
     }
     for (let composedObject of this.composedObjects[object][3]) {
         this.displayComposedObjects(composedObject);
-    }*/
-
-    this.objects[5].display();
+    }
 }
-
 
 MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
-    for (let object in this.composedObjects) {
+    /*for (let object in this.composedObjects) {
         this.displayComposedObjects(object);
-    }
+    }*/
+
+    this.scene.multMatrix(this.transformations["t1"]);
+    this.objects[5].display();
 
     this.scene.popMatrix();
 }

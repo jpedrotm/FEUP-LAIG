@@ -17,7 +17,7 @@
     <!-- como o comprimento dos tres eixos (cilindros) -->
     <scene root="root" axis_length="1"/>
 
-    <views default="view1">
+    <views default="1">
 
         <!-- declaracao obrigatoria de pelo menos uma vista; -->
         <!-- se varias vistas declaradas, o default e' a -->
@@ -26,7 +26,12 @@
         <!-- ultima vista da lista volta 'a primeira -->
         <perspective id="view1" near="0.1" far="500" angle="0">
             <from x="0" y="0" z="0"/>
-            <to x="10" y="10" z="10"/>
+            <to x="1" y="0" z="0"/>
+        </perspective>
+
+        <perspective id="view1" near="0.1" far="500" angle="0">
+            <from x="0" y="0" z="0"/>
+            <to x="0" y="1" z="0"/>
         </perspective>
 
     </views>
@@ -96,12 +101,13 @@
 
         <!-- Deve existir um ou mais blocos "transformation" -->
         <!-- Os identificadores "id" nao podem ser repetidos -->
-        <transformation id="ss">
+        <transformation id="t1">
             <!-- instrucoes a usar sem limite nem ordem -->
-            <!-- deve existir pelo menos uma transformacao -->
-            <translate x="ff" y="ff" z="ff"/>
-            <rotate axis="cc" angle="ff"/>
-            <scale x="ff" y="ff" z="ff"/>
+            <!-- deve existir pelo menos uma transformacao-->
+            <translate x="0" y="0" z="0"/>
+            <rotate axis="x" angle="90.0"/>
+            <!--<rotate axis="y" angle="180.0"/>-->
+            <scale x="2.0" y="2.0" z="2.0"/>
         </transformation>
 
     </transformations>

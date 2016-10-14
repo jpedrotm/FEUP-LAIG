@@ -53,12 +53,13 @@ serialInclude(['../lib/CGF.js',
 'primitives/semisphere.js',
 'primitives/sphere.js',
 'primitives/torus.js',
+'MyInterface.js',
 
     main = function() {
         // Standard application, scene and interface setup
         var app = new CGFapplication(document.body);
-        var myScene = new XMLscene();
-        var myInterface = new CGFinterface();
+        var myInterface = new MyInterface();
+        var myScene = new XMLscene(myInterface);
 
         app.init();
 

@@ -1,5 +1,7 @@
-function XMLscene() {
+function XMLscene(myInterface) {
     CGFscene.call(this);
+
+    this.interface=myInterface;
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -48,6 +50,27 @@ XMLscene.prototype.onGraphLoaded = function() {
     //this.setGlobalAmbientLight(this.graph.ambient['r'], this.graph.ambient['g'], this.graph.ambient['b'], this.graph.ambient['a']);
     this.lights[0].setVisible(true);
     this.lights[0].enable();
+};
+
+XMLscene.prototype.updateView=function(){
+
+  console.log("VIEW: "+this.graph.viewDefault+", ENTROU: "+this.graph.perspectives.length);
+  this.camera=new CGFCamera(0.4, 0.1, 500, vec3.fromValues(15,0,0), vec3.fromValues(0, 0, 0));
+  this.interface.setActiveCamera(this.camera);
+
+  /*var length=this.graph.perspectives.length;
+  var tempViewDefault=this.graph.viewDefault;
+
+  if(tempViewDefault>=length){
+    this.graph.viewDefault=1;
+  }
+else if(tempViewDefault<1){
+  this.graph.viewDefault=1;
+}
+else{
+  this.graph.viewDefault=this.graph.viewDefault+1;
+}*/
+
 };
 
 XMLscene.prototype.display = function() {
