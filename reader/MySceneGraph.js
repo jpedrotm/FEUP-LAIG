@@ -20,7 +20,7 @@ function MySceneGraph(filename, scene) {
     this.materials = {};
 
     //Parser das transformations
-    this.transformations={};
+    this.transformations = {};
 
     //Parser illumination
     this.background = [];
@@ -123,7 +123,7 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
 
     }
 
-    console.log("perspectives: "+this.perspectives.length);
+    console.log("perspectives: " + this.perspectives.length);
 
 
 };
@@ -309,43 +309,43 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
         var id = mats[i].attributes.getNamedItem("id").value;
 
-        if(this.materials[id]==null){
+        if (this.materials[id] == null) {
 
-          var emission = mats[i].getElementsByTagName("emission");
-          var re = emission[0].attributes.getNamedItem("r").value;
-          var ge = emission[0].attributes.getNamedItem("g").value;
-          var be = emission[0].attributes.getNamedItem("b").value;
-          var ae = emission[0].attributes.getNamedItem("a").value;
+            var emission = mats[i].getElementsByTagName("emission");
+            var re = emission[0].attributes.getNamedItem("r").value;
+            var ge = emission[0].attributes.getNamedItem("g").value;
+            var be = emission[0].attributes.getNamedItem("b").value;
+            var ae = emission[0].attributes.getNamedItem("a").value;
 
-          var ambient = mats[i].getElementsByTagName("ambient");
-          var ra = ambient[0].attributes.getNamedItem("r").value;
-          var ga = ambient[0].attributes.getNamedItem("g").value;
-          var ba = ambient[0].attributes.getNamedItem("b").value;
-          var aa = ambient[0].attributes.getNamedItem("a").value;
+            var ambient = mats[i].getElementsByTagName("ambient");
+            var ra = ambient[0].attributes.getNamedItem("r").value;
+            var ga = ambient[0].attributes.getNamedItem("g").value;
+            var ba = ambient[0].attributes.getNamedItem("b").value;
+            var aa = ambient[0].attributes.getNamedItem("a").value;
 
-          var diffuse = mats[i].getElementsByTagName("diffuse");
-          var rd = diffuse[0].attributes.getNamedItem("r").value;
-          var gd = diffuse[0].attributes.getNamedItem("g").value;
-          var bd = diffuse[0].attributes.getNamedItem("b").value;
-          var ad = diffuse[0].attributes.getNamedItem("a").value;
+            var diffuse = mats[i].getElementsByTagName("diffuse");
+            var rd = diffuse[0].attributes.getNamedItem("r").value;
+            var gd = diffuse[0].attributes.getNamedItem("g").value;
+            var bd = diffuse[0].attributes.getNamedItem("b").value;
+            var ad = diffuse[0].attributes.getNamedItem("a").value;
 
-          var specular = mats[i].getElementsByTagName("specular");
-          var rs = specular[0].attributes.getNamedItem("r").value;
-          var gs = specular[0].attributes.getNamedItem("g").value;
-          var bs = specular[0].attributes.getNamedItem("b").value;
-          var as = specular[0].attributes.getNamedItem("a").value;
+            var specular = mats[i].getElementsByTagName("specular");
+            var rs = specular[0].attributes.getNamedItem("r").value;
+            var gs = specular[0].attributes.getNamedItem("g").value;
+            var bs = specular[0].attributes.getNamedItem("b").value;
+            var as = specular[0].attributes.getNamedItem("a").value;
 
-          var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
+            var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
 
-          var tempMaterial = new CGFappearance(this);
-        	tempMaterial.setAmbient(ra,ga,ba,aa);
-        	tempMaterial.setDiffuse(rd,gd,bd,ad);
-        	tempMaterial.setSpecular(rs,gs,bs,as);
-        	tempMaterial.setShininess(shininess);
+            var tempMaterial = new CGFappearance(this);
+            tempMaterial.setAmbient(ra, ga, ba, aa);
+            tempMaterial.setDiffuse(rd, gd, bd, ad);
+            tempMaterial.setSpecular(rs, gs, bs, as);
+            tempMaterial.setShininess(shininess);
 
-          console.log("MATERIAL GRAVADO");
+            console.log("MATERIAL GRAVADO");
 
-          this.materials[id]=tempMaterial;
+            this.materials[id] = tempMaterial;
 
         }
 
@@ -369,74 +369,74 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
     var transformation = transformations[0].getElementsByTagName('transformation');
 
-    console.log("TRANSFORMATIONS: "+transformation.length);
+    console.log("TRANSFORMATIONS: " + transformation.length);
 
     for (var i = 0; i < transformation.length; i++) {
 
-      var id = transformation[i].attributes.getNamedItem("id").value;
+        var id = transformation[i].attributes.getNamedItem("id").value;
 
-        var tranformationMatrix=mat4.create();
+        var transformationMatrix = mat4.create();
 
         var translate = transformation[i].getElementsByTagName("translate");
 
-        for(var j=0;j<translate.length;j++){
-          var tx = translate[j].attributes.getNamedItem("x").value;
-          var ty = translate[j].attributes.getNamedItem("y").value;
-          var tz = translate[j].attributes.getNamedItem("z").value;
+        for (var j = 0; j < translate.length; j++) {
+            var tx = translate[j].attributes.getNamedItem("x").value;
+            var ty = translate[j].attributes.getNamedItem("y").value;
+            var tz = translate[j].attributes.getNamedItem("z").value;
 
-          var translateArray=[tx,ty,tz];
+            var translateArray = [tx, ty, tz];
 
-          mat4.translate(tranformationMatrix,tranformationMatrix,translateArray);
+            mat4.translate(transformationMatrix, transformationMatrix, translateArray);
 
-          console.log("tx: "+tx+", ty: "+ty+", tz: "+tz);
+            console.log("tx: " + tx + ", ty: " + ty + ", tz: " + tz);
 
         }
 
 
         var rotate = transformation[i].getElementsByTagName("rotate");
 
-        for(var j=0;j<rotate.length;j++){
+        for (var j = 0; j < rotate.length; j++) {
 
-          var axis = rotate[j].attributes.getNamedItem("axis").value;
-          var angle = rotate[j].attributes.getNamedItem("angle").value;
+            var axis = rotate[j].attributes.getNamedItem("axis").value;
+            var angle = rotate[j].attributes.getNamedItem("angle").value;
 
-          var rotationArray;
+            var rotationArray;
 
-          switch (axis) {
-            case 'x':
-              rotationArray=[1,0,0];
-              break;
-            case 'y':
-              rotationArray=[0,1,0];
-            case 'z':
-              rotationArray=[0,0,1];
-            default:
-              rotationArray=[1,0,0]; //Esta como default a rodar em x, não sei se é necessário mudar
-          }
-          angle=angle*2*Math.PI/360;
+            switch (axis) {
+                case 'x':
+                    rotationArray = [1, 0, 0];
+                    break;
+                case 'y':
+                    rotationArray = [0, 1, 0];
+                case 'z':
+                    rotationArray = [0, 0, 1];
+                default:
+                    rotationArray = [1, 0, 0]; //Esta como default a rodar em x, não sei se é necessário mudar
+            }
+            angle = angle * 2 * Math.PI / 360;
 
-          mat4.rotate(tranformationMatrix,tranformationMatrix,angle,rotationArray);
+            mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
 
-          console.log("angle: "+angle);
+            console.log("angle: " + angle);
         }
 
 
         var scale = transformation[i].getElementsByTagName("scale");
 
-        for(var j=0;j<scale.length;j++){
-          var sx = scale[j].attributes.getNamedItem("x").value;
-          var sy = scale[j].attributes.getNamedItem("y").value;
-          var sz = scale[j].attributes.getNamedItem("z").value;
+        for (var j = 0; j < scale.length; j++) {
+            var sx = scale[j].attributes.getNamedItem("x").value;
+            var sy = scale[j].attributes.getNamedItem("y").value;
+            var sz = scale[j].attributes.getNamedItem("z").value;
 
-          var scaleArray=[sx,sy,sz];
+            var scaleArray = [sx, sy, sz];
 
-          mat4.scale(tranformationMatrix,tranformationMatrix,scaleArray);
+            mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
 
-          console.log("sx: "+sx+", sy: "+sy+", sz: "+sz);
+            console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
 
         }
 
-        this.transformations[id]=tranformationMatrix;
+        this.transformations[id] = transformationMatrix;
 
     }
 
@@ -516,7 +516,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
             var slices = torus[0].attributes.getNamedItem("slices").value;
             var loops = torus[0].attributes.getNamedItem("loops").value;
 
-            this.objects[id] = new Torus(this.scene,0.5,1,50,50);
+            this.objects[id] = new Torus(this.scene, 0.5, 1, 50, 50);
         }
 
 
@@ -553,21 +553,70 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     this.transformationsFlag = 1;
                     let transformations = attribute;
 
-                    //TODO: save transformations into a single matrix
+
+
                     for (let transformation of transformations.children) {
+                        var transformationMatrix = mat4.create();
                         let type = transformation.nodeName;
                         switch (type) {
                             case 'transformationref':
-
+                                console.log("transformationref:");
+                                console.log(this.transformations[transformation.attributes.getNamedItem("id").value]);
+                                this.transformationsArray.push(this.transformations[transformation.attributes.getNamedItem("id").value]);
                                 break;
-                            case 'tranlate':
+                            case 'translate':
+                                var tx = transformation.attributes.getNamedItem("x").value;
+                                var ty = transformation.attributes.getNamedItem("y").value;
+                                var tz = transformation.attributes.getNamedItem("z").value;
 
+                                var translateArray = [tx, ty, tz];
+
+                                mat4.translate(transformationMatrix, transformationMatrix, translateArray);
+
+
+                                console.log("transformationMatrix:");
+                                console.log(transformationMatrix);
+                                this.transformationsArray.push(transformationMatrix);
                                 break;
                             case 'rotate':
 
+                                var axis = transformation.attributes.getNamedItem("axis").value;
+                                var angle = transformation.attributes.getNamedItem("angle").value;
+
+                                var rotationArray;
+
+                                switch (axis) {
+                                    case 'x':
+                                        rotationArray = [1, 0, 0];
+                                        break;
+                                    case 'y':
+                                        rotationArray = [0, 1, 0];
+                                    case 'z':
+                                        rotationArray = [0, 0, 1];
+                                    default:
+                                        rotationArray = [1, 0, 0]; //Esta como default a rodar em x, não sei se é necessário mudar
+
+                                        angle = angle * 2 * Math.PI / 360;
+
+                                        mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
+
+
+                                }
+                                this.transformationsArray.push(transformationMatrix);
                                 break;
                             case 'scale':
+                                var sx = transformation.attributes.getNamedItem("x").value;
+                                var sy = transformation.attributes.getNamedItem("y").value;
+                                var sz = transformation.attributes.getNamedItem("z").value;
 
+                                var scaleArray = [sx, sy, sz];
+
+                                mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
+
+                                console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
+
+
+                                this.transformationsArray.push(transformationMatrix);
                                 break;
                         }
                     }
@@ -611,7 +660,13 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                 if (this.textureFlag) {
                     if (this.childrenFlag) {
                         console.log("read all components");
-                        this.composedObjects[id] = [this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren];
+                        this.composedObjects[id] = [
+                            this.transformationsArray,
+                            this.materialsArray,
+                            this.componentTexture,
+                            this.componentChildren,
+                            this.primitiveChildren
+                        ];
 
                     } else {
                         console.log("No children objects defined");
@@ -632,7 +687,6 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 
 MySceneGraph.prototype.displayComposedObjects = function(object) {
     for (let primitive of this.composedObjects[object][4]) {
-      console.log(primitive);
         this.objects[primitive].display();
     }
     for (let composedObject of this.composedObjects[object][3]) {
@@ -643,12 +697,19 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
 MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
-    /*for (let object in this.composedObjects) {
+    for (let object in this.composedObjects) {
+        this.scene.pushMatrix();
+        if (this.composedObjects[object][0].length != 0) {
+            for (transformation of this.composedObjects[object][0]) {
+                this.scene.multMatrix(transformation);
+            }
+        }
         this.displayComposedObjects(object);
-    }*/
+        this.scene.popMatrix();
+    }
 
-    this.scene.multMatrix(this.transformations["t1"]);
-    this.objects[5].display();
+    //this.scene.multMatrix(this.transformations["t1"]);
+    //this.objects[5].display();
 
     this.scene.popMatrix();
 }

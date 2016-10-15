@@ -104,6 +104,12 @@
         <transformation id="t1">
             <!-- instrucoes a usar sem limite nem ordem -->
             <!-- deve existir pelo menos uma transformacao-->
+            <translate x="4" y="0" z="0"/>
+        </transformation>
+
+        <transformation id="t2">
+            <!-- instrucoes a usar sem limite nem ordem -->
+            <!-- deve existir pelo menos uma transformacao-->
             <translate x="0" y="0" z="0"/>
             <rotate axis="x" angle="90.0"/>
             <!--<rotate axis="y" angle="180.0"/>-->
@@ -161,15 +167,8 @@
 
                 <!-- deve conter uma referencia a uma das "transformation" -->
                 <!-- declaradas anteriormente -->
-                <transformationref id="transformation1"/>
-
-                <!-- ou, ALTERNATIVAMENTE, transformacoes explicitas, -->
-                <!-- usando zero ou mais das instrucoes seguintes, sem -->
-                <!-- limite nem ordem -->
-                <!-- ex: bloco transformation pode ficar sem conteudo -->
-                <translate x="0" y="0" z="0"/>
-                <rotate axis="x" angle="0"/>
-                <scale x="1" y="1" z="1"/>
+                <translate x="2" y="2" z="0"/>
+                <transformationref id="t1"/>
             </transformation>
 
             <!-- declaracao obrigatoria de pelo menos um material; -->
@@ -209,15 +208,9 @@
 
                 <!-- deve conter uma referencia a uma das "transformation" -->
                 <!-- declaradas anteriormente -->
-                <transformationref id="transformation1"/>
 
-                <!-- ou, ALTERNATIVAMENTE, transformacoes explicitas, -->
-                <!-- usando zero ou mais das instrucoes seguintes, sem -->
-                <!-- limite nem ordem -->
-                <!-- ex: bloco transformation pode ficar sem conteudo -->
-                <translate x="0" y="0" z="0"/>
-                <rotate axis="x" angle="0"/>
-                <scale x="1" y="1" z="1"/>
+                <transformationref id="t1"/>
+
             </transformation>
 
             <!-- declaracao obrigatoria de pelo menos um material; -->
