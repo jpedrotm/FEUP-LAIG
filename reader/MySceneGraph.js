@@ -15,7 +15,7 @@ function MySceneGraph(filename, scene) {
     this.perspectives = [];
 
     //Parser das textures
-    this.textures = [];
+    this.textures = {};
 
     //Parser dos materials
     this.materials = {};
@@ -80,7 +80,7 @@ MySceneGraph.prototype.parser = function(rootElement) {
     this.parserToViews(rootElement); //almost completed
     this.parserToIllumination(rootElement);
     this.parserToLights(rootElement); //almost completed
-    this.parserToTextures(rootElement); //almost completed
+    this.parserToTextures(rootElement);
     this.parserToMaterials(rootElement);
     this.parserToTransformations(rootElement);
     this.parserToPrimitives(rootElement);
@@ -264,7 +264,7 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
 
 };
 
-//TODO: colocar a guardar
+
 MySceneGraph.prototype.parserToTextures = function(rootElement) {
 
 
@@ -291,12 +291,11 @@ MySceneGraph.prototype.parserToTextures = function(rootElement) {
         var length_s = texts[i].attributes.getNamedItem("length_s").value;
         var length_t = texts[i].attributes.getNamedItem("length_t").value;
 
-        console.log(id + "," + file + "," + length_s + "," + length_t + "\n");
+        this.textures[id]=new CGFtexture(this.scene, file);
 
     }
 
 };
-
 
 MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
@@ -348,6 +347,7 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
             var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
 
             var tempMaterial = new CGFappearance(this);
+            tempMaterial.setEmission(re,ge,be,ae);
             tempMaterial.setAmbient(ra, ga, ba, aa);
             tempMaterial.setDiffuse(rd, gd, bd, ad);
             tempMaterial.setSpecular(rs, gs, bs, as);
@@ -634,6 +634,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     }
                     break;
                 case 'materials':
+                console.log("MATERIALS");
                     this.materialsFlag = 1;
                     let materials = attribute;
                     for (let material of materials.children) {
@@ -641,6 +642,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     }
                     break;
                 case 'texture':
+                console.log("TEXTURES");
                     this.textureFlag = 1;
                     let texture = attribute;
                     this.componentTexture = (texture.attributes.getNamedItem("id").value);
@@ -699,8 +701,8 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 
 MySceneGraph.prototype.displayComposedObjects = function(object) {
     for (let primitive of this.composedObjects[object][4]) {
-        console.log("Primitiva:");
-        console.log(primitive);
+        //console.log("Primitiva:");
+        //console.log(primitive);
         this.objects[primitive].display();
     }
     for (let composedObject of this.composedObjects[object][3]) {
@@ -710,8 +712,8 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
                 this.scene.multMatrix(transformation);
             }
         }
-        console.log("Component:");
-        console.log(composedObject);
+        //console.log("Component:");
+        //console.log(composedObject);
         this.displayComposedObjects(composedObject);
         this.scene.popMatrix();
     }
