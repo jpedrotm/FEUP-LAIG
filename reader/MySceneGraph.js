@@ -8,7 +8,8 @@ function MySceneGraph(filename, scene) {
     this.reader = new CGFXMLreader();
 
     //Estruturas de dados necessárias para o parser-----------------------------------------------------------
-
+    this.root;
+    this.axis_length;
     //Parser das views
     this.viewDefault;
     this.perspectives = [];
@@ -66,6 +67,15 @@ MySceneGraph.prototype.onXMLReady = function() {
 
 
 MySceneGraph.prototype.parser = function(rootElement) {
+    var scene;
+    scene = rootElement.getElementsByTagName('scene');
+
+    if (scene == null) {
+        return "Views are missing.";
+    }
+
+    this.root = scene[0].attributes.getNamedItem("root").value;
+    this.axis_length = scene[0].attributes.getNamedItem("axis_length").value;
 
     this.parserToViews(rootElement); //almost completed
     this.parserToIllumination(rootElement);
@@ -690,21 +700,31 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
         this.objects[primitive].display();
     }
     for (let composedObject of this.composedObjects[object][3]) {
+        this.scene.pushMatrix();
+        if (this.composedObjects[composedObject][0].length != 0) {
+            for (transformation of this.composedObjects[composedObject][0]) {
+                this.scene.multMatrix(transformation);
+            }
+        }
         this.displayComposedObjects(composedObject);
+        this.scene.popMatrix();
     }
 }
 
 MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
-    for (let object in this.composedObjects) {
+    if (this.composedObjects[this.root] == undefined) {
+        console.log("No root object defined");
+    } //caso exista um objecto root, desenha toda a cena percorrendo esse root em profundidade
+    else {
         this.scene.pushMatrix();
-        if (this.composedObjects[object][0].length != 0) {
-            for (transformation of this.composedObjects[object][0]) {
+        if (this.composedObjects[this.root][0].length != 0) {
+            for (transformation of this.composedObjects[this.root][0]) {
                 this.scene.multMatrix(transformation);
             }
         }
-        this.displayComposedObjects(object);
+        this.displayComposedObjects(this.root);
         this.scene.popMatrix();
     }
 

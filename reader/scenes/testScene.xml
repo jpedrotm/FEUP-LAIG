@@ -160,7 +160,7 @@
 
     <components>
 
-        <component id="object1">
+        <component id="root">
 
             <!-- bloco "transformation" obrigatorio -->
             <transformation>
