@@ -1,5 +1,5 @@
 <dsx>
-    <scene root="plane" axis_length="1"/>
+    <scene root="airport" axis_length="1"/>
 
     <views default="1">
 
@@ -8,8 +8,8 @@
             <to x="15" y="15" z="15"/>
         </perspective>
 
-        <perspective id="view1" near="0.1" far="500" angle="0">
-            <from x="0" y="0" z="0"/>
+        <perspective id="view2" near="0.1" far="500" angle="0">
+            <from x="150" y="150" z="150"/>
             <to x="0" y="1" z="0"/>
         </perspective>
 
@@ -43,7 +43,7 @@
 
     <textures>
 
-        <texture id="texture1" file="./scenes/img/textura1.png" length_s="1.0" length_t="1.0"/>
+        <texture id="metal" file="./scenes/img/metal.jpg" length_s="1.0" length_t="1.0"/>
 
     </textures>
 
@@ -104,24 +104,121 @@
         <primitive id="backLeftWinglet">
             <cylinder base="2" top="1" height="4" slices="50" stacks="50" />
         </primitive>
-
+        <primitive id="track">
+          <rectangle x1="-40" y1="0" x2="40" y2="1000" />
+        </primitive>
+        <primitive id="signal">
+          <triangle x1="0" y1="f0" z1="0" x2="0" y2="1" z2="1" x3="0" y3="2" z3="0" />
+        </primitive>
+        <primitive id="frontWheel">
+            <torus inner="10" outer="20" slices="50" loops="50" />
+        </primitive>
+        <primitive id="rightWheel">
+            <torus inner="10" outer="20" slices="50" loops="50" />
+        </primitive>
+        <primitive id="leftWheel">
+            <torus inner="10" outer="20" slices="50" loops="50" />
+        </primitive>
+        <primitive id="frontWheel2">
+            <torus inner="10" outer="20" slices="50" loops="50" />
+        </primitive>
+        <primitive id="rightWheel2">
+            <torus inner="10" outer="20" slices="50" loops="50" />
+        </primitive>
+        <primitive id="leftWheel2">
+            <torus inner="10" outer="20" slices="50" loops="50" />
+        </primitive>
 
 
     </primitives>
-
     <components>
+
+      <component id="airport">
+
+          <transformation>
+              <scale x="0.3" y="0.3" z="0.3" />
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="metal"/>
+
+          <children>
+              <componentref id="plane"/>
+              <componentref id="track"/>
+          </children>
+
+      </component>
+
+      <component id="track">
+
+          <transformation>
+            <scale x="1" y="1" z="1" />
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="metal"/>
+
+          <children>
+                <componentref id="trackground"/>
+                <componentref id="tracksignal"/>
+          </children>
+
+      </component>
+
+      <component id="tracksignal">
+
+          <transformation>
+            <scale x="1" y="1" z="1" />
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="metal"/>
+
+          <children>
+              <primitiveref id="signal"/>
+          </children>
+
+      </component>
+
+      <component id="trackground">
+
+          <transformation>
+              <rotate axis="x" angle="90"/>
+              <rotate axis="y" angle="180"/>
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="metal"/>
+
+          <children>
+                <primitiveref id="track"/>
+          </children>
+
+      </component>
 
         <component id="plane">
 
             <transformation>
-                <translate x="0" y="0" z="10"/>
+                <translate x="0" y="10" z="50"/>
             </transformation>
 
             <materials>
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <componentref id="body"/>
@@ -146,12 +243,156 @@
 
             <children>
                 <primitiveref id="planeBody"/>
+                <componentref id="wheels"/>
                 <componentref id="front"/>
                 <componentref id="back"/>
 
             </children>
 
         </component>
+
+        <component id="wheels">
+
+            <transformation>
+                <translate x="0" y="0" z="0"/>
+            </transformation>
+
+            <materials>
+                <material id="metal"/>
+            </materials>
+
+            <texture id="1"/>
+
+            <children>
+                <componentref id="frontWheel"/>
+                <componentref id="rightWheel"/>
+                <componentref id="leftWheel"/>
+                <componentref id="frontWheel2"/>
+                <componentref id="rightWheel2"/>
+                <componentref id="leftWheel2"/>
+            </children>
+
+        </component>
+
+        <component id="frontWheel">
+
+            <transformation>
+                <translate x="1" y="-5" z="40"/>
+                <scale x="1" y="1" z="1" />
+                <rotate axis="y" angle="90"/>
+            </transformation>
+
+            <materials>
+                <material id="metal"/>
+            </materials>
+
+            <texture id="1"/>
+
+            <children>
+                <primitiveref id="frontWheel"/>
+            </children>
+
+        </component>
+        <component id="frontWheel2">
+
+            <transformation>
+                <translate x="-1" y="-5" z="40"/>
+                <scale x="1" y="1" z="1" />
+                <rotate axis="y" angle="90"/>
+            </transformation>
+
+            <materials>
+                <material id="metal"/>
+            </materials>
+
+            <texture id="1"/>
+
+            <children>
+                <primitiveref id="frontWheel2"/>
+            </children>
+
+        </component>
+
+        <component id="leftWheel">
+
+          <transformation>
+              <translate x="-5" y="-5" z="18"/>
+              <scale x="1" y="1" z="1" />
+              <rotate axis="y" angle="90"/>
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="1"/>
+
+          <children>
+              <primitiveref id="leftWheel"/>
+          </children>
+
+        </component>
+        <component id="leftWheel2">
+
+          <transformation>
+              <translate x="-4" y="-5" z="18"/>
+              <scale x="1" y="1" z="1" />
+              <rotate axis="y" angle="90"/>
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="1"/>
+
+          <children>
+              <primitiveref id="leftWheel2"/>
+          </children>
+
+        </component>
+
+        <component id="rightWheel">
+
+          <transformation>
+              <translate x="5" y="-5" z="18"/>
+              <scale x="1" y="1" z="1" />
+              <rotate axis="y" angle="90"/>
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="1"/>
+
+          <children>
+              <primitiveref id="rightWheel"/>
+          </children>
+
+        </component>
+        <component id="rightWheel2">
+
+          <transformation>
+              <translate x="4" y="-5" z="18"/>
+              <scale x="1" y="1" z="1" />
+              <rotate axis="y" angle="90"/>
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="1"/>
+
+          <children>
+              <primitiveref id="rightWheel2"/>
+          </children>
+
+        </component>
+
+
+
         <component id="back">
 
             <transformation>
@@ -263,7 +504,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="front"/>

@@ -291,7 +291,7 @@ MySceneGraph.prototype.parserToTextures = function(rootElement) {
         var length_s = texts[i].attributes.getNamedItem("length_s").value;
         var length_t = texts[i].attributes.getNamedItem("length_t").value;
 
-        this.textures[id]=new CGFtexture(this.scene, file);
+        this.textures[id] = new CGFtexture(this.scene, file);
 
     }
 
@@ -347,7 +347,7 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
             var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
 
             var tempMaterial = new CGFappearance(this);
-            tempMaterial.setEmission(re,ge,be,ae);
+            tempMaterial.setEmission(re, ge, be, ae);
             tempMaterial.setAmbient(ra, ga, ba, aa);
             tempMaterial.setDiffuse(rd, gd, bd, ad);
             tempMaterial.setSpecular(rs, gs, bs, as);
@@ -634,7 +634,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     }
                     break;
                 case 'materials':
-                console.log("MATERIALS");
+                    console.log("MATERIALS");
                     this.materialsFlag = 1;
                     let materials = attribute;
                     for (let material of materials.children) {
@@ -642,7 +642,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     }
                     break;
                 case 'texture':
-                console.log("TEXTURES");
+                    console.log("TEXTURES");
                     this.textureFlag = 1;
                     let texture = attribute;
                     this.componentTexture = (texture.attributes.getNamedItem("id").value);
