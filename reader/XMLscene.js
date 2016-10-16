@@ -1,7 +1,7 @@
 function XMLscene(myInterface) {
     CGFscene.call(this);
 
-    this.interface=myInterface;
+    this.interface = myInterface;
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -26,13 +26,13 @@ XMLscene.prototype.init = function(application) {
 
 XMLscene.prototype.initLights = function() {
 
-    this.lights[0].setPosition(2, 3, 3, 1);
+    this.lights[0].setPosition(10, 10, 10, 1);
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
     this.lights[0].update();
 };
 
 XMLscene.prototype.initCameras = function() {
-    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(150, 150, 150), vec3.fromValues(0, 0, 0));
 };
 
 XMLscene.prototype.setDefaultAppearance = function() {
@@ -45,20 +45,20 @@ XMLscene.prototype.setDefaultAppearance = function() {
 // Handler called when the graph is finally loaded.
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function() {
-  this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     //this.gl.clearColor(this.graph.background['r'], this.graph.background['g'], this.graph.background['b'], this.graph.background['a']);
     //this.setGlobalAmbientLight(this.graph.ambient['r'], this.graph.ambient['g'], this.graph.ambient['b'], this.graph.ambient['a']);
     this.lights[0].setVisible(true);
     this.lights[0].enable();
 };
 
-XMLscene.prototype.updateView=function(){
+XMLscene.prototype.updateView = function() {
 
-  console.log("VIEW: "+this.graph.viewDefault+", ENTROU: "+this.graph.perspectives.length);
-  this.camera=new CGFCamera(0.4, 0.1, 500, vec3.fromValues(15,0,0), vec3.fromValues(0, 0, 0));
-  this.interface.setActiveCamera(this.camera);
+    console.log("VIEW: " + this.graph.viewDefault + ", ENTROU: " + this.graph.perspectives.length);
+    this.camera = new CGFCamera(0.4, 0.1, 500, vec3.fromValues(15, 0, 0), vec3.fromValues(0, 0, 0));
+    this.interface.setActiveCamera(this.camera);
 
-  /*var length=this.graph.perspectives.length;
+    /*var length=this.graph.perspectives.length;
   var tempViewDefault=this.graph.viewDefault;
 
   if(tempViewDefault>=length){

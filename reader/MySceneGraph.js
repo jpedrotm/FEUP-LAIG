@@ -418,10 +418,12 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
                     break;
                 case 'y':
                     rotationArray = [0, 1, 0];
+                    break;
                 case 'z':
                     rotationArray = [0, 0, 1];
+                    break;
                 default:
-                    rotationArray = [1, 0, 0]; //Esta como default a rodar em x, não sei se é necessário mudar
+                    break;
             }
             angle = angle * 2 * Math.PI / 360;
 
@@ -601,17 +603,17 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                                         break;
                                     case 'y':
                                         rotationArray = [0, 1, 0];
+                                        break;
                                     case 'z':
                                         rotationArray = [0, 0, 1];
+                                        break;
                                     default:
-                                        rotationArray = [1, 0, 0]; //Esta como default a rodar em x, não sei se é necessário mudar
-
-                                        angle = angle * 2 * Math.PI / 360;
-
-                                        mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
-
-
+                                        break;
                                 }
+                                angle = angle * 2 * Math.PI / 360;
+
+                                mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
+
                                 this.transformationsArray.push(transformationMatrix);
                                 break;
                             case 'scale':
@@ -697,6 +699,8 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 
 MySceneGraph.prototype.displayComposedObjects = function(object) {
     for (let primitive of this.composedObjects[object][4]) {
+        console.log("Primitiva:");
+        console.log(primitive);
         this.objects[primitive].display();
     }
     for (let composedObject of this.composedObjects[object][3]) {
@@ -706,6 +710,8 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
                 this.scene.multMatrix(transformation);
             }
         }
+        console.log("Component:");
+        console.log(composedObject);
         this.displayComposedObjects(composedObject);
         this.scene.popMatrix();
     }
