@@ -291,7 +291,7 @@ MySceneGraph.prototype.parserToTextures = function(rootElement) {
         var length_s = texts[i].attributes.getNamedItem("length_s").value;
         var length_t = texts[i].attributes.getNamedItem("length_t").value;
 
-        this.textures[id] = [file, length_s, length_t];
+        this.textures[id] = [id, file, length_s, length_t];
 
     }
 
@@ -645,7 +645,12 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     console.log("TEXTURES");
                     this.textureFlag = 1;
                     let texture = attribute;
-                    this.componentTexture = (texture.attributes.getNamedItem("id").value);
+                    if ((texture.attributes.getNamedItem("id").value) == "inherit") {
+                        this.componentTexture = [id, id, 0, 0];
+                    } else {
+                        this.componentTexture = this.textures[(texture.attributes.getNamedItem("id").value)];
+                    }
+
                     break;
                 case 'children':
 
@@ -674,7 +679,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                 if (this.textureFlag) {
                     if (this.childrenFlag) {
                         console.log("read all components");
-                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.textures[this.componentTexture], this.componentChildren, this.primitiveChildren);
+                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren);
                     } else {
                         console.log("No children objects defined");
                     }
@@ -694,7 +699,10 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 
 MySceneGraph.prototype.displayComposedObjects = function(object) {
     for (let primitive of this.composedObjects[object].getChildrenPrimitive()) {
-        this.composedObjects[object].getAppearance().apply();
+        if (this.composedObjects[object].getTexture()[0] != "inherit") {
+            this.composedObjects[object].getAppearance().apply();
+        }
+
         this.objects[primitive].display();
     }
     for (let composedObject of this.composedObjects[object].getChildrenComponent()) {
@@ -706,6 +714,9 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
         }
         //console.log("Component:");
         //console.log(composedObject);
+        if (this.composedObjects[composedObject].getTexture()[0] != "inherit") {
+            this.composedObjects[composedObject].getAppearance().apply();
+        }
         this.displayComposedObjects(composedObject);
         this.scene.popMatrix();
     }
