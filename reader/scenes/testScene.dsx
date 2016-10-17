@@ -44,6 +44,8 @@
     <textures>
 
         <texture id="metal" file="./scenes/img/metal.jpg" length_s="1.0" length_t="1.0"/>
+        <texture id="tap" file="./scenes/img/tap.png" length_s="1.0" length_t="1.0"/>
+        <texture id="track" file="./scenes/img/track.png" length_s="1.0" length_t="1.0"/>
 
     </textures>
 
@@ -200,7 +202,7 @@
               <material id="metal"/>
           </materials>
 
-          <texture id="metal"/>
+          <texture id="track"/>
 
           <children>
                 <primitiveref id="track"/>
@@ -239,7 +241,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="tap"/>
 
             <children>
                 <primitiveref id="planeBody"/>
@@ -261,7 +263,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <componentref id="frontWheel"/>
@@ -286,7 +288,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="frontWheel"/>
@@ -305,7 +307,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="frontWheel2"/>
@@ -325,7 +327,7 @@
               <material id="metal"/>
           </materials>
 
-          <texture id="1"/>
+          <texture id="metal"/>
 
           <children>
               <primitiveref id="leftWheel"/>
@@ -344,7 +346,7 @@
               <material id="metal"/>
           </materials>
 
-          <texture id="1"/>
+          <texture id="metal"/>
 
           <children>
               <primitiveref id="leftWheel2"/>
@@ -364,7 +366,7 @@
               <material id="metal"/>
           </materials>
 
-          <texture id="1"/>
+          <texture id="metal"/>
 
           <children>
               <primitiveref id="rightWheel"/>
@@ -383,7 +385,7 @@
               <material id="metal"/>
           </materials>
 
-          <texture id="1"/>
+          <texture id="metal"/>
 
           <children>
               <primitiveref id="rightWheel2"/>
@@ -403,7 +405,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <componentref id="backCone"/>
@@ -425,7 +427,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="back"/>
@@ -444,7 +446,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="backTopWinglet"/>
@@ -465,7 +467,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="backRightWinglet"/>
@@ -486,7 +488,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="backLeftWinglet"/>
@@ -523,7 +525,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <componentref id="wing1"/>
@@ -542,7 +544,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="tap"/>
 
             <children>
                 <componentref id="wingbody1"/>
@@ -561,7 +563,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <componentref id="wingbody2"/>
@@ -581,7 +583,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="wing1"/>
@@ -600,7 +602,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="wing2"/>
@@ -620,7 +622,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="winglet1"/>
@@ -641,7 +643,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="winglet2"/>
@@ -659,7 +661,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <componentref id="motor1"/>
@@ -678,7 +680,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="motor1"/>
@@ -695,7 +697,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="1"/>
+            <texture id="metal"/>
 
             <children>
                 <primitiveref id="motor2"/>
