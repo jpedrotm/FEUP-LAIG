@@ -54,6 +54,7 @@ serialInclude(['../lib/CGF.js',
     'primitives/sphere.js',
     'primitives/torus.js',
     'MyInterface.js',
+    'utils.js',
 
     main = function() {
         // Standard application, scene and interface setup

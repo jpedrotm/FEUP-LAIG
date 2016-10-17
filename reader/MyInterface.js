@@ -19,6 +19,9 @@ MyInterface.prototype.init = function(application) {
 
 	this.gui = new dat.GUI();
 
+	this.lights = this.gui.addFolder("Lights");
+  this.lights.open();
+
   return true;
 };
 
@@ -36,4 +39,10 @@ MyInterface.prototype.processKeyDown = function(event) {
 			break;
 
 	};
+};
+
+MyInterface.prototype.addLight = function(i, id) {
+
+	this.lights.add(this.scene.infoLights, i, this.scene.infoLights[i]).name(id);
+
 };
