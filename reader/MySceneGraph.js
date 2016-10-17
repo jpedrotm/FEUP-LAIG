@@ -646,7 +646,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     this.textureFlag = 1;
                     let texture = attribute;
                     if ((texture.attributes.getNamedItem("id").value) == "inherit") {
-                        this.componentTexture = [id, id, 0, 0];
+                        this.componentTexture = [id, "inherit", 1, 1];
                     } else {
                         this.componentTexture = this.textures[(texture.attributes.getNamedItem("id").value)];
                     }

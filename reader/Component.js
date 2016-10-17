@@ -11,7 +11,10 @@ function Component(scene, transformations, materials, texture, childrenComponent
     this.childrenComponent = childrenComponent;
     this.childrenPrimitive = childrenPrimitive;
     this.appearance = new CGFappearance(this.scene);
-    this.appearance.loadTexture(this.texture[1]);
+    if (this.texture[1] == "inherit")
+        this.appearance.loadTexture("");
+    else
+        this.appearance.loadTexture(this.texture[1]);
 
 };
 
