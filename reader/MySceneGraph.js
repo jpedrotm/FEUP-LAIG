@@ -564,9 +564,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                 case 'transformation':
                     this.transformationsFlag = 1;
                     let transformations = attribute;
-
-
-
+                    let transformationrefFlag = 0;
                     for (let transformation of transformations.children) {
                         var transformationMatrix = mat4.create();
                         let type = transformation.nodeName;
@@ -575,60 +573,69 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                                 console.log("transformationref:");
                                 console.log(this.transformations[transformation.attributes.getNamedItem("id").value]);
                                 this.transformationsArray.push(this.transformations[transformation.attributes.getNamedItem("id").value]);
+                                transformationrefFlag = 1;
                                 break;
                             case 'translate':
-                                var tx = transformation.attributes.getNamedItem("x").value;
-                                var ty = transformation.attributes.getNamedItem("y").value;
-                                var tz = transformation.attributes.getNamedItem("z").value;
+                                if (!transformationrefFlag) {
+                                    var tx = transformation.attributes.getNamedItem("x").value;
+                                    var ty = transformation.attributes.getNamedItem("y").value;
+                                    var tz = transformation.attributes.getNamedItem("z").value;
 
-                                var translateArray = [tx, ty, tz];
+                                    var translateArray = [tx, ty, tz];
 
-                                mat4.translate(transformationMatrix, transformationMatrix, translateArray);
+                                    mat4.translate(transformationMatrix, transformationMatrix, translateArray);
 
 
-                                console.log("transformationMatrix:");
-                                console.log(transformationMatrix);
-                                this.transformationsArray.push(transformationMatrix);
+                                    console.log("transformationMatrix:");
+                                    console.log(transformationMatrix);
+                                    this.transformationsArray.push(transformationMatrix);
+                                }
+
                                 break;
                             case 'rotate':
+                                if (!transformationrefFlag) {
+                                    var axis = transformation.attributes.getNamedItem("axis").value;
+                                    var angle = transformation.attributes.getNamedItem("angle").value;
 
-                                var axis = transformation.attributes.getNamedItem("axis").value;
-                                var angle = transformation.attributes.getNamedItem("angle").value;
+                                    var rotationArray;
 
-                                var rotationArray;
+                                    switch (axis) {
+                                        case 'x':
+                                            rotationArray = [1, 0, 0];
+                                            break;
+                                        case 'y':
+                                            rotationArray = [0, 1, 0];
+                                            break;
+                                        case 'z':
+                                            rotationArray = [0, 0, 1];
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    angle = angle * 2 * Math.PI / 360;
 
-                                switch (axis) {
-                                    case 'x':
-                                        rotationArray = [1, 0, 0];
-                                        break;
-                                    case 'y':
-                                        rotationArray = [0, 1, 0];
-                                        break;
-                                    case 'z':
-                                        rotationArray = [0, 0, 1];
-                                        break;
-                                    default:
-                                        break;
+                                    mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
+
+                                    this.transformationsArray.push(transformationMatrix);
                                 }
-                                angle = angle * 2 * Math.PI / 360;
 
-                                mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
-
-                                this.transformationsArray.push(transformationMatrix);
                                 break;
                             case 'scale':
-                                var sx = transformation.attributes.getNamedItem("x").value;
-                                var sy = transformation.attributes.getNamedItem("y").value;
-                                var sz = transformation.attributes.getNamedItem("z").value;
+                                if (!transformationrefFlag) {
+                                    var sx = transformation.attributes.getNamedItem("x").value;
+                                    var sy = transformation.attributes.getNamedItem("y").value;
+                                    var sz = transformation.attributes.getNamedItem("z").value;
 
-                                var scaleArray = [sx, sy, sz];
+                                    var scaleArray = [sx, sy, sz];
 
-                                mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
+                                    mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
 
-                                console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
+                                    console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
 
 
-                                this.transformationsArray.push(transformationMatrix);
+                                    this.transformationsArray.push(transformationMatrix);
+                                }
+
                                 break;
                         }
                     }

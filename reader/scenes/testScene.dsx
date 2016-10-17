@@ -62,6 +62,7 @@
     <transformations>
         <transformation id="wings">
             <rotate axis="y" angle="-90"/>
+            <translate x="0" y="0" z="20"/>
         </transformation>
 
     </transformations>
@@ -516,7 +517,6 @@
 
             <transformation>
                 <transformationref id="wings"/>
-                <translate x="20" y="0" z="0"/>
             </transformation>
 
             <materials>
