@@ -350,7 +350,7 @@ MySceneGraph.prototype.parserToTextures = function(rootElement) {
         var length_s = texts[i].attributes.getNamedItem("length_s").value;
         var length_t = texts[i].attributes.getNamedItem("length_t").value;
 
-        this.textures[id] = new CGFtexture(this.scene, file);
+        this.textures[id] = [id, file, length_s, length_t];
 
     }
 
@@ -711,7 +711,12 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     console.log("TEXTURES");
                     this.textureFlag = 1;
                     let texture = attribute;
-                    this.componentTexture = (texture.attributes.getNamedItem("id").value);
+                    if ((texture.attributes.getNamedItem("id").value) == "inherit") {
+                        this.componentTexture = [id, "inherit", 1, 1];
+                    } else {
+                        this.componentTexture = this.textures[(texture.attributes.getNamedItem("id").value)];
+                    }
+
                     break;
                 case 'children':
 
@@ -740,14 +745,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                 if (this.textureFlag) {
                     if (this.childrenFlag) {
                         console.log("read all components");
-                        this.composedObjects[id] = [
-                            this.transformationsArray,
-                            this.materialsArray,
-                            this.componentTexture,
-                            this.componentChildren,
-                            this.primitiveChildren
-                        ];
-
+                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren);
                     } else {
                         console.log("No children objects defined");
                     }
@@ -766,20 +764,25 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 }
 
 MySceneGraph.prototype.displayComposedObjects = function(object) {
-    for (let primitive of this.composedObjects[object][4]) {
-        //console.log("Primitiva:");
-        //console.log(primitive);
+    for (let primitive of this.composedObjects[object].getChildrenPrimitive()) {
+        if (this.composedObjects[object].getTexture()[0] != "inherit") {
+            this.composedObjects[object].getAppearance().apply();
+        }
+
         this.objects[primitive].display();
     }
-    for (let composedObject of this.composedObjects[object][3]) {
+    for (let composedObject of this.composedObjects[object].getChildrenComponent()) {
         this.scene.pushMatrix();
-        if (this.composedObjects[composedObject][0].length != 0) {
-            for (transformation of this.composedObjects[composedObject][0]) {
+        if (this.composedObjects[composedObject].getTransformations().length != 0) {
+            for (transformation of this.composedObjects[composedObject].getTransformations()) {
                 this.scene.multMatrix(transformation);
             }
         }
         //console.log("Component:");
         //console.log(composedObject);
+        if (this.composedObjects[composedObject].getTexture()[0] != "inherit") {
+            this.composedObjects[composedObject].getAppearance().apply();
+        }
         this.displayComposedObjects(composedObject);
         this.scene.popMatrix();
     }
@@ -793,8 +796,8 @@ MySceneGraph.prototype.display = function() {
     } //caso exista um objecto root, desenha toda a cena percorrendo esse root em profundidade
     else {
         this.scene.pushMatrix();
-        if (this.composedObjects[this.root][0].length != 0) {
-            for (transformation of this.composedObjects[this.root][0]) {
+        if (this.composedObjects[this.root].getTransformations().length != 0) {
+            for (transformation of this.composedObjects[this.root].getTransformations()) {
                 this.scene.multMatrix(transformation);
             }
         }

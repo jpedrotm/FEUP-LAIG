@@ -54,6 +54,7 @@ serialInclude(['../lib/CGF.js',
     'primitives/sphere.js',
     'primitives/torus.js',
     'MyInterface.js',
+    'Component.js',
     'utils.js',
 
     main = function() {

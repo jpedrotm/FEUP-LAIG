@@ -20,9 +20,8 @@ XMLscene.prototype.init = function(application) {
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
-
+    this.enableTextures(true);
     this.infoLights=[];
-
     this.axis = new CGFaxis(this);
 };
 

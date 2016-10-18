@@ -37,6 +37,10 @@ noBasesCylinder.prototype.initBuffers = function() {
     this.normals = [];
     this.indices = [];
     this.texCoords = [];
+    var patchLengthx = 1 / this.slices;
+    var patchLengthy = 1 / this.stacks;
+    var xCoord = 0;
+    var yCoord = 0;
 
 
     for (var q = 0; q < this.stacks + 1; q++) {
@@ -47,9 +51,11 @@ noBasesCylinder.prototype.initBuffers = function() {
         for (var i = 0; i < sides; i++) {
             this.vertices.push(inc * Math.cos(i * n), inc * Math.sin(i * n), q * this.deltaHeight);
             this.normals.push(Math.cos(i * n), Math.sin(i * n), 0);
-            this.texCoords.push(0.5 * i / sides, 0.5 * i / sides, 0);
-            this.texCoords.push(0.5 * i / sides, 0.5 * i / sides, z);
+            this.texCoords.push(xCoord, yCoord);
+            xCoord += patchLengthx;
         }
+        xCoord = 0;
+        yCoord += patchLengthy;
 
     }
 
