@@ -1,4 +1,4 @@
-<!-- Os comentarios devem ter espacos no inicio e no fim, a -->
+00<!-- Os comentarios devem ter espacos no inicio e no fim, a -->
 <!-- separar dos hifens -->
 <!-- Nao devem ser usados caracteres especiais (p.ex. acentos) -->
 <!-- Todas as tags e atributos sao obrigatorios, exceto onde for -->
@@ -148,7 +148,7 @@
                 <!-- deve conter uma referencia a uma das "transformation" -->
                 <!-- declaradas anteriormente -->
                 <transformationref id="ss" />
-                
+
                 <!-- ou, ALTERNATIVAMENTE, transformacoes explicitas, -->
                 <!-- usando zero ou mais instrucoes como as seguintes,  -->
                 <!-- seguindo as mesmas regras que no bloco transformations-->
