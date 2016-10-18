@@ -140,6 +140,9 @@
         <primitive id="leftWheel2">
             <torus inner="10" outer="20" slices="50" loops="50" />
         </primitive>
+        <primitive id="warningTriangle">
+            <triangle x1="0" y1="0" z1="0" x2="2" y2="0" z2="0" x3="1" y3="2" z3="0" />
+        </primitive>
 
 
     </primitives>
@@ -160,6 +163,7 @@
           <children>
               <componentref id="plane"/>
               <componentref id="track"/>
+
           </children>
 
       </component>
@@ -178,14 +182,37 @@
 
           <children>
                 <componentref id="trackground"/>
-                <componentref id="tracksignal"/>
+                <componentref id="warningSignals"/>
+          </children>
+
+      </component>
+      <component id="warningSignals">
+
+          <transformation>
+            <translate x="-50" y="0" z="0"/>
+            <scale x="2" y="2" z="2" />
+            <rotate axis="z" angle="90"/>
+            <rotate axis="x" angle="90"/>
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="yellow"/>
+
+          <children>
+                <componentref id="tracksignal1"/>
+                <componentref id="tracksignal2"/>
+                <componentref id="tracksignal3"/>
           </children>
 
       </component>
 
-      <component id="tracksignal">
+      <component id="tracksignal1">
 
           <transformation>
+            <translate x="0" y="10" z="0"/>
             <scale x="1" y="1" z="1" />
           </transformation>
 
@@ -193,10 +220,48 @@
               <material id="metal"/>
           </materials>
 
-          <texture id="metal"/>
+          <texture id="inherit"/>
 
           <children>
-              <primitiveref id="signal"/>
+              <primitiveref id="warningTriangle"/>
+          </children>
+
+      </component>
+
+      <component id="tracksignal2">
+
+          <transformation>
+            <translate x="0" y="40" z="0"/>
+            <scale x="1" y="1" z="1" />
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="inherit"/>
+
+          <children>
+              <primitiveref id="warningTriangle"/>
+          </children>
+
+      </component>
+
+      <component id="tracksignal3">
+
+          <transformation>
+            <translate x="0" y="70" z="0"/>
+            <scale x="1" y="1" z="1" />
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="inherit"/>
+
+          <children>
+              <primitiveref id="warningTriangle"/>
           </children>
 
       </component>
@@ -713,6 +778,7 @@
             </children>
 
         </component>
+
 
     </components>
 
