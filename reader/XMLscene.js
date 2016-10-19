@@ -124,7 +124,6 @@ XMLscene.prototype.updateLights = function () {
 
 };
 
-
 XMLscene.prototype.initCameras = function() {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(150, 150, 150), vec3.fromValues(0, 0, 0));
 };
@@ -144,28 +143,37 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.setGlobalAmbientLight(this.graph.ambient.r, this.graph.ambient.g, this.graph.ambient.b, this.graph.ambient.a);
     this.lights[0].setVisible(true);
     this.lights[0].enable();
-
+    this.graphViews();
     this.graphLights();
 };
 
-XMLscene.prototype.updateView = function() {
+XMLscene.prototype.graphViews = function() {
 
-    console.log("VIEW: " + this.graph.viewDefault + ", ENTROU: " + this.graph.perspectives.length);
-    this.camera = new CGFCamera(0.4, 0.1, 500, vec3.fromValues(15, 0, 0), vec3.fromValues(0, 0, 0));
+    var tempIndice=this.graph.viewsIndice;
+
+    this.camera=this.graph.perspectives[tempIndice].camera;
     this.interface.setActiveCamera(this.camera);
 
-    /*var length=this.graph.perspectives.length;
-  var tempViewDefault=this.graph.viewDefault;
+};
 
-  if(tempViewDefault>=length){
-    this.graph.viewDefault=1;
+XMLscene.prototype.switchView=function(){
+
+  var tempIndice=this.graph.viewsIndice;
+  var numCameras=this.graph.perspectives.length;
+
+  if(tempIndice==numCameras-1)
+  {
+    this.graph.viewsIndice=0;
   }
-else if(tempViewDefault<1){
-  this.graph.viewDefault=1;
-}
-else{
-  this.graph.viewDefault=this.graph.viewDefault+1;
-}*/
+  else
+  {
+    this.graph.viewsIndice++;
+  }
+
+  tempIndice=this.graph.viewsIndice;
+
+  this.camera=this.graph.perspectives[tempIndice].camera;
+  this.interface.setActiveCamera(this.camera);
 
 };
 

@@ -38,4 +38,11 @@ class Spot{
     this.specular=specular;
     this.exponent=exponent;
   }
-}
+};
+
+class GraphView{
+  constructor(id,camera){
+    this.id=id;
+    this.camera=camera;
+  }
+};

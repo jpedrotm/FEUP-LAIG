@@ -32,10 +32,10 @@ MyInterface.prototype.processKeyDown = function(event) {
 	switch (event.keyCode)
 	{
     case (86):
-      this.scene.updateView();
+      this.scene.switchView();
       break;
 		case (118):
-	    this.scene.updateView();
+	    this.scene.switchView();
 			break;
 
 	};

@@ -11,7 +11,7 @@ function MySceneGraph(filename, scene) {
     this.root;
     this.axis_length;
     //Parser das views
-    this.viewDefault;
+    this.viewsIndice=0;
     this.perspectives = [];
 
     //Parser das luzes
@@ -105,7 +105,7 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
         return "Either zero or more than one 'view' element found.";
     }
 
-    this.viewDefault = views[0].attributes.getNamedItem("default").value;
+    var viewDefault = views[0].attributes.getNamedItem("default").value;
 
 
     var perspective = views[0].getElementsByTagName('perspective');
@@ -121,18 +121,36 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
 
         //Obter os valores da perspective
         var id = perspective[i].attributes.getNamedItem("id").value;
-        var near = perspective[i].attributes.getNamedItem("near").value;
-        var far = perspective[i].attributes.getNamedItem("far").value;
-        var angle = perspective[i].attributes.getNamedItem("angle").value;
+        var near = perspective[i].attributes.getNamedItem("near").value*1.0;
+        var far = perspective[i].attributes.getNamedItem("far").value*1.0;
+        var angle = perspective[i].attributes.getNamedItem("angle").value*1.0;
 
         //Obter o que está definido dentro de cada perspective (from e to) e obter os valores de estes
         var from = perspective[i].getElementsByTagName('from');
+        var xf=from[0].attributes.getNamedItem("x").value*1.0;
+        var yf=from[0].attributes.getNamedItem("y").value*1.0;
+        var zf=from[0].attributes.getNamedItem("z").value*1.0;
 
         var to = perspective[i].getElementsByTagName('to');
+        var xt=to[0].attributes.getNamedItem("x").value*1.0;
+        var yt=to[0].attributes.getNamedItem("y").value*1.0;
+        var zt=to[0].attributes.getNamedItem("z").value*1.0;
 
-        this.perspectives.push(new CGFcamera(angle, near, far,
-            vec3.fromValues(from.x, from.y, from.z),
-            vec3.fromValues(to.x, to.y, to.z)));
+        console.log(id+","+near+","+far+","+angle+","+xf+","+yf+","+zf+","+xt+","+yt+","+zt);
+
+        var tempCamera=new CGFcamera(angle, near, far,
+            vec3.fromValues(xf,yf,zf),
+            vec3.fromValues(xt,yt,zt));
+
+        var tempView=new GraphView(id,tempCamera);
+
+        this.perspectives.push(tempView);
+
+        if(id === viewDefault)
+        {
+          console.log("ENTROU"+i);
+          this.viewsIndice=i;
+        }
 
     }
 
@@ -322,7 +340,6 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
     console.log("SIIIIIIII: "+this.spotLights.length);
 
 };
-
 
 MySceneGraph.prototype.parserToTextures = function(rootElement) {
 

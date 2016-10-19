@@ -3,14 +3,14 @@
 
     <views default="1">
 
-        <perspective id="1" near="10" far="500" angle="0">
-            <from x="10" y="10" z="10"/>
-            <to x="15" y="15" z="15"/>
+        <perspective id="1" near="0.1" far="500" angle="0.4">
+            <from x="30" y="30" z="30"/>
+            <to x="0" y="0" z="0"/>
         </perspective>
 
-        <perspective id="view2" near="0.1" far="500" angle="0">
-            <from x="150" y="150" z="150"/>
-            <to x="0" y="1" z="0"/>
+        <perspective id="2" near="0.1" far="500" angle="0.4">
+            <from x="50" y="4" z="4"/>
+            <to x="0" y="4" z="4"/>
         </perspective>
 
     </views>
