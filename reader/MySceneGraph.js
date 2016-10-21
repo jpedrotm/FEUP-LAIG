@@ -15,8 +15,8 @@ function MySceneGraph(filename, scene) {
     this.perspectives = [];
 
     //Parser das luzes
-    this.omniLights=[];
-    this.spotLights=[];
+    this.omniLights = [];
+    this.spotLights = [];
 
     //Parser das textures
     this.textures = {};
@@ -36,6 +36,7 @@ function MySceneGraph(filename, scene) {
     //components
     this.composedObjects = {};
 
+    this.fatherMaterials;
     //--------------------------------------------------------------------------------------------------------
 
     /*
@@ -181,7 +182,7 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
     var ba = ambientTemp[0].attributes.getNamedItem("b").value;
     var aa = ambientTemp[0].attributes.getNamedItem("a").value;
 
-    this.ambient=new RGBA(ra,ga,ba,aa);
+    this.ambient = new RGBA(ra, ga, ba, aa);
 
     var backgroundTemp = illumination[0].getElementsByTagName("background");
     var rb = backgroundTemp[0].attributes.getNamedItem("r").value;
@@ -189,7 +190,7 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
     var bb = backgroundTemp[0].attributes.getNamedItem("b").value;
     var ab = backgroundTemp[0].attributes.getNamedItem("a").value;
 
-    this.background=new RGBA(rb,gb,bb,ab);
+    this.background = new RGBA(rb, gb, bb, ab);
 
 
 };
@@ -230,12 +231,10 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         var idOmni = omnis[i].attributes.getNamedItem("id").value;
         var enabledOmni = omnis[i].attributes.getNamedItem("enabled").value;
 
-        if(enabledOmni==="1")
-        {
-          enabledOmni=true;
-        }
-        else {
-          enabledOmni=false;
+        if (enabledOmni === "1") {
+            enabledOmni = true;
+        } else {
+            enabledOmni = false;
         }
 
         location = omnis[i].getElementsByTagName("location");
@@ -244,7 +243,7 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         lz = location[0].attributes.getNamedItem("z").value;
         lw = location[0].attributes.getNamedItem("w").value;
 
-        tempLocation=new Point(lx,ly,lz,lw);
+        tempLocation = new Point(lx, ly, lz, lw);
 
         ambient = omnis[i].getElementsByTagName("ambient");
         ra = ambient[0].attributes.getNamedItem("r").value;
@@ -252,7 +251,7 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         ba = ambient[0].attributes.getNamedItem("b").value;
         aa = ambient[0].attributes.getNamedItem("a").value;
 
-        tempAmbient=new RGBA(ra,ga,ba,aa);
+        tempAmbient = new RGBA(ra, ga, ba, aa);
 
         diffuse = omnis[i].getElementsByTagName("diffuse");
         rd = diffuse[0].attributes.getNamedItem("r").value;
@@ -260,7 +259,7 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         bd = diffuse[0].attributes.getNamedItem("b").value;
         ad = diffuse[0].attributes.getNamedItem("a").value;
 
-        tempDiffuse=new RGBA(rd,gd,bd,ad);
+        tempDiffuse = new RGBA(rd, gd, bd, ad);
 
         specular = omnis[i].getElementsByTagName("specular");
         rs = specular[0].attributes.getNamedItem("r").value;
@@ -268,9 +267,9 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         bs = specular[0].attributes.getNamedItem("b").value;
         as = specular[0].attributes.getNamedItem("a").value;
 
-        tempSpecular=new RGBA(rs,gs,bs,as);
+        tempSpecular = new RGBA(rs, gs, bs, as);
 
-        this.omniLights.push(new Omni(idOmni,tempLocation,tempAmbient,tempDiffuse,tempSpecular,enabledOmni));
+        this.omniLights.push(new Omni(idOmni, tempLocation, tempAmbient, tempDiffuse, tempSpecular, enabledOmni));
 
     }
 
@@ -281,31 +280,30 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         var idSpot = spots[i].attributes.getNamedItem("id").value;
         var enabledSpot = spots[i].attributes.getNamedItem("enabled").value;
 
-        if(enabledSpot==="1"){
-          enabledSpot=true;
-        }
-        else {
-          enabledSpot=false;
+        if (enabledSpot === "1") {
+            enabledSpot = true;
+        } else {
+            enabledSpot = false;
         }
 
         var angleSpot = spots[i].attributes.getNamedItem("angle").value;
         var exponentSpot = spots[i].attributes.getNamedItem("exponent").value;
 
-        console.log("ENABLED: "+enabledSpot);
+        console.log("ENABLED: " + enabledSpot);
 
         var target = spots[i].getElementsByTagName("target");
         var tx = target[0].attributes.getNamedItem("x").value;
         var ty = target[0].attributes.getNamedItem("y").value;
         var tz = target[0].attributes.getNamedItem("z").value;
 
-        tempTarget=new Point(tx,ty,tz,null);
+        tempTarget = new Point(tx, ty, tz, null);
 
         location = spots[i].getElementsByTagName("location");
         lx = location[0].attributes.getNamedItem("x").value;
         ly = location[0].attributes.getNamedItem("y").value;
         lz = location[0].attributes.getNamedItem("z").value;
 
-        tempLocation=new Point(lx,ly,lz,null);
+        tempLocation = new Point(lx, ly, lz, null);
 
         ambient = spots[i].getElementsByTagName("ambient");
         ra = ambient[0].attributes.getNamedItem("r").value;
@@ -313,7 +311,7 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         ba = ambient[0].attributes.getNamedItem("b").value;
         aa = ambient[0].attributes.getNamedItem("a").value;
 
-        tempAmbient=new RGBA(ra,ga,ba,aa);
+        tempAmbient = new RGBA(ra, ga, ba, aa);
 
         diffuse = spots[i].getElementsByTagName("diffuse");
         rd = diffuse[0].attributes.getNamedItem("r").value;
@@ -321,9 +319,9 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         bd = diffuse[0].attributes.getNamedItem("b").value;
         ad = diffuse[0].attributes.getNamedItem("a").value;
 
-        tempDiffuse=new RGBA(rd,gd,bd,ad);
+        tempDiffuse = new RGBA(rd, gd, bd, ad);
 
-        console.log("DiFFUSE: "+rd+gd+tempDiffuse.b+tempDiffuse.a);
+        console.log("DiFFUSE: " + rd + gd + tempDiffuse.b + tempDiffuse.a);
 
         specular = spots[i].getElementsByTagName("specular");
         rs = specular[0].attributes.getNamedItem("r").value;
@@ -331,13 +329,13 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         bs = specular[0].attributes.getNamedItem("b").value;
         as = specular[0].attributes.getNamedItem("a").value;
 
-        tempSpecular=new RGBA(rs,gs,bs,as);
+        tempSpecular = new RGBA(rs, gs, bs, as);
 
-        this.spotLights.push(new Spot(idSpot,enabledSpot,exponentSpot,angleSpot,tempTarget,tempLocation,tempAmbient,tempDiffuse,tempSpecular));
+        this.spotLights.push(new Spot(idSpot, enabledSpot, exponentSpot, angleSpot, tempTarget, tempLocation, tempAmbient, tempDiffuse, tempSpecular));
 
     }
 
-    console.log("SIIIIIIII: "+this.spotLights.length);
+    console.log("SIIIIIIII: " + this.spotLights.length);
 
 };
 
@@ -422,16 +420,16 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
             var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
 
-            var tempMaterial = new CGFappearance(this);
-            tempMaterial.setEmission(re, ge, be, ae);
-            tempMaterial.setAmbient(ra, ga, ba, aa);
-            tempMaterial.setDiffuse(rd, gd, bd, ad);
-            tempMaterial.setSpecular(rs, gs, bs, as);
-            tempMaterial.setShininess(shininess);
-
             console.log("MATERIAL GRAVADO");
 
-            this.materials[id] = tempMaterial;
+            this.materials[id] = [
+                [re, ge, be, ae],
+                [ra, ga, ba, aa],
+                [rd, gd, bd, ad],
+                [rs, gs, bs, as],
+                [shininess],
+                [id]
+            ];
 
         }
 
@@ -721,7 +719,19 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     this.materialsFlag = 1;
                     let materials = attribute;
                     for (let material of materials.children) {
-                        this.materialsArray.push(material.attributes.getNamedItem("id").value);
+                        if ((material.attributes.getNamedItem("id").value) == "inherit") {
+                            this.materialsArray.push([
+                                [0, 0, 0, 0],
+                                [0, 0, 0, 0],
+                                [0, 0, 0, 0],
+                                [0, 0, 0, 0],
+                                [0, 0, 0, 0],
+                                "inherit"
+                            ]);
+                        } else {
+                            this.materialsArray.push(this.materials[material.attributes.getNamedItem("id").value]);
+                        }
+
                     }
                     break;
                 case 'texture':
@@ -782,6 +792,9 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 
 MySceneGraph.prototype.displayComposedObjects = function(object) {
     for (let primitive of this.composedObjects[object].getChildrenPrimitive()) {
+        if (this.composedObjects[object].getMaterials()[5] != "inherit") {
+            this.composedObjects[object].setMaterials(this.composedObjects[object].getMaterials());
+        }
         if (this.composedObjects[object].getTexture()[0] != "inherit") {
             this.composedObjects[object].getAppearance().apply();
         }
@@ -797,6 +810,12 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
         }
         //console.log("Component:");
         //console.log(composedObject);
+        if (this.composedObjects[composedObject].getMaterials()[0][5] != "inherit") {
+            this.fatherMaterials = this.composedObjects[composedObject].getMaterials();
+            this.composedObjects[composedObject].setMaterials(this.composedObjects[composedObject].getMaterials());
+        } else {
+            this.composedObjects[composedObject].setMaterials(this.fatherMaterials);
+        }
         if (this.composedObjects[composedObject].getTexture()[0] != "inherit") {
             this.composedObjects[composedObject].getAppearance().apply();
         }
