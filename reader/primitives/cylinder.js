@@ -11,13 +11,14 @@ function Cylinder(scene, base, top, height, slices, stacks) {
     //if stacks not define, set to 5
     stacks = typeof stacks !== 'undefined' ? stacks : 5;
 
-    this.slices = parseInt(slices);
-    this.stacks = parseInt(stacks);
-    this.base = parseInt(base);
-    this.top = parseInt(top);
-    this.height = parseInt(height);
-    this.deltaHeight = this.height / this.stacks;
-    this.delta = (this.top - this.base) / this.stacks;
+    this.base=base;
+    this.top=top;
+    this.height=height;
+
+    this.noBasesCylinder=new noBasesCylinder(scene, base, top, height, slices, stacks);
+
+    this.baseCircle= new Circle(scene,slices,base);
+    this.topCirlce=new Circle(scene,slices,top);
 
     this.initBuffers();
 };
@@ -25,59 +26,25 @@ function Cylinder(scene, base, top, height, slices, stacks) {
 Cylinder.prototype = Object.create(CGFobject.prototype);
 Cylinder.prototype.constructor = Cylinder;
 
-Cylinder.prototype.initBuffers = function() {
+Cylinder.prototype.display=function(){
 
-    //TODO: add top and bottom face
+  //Desenhar o cilindro sem bases
+  this.scene.pushMatrix();
+  this.noBasesCylinder.display();
+  this.scene.popMatrix();
 
-    //Sets the number os sides;
-    var sides = this.slices;
-    var stacks = this.stacks;
+  //Desenhar a base
+  this.scene.pushMatrix();
+  this.scene.scale(this.base,this.base,1);
+  this.scene.rotate(Math.PI,0,1,0);
+  this.baseCircle.display();
+  this.scene.popMatrix();
 
-    var n = 2 * Math.PI / sides;
+  //Desenhar o topo
+  this.scene.pushMatrix();
+  this.scene.scale(this.top,this.top,1);
+  this.scene.translate(0,0,this.height);
+  this.topCirlce.display();
+  this.scene.popMatrix();
 
-    this.vertices = [];
-    this.normals = [];
-    this.indices = [];
-    this.texCoords = [];
-
-    for (var q = 0; q < this.stacks + 1; q++) {
-
-        var z = (q * this.deltaHeight / this.stacks);
-        var inc = ((q + 1) * this.delta) + this.base;
-
-        for (var i = 0; i < sides; i++) {
-            this.vertices.push(inc * Math.cos(i * n), inc * Math.sin(i * n), q * this.deltaHeight);
-            this.normals.push(Math.cos(i * n), Math.sin(i * n), 0);
-            this.texCoords.push(0.5 * i / sides, 0.5 * i / sides, 0);
-            this.texCoords.push(0.5 * i / sides, 0.5 * i / sides, z);
-        }
-
-    }
-
-
-    for (var q = 0; q < this.stacks; q++) {
-        for (var i = 0; i < sides; i++) {
-            this.indices.push(this.slices * q + i, this.slices * q + i + 1, this.slices * (q + 1) + i);
-            this.indices.push(this.slices * q + i + 1, this.slices * q + i, this.slices * (q + 1) + i);
-            if (i != (this.slices - 1)) {
-                this.indices.push(this.slices * (q + 1) + i + 1, this.slices * (q + 1) + i, this.slices * q + i + 1);
-                this.indices.push(this.slices * (q + 1) + i, this.slices * (q + 1) + i + 1, this.slices * q + i + 1);
-            } else {
-                this.indices.push(this.slices * q, this.slices * q + i + 1, this.slices * q + i);
-                this.indices.push(this.slices * q + i + 1, this.slices * q, this.slices * q + i);
-            }
-
-
-        }
-
-    }
-
-
-
-
-
-
-    this.primitiveType = this.scene.gl.TRIANGLES;
-
-    this.initGLBuffers();
 };
