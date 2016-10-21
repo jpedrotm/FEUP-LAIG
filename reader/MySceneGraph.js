@@ -8,36 +8,20 @@ function MySceneGraph(filename, scene) {
     this.reader = new CGFXMLreader();
 
     //Estruturas de dados necessárias para o parser-----------------------------------------------------------
-    this.root;
-    this.axis_length;
-    //Parser das views
     this.viewDefault;
     this.perspectives = [];
-
-    //Parser das luzes
-    this.omniLights = [];
-    this.spotLights = [];
-
-    //Parser das textures
-    this.textures = {};
-
-    //Parser dos materials
-    this.materials = {};
-
-    //Parser das transformations
-    this.transformations = {};
+    this.cfgCameras = [];
+    this.textures = [].fill(new Array(3));; //[id][0...1...2] 0-file 1-length_s 2-length_t
+    this.materials = [];
 
     //Parser illumination
     this.background = [];
     this.ambient = [];
 
-    //primitives
     this.objects = {};
-    //components
-    this.composedObjects = {};
 
-    this.fatherMaterials;
     //--------------------------------------------------------------------------------------------------------
+
 
     /*
      * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -71,28 +55,17 @@ MySceneGraph.prototype.onXMLReady = function() {
 
 
 MySceneGraph.prototype.parser = function(rootElement) {
-    var scene;
-    scene = rootElement.getElementsByTagName('scene');
 
-    if (scene == null) {
-        return "Views are missing.";
-    }
-
-    this.root = scene[0].attributes.getNamedItem("root").value;
-    this.axis_length = scene[0].attributes.getNamedItem("axis_length").value;
-
-    this.parserToViews(rootElement); //almost completed
-    this.parserToIllumination(rootElement);
+    this.parserToViews(rootElement); //completed
+    this.parserToIllumination(rootElement); //completed
     this.parserToLights(rootElement); //almost completed
-    this.parserToTextures(rootElement);
-    this.parserToMaterials(rootElement);
-    this.parserToTransformations(rootElement);
-    this.parserToPrimitives(rootElement);
-    this.parserToComponents(rootElement);
+    this.parserToTextures(rootElement); //almost completed
+    this.parserToMaterials(rootElement); //almost completed
+    this.parserToTransformations(rootElement); //almost completed
+    this.parserToPrimitives(rootElement); //almost completed
 
 };
 
-//TODO: Esta a dar erros quando se usa as camaras
 MySceneGraph.prototype.parserToViews = function(rootElement) {
 
     var views;
@@ -106,10 +79,10 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
         return "Either zero or more than one 'view' element found.";
     }
 
-    this.viewDefault = views[0].attributes.getNamedItem("default").value;
+    this.defaultCamera = views[0].attributes.getNamedItem("default").value;
 
 
-    var perspective = views[0].getElementsByTagName('perspective');
+    this.perspectives = views[0].getElementsByTagName('perspective');
 
     if (this.perspectives == null) {
         return "Perspectives are missing.";
@@ -117,29 +90,23 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
 
 
 
-    for (var i = 0; i < perspective.length; i++) {
+    for (var i = 0; i < this.perspectives.length; i++) {
 
 
         //Obter os valores da perspective
-        var id = perspective[i].attributes.getNamedItem("id").value;
-        var near = perspective[i].attributes.getNamedItem("near").value;
-        var far = perspective[i].attributes.getNamedItem("far").value;
-        var angle = perspective[i].attributes.getNamedItem("angle").value;
+        var id = this.perspectives[i].attributes.getNamedItem("id").value;
+        var near = this.perspectives[i].attributes.getNamedItem("near").value;
+        var far = this.perspectives[i].attributes.getNamedItem("far").value;
+        var angle = this.perspectives[i].attributes.getNamedItem("angle").value;
 
         //Obter o que está definido dentro de cada perspective (from e to) e obter os valores de estes
-        var from = perspective[i].getElementsByTagName('from');
+        var from = this.perspectives[i].getElementsByTagName('from');
+        var vectorF = [from[0].attributes.getNamedItem("x").value, from[0].attributes.getNamedItem("y").value, from[0].attributes.getNamedItem("z").value];
 
-        var to = perspective[i].getElementsByTagName('to');
-
-        this.perspectives.push(new CGFcamera(angle, near, far,
-            vec3.fromValues(from.x, from.y, from.z),
-            vec3.fromValues(to.x, to.y, to.z)));
+        var to = this.perspectives[i].getElementsByTagName('to');
+        var vectorT = [to[0].attributes.getNamedItem("x").value, to[0].attributes.getNamedItem("y").value, to[0].attributes.getNamedItem("z").value]
 
     }
-
-    console.log("perspectives: " + this.perspectives.length);
-
-
 };
 
 MySceneGraph.prototype.parserToIllumination = function(rootElement) {
@@ -159,24 +126,21 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
     var local = illumination[0].attributes.getNamedItem("local");
 
     var ambientTemp = illumination[0].getElementsByTagName("ambient");
-    var ra = ambientTemp[0].attributes.getNamedItem("r").value;
-    var ga = ambientTemp[0].attributes.getNamedItem("g").value;
-    var ba = ambientTemp[0].attributes.getNamedItem("b").value;
-    var aa = ambientTemp[0].attributes.getNamedItem("a").value;
-
-    this.ambient = new RGBA(ra, ga, ba, aa);
+    this.ambient['r'] = ambientTemp[0].attributes.getNamedItem("r").value;
+    this.ambient['g'] = ambientTemp[0].attributes.getNamedItem("g").value;
+    this.ambient['b'] = ambientTemp[0].attributes.getNamedItem("b").value;
+    this.ambient['a'] = ambientTemp[0].attributes.getNamedItem("a").value;
 
     var backgroundTemp = illumination[0].getElementsByTagName("background");
-    var rb = backgroundTemp[0].attributes.getNamedItem("r").value;
-    var gb = backgroundTemp[0].attributes.getNamedItem("g").value;
-    var bb = backgroundTemp[0].attributes.getNamedItem("b").value;
-    var ab = backgroundTemp[0].attributes.getNamedItem("a").value;
-
-    this.background = new RGBA(rb, gb, bb, ab);
+    this.background['r'] = backgroundTemp[0].attributes.getNamedItem("r").value;
+    this.background['g'] = backgroundTemp[0].attributes.getNamedItem("g").value;
+    this.background['b'] = backgroundTemp[0].attributes.getNamedItem("b").value;
+    this.background['a'] = backgroundTemp[0].attributes.getNamedItem("a").value;
 
 
 };
 
+//TODO: colocar a guardar
 MySceneGraph.prototype.parserToLights = function(rootElement) {
 
 
@@ -196,11 +160,6 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
     var ambient;
     var diffuse;
     var specular;
-    var tempLocation;
-    var tempAmbient;
-    var tempDiffuse;
-    var tempSpecular;
-    var tempTarget;
     var lx, ly, lz, lw;
     var ra, ga, ba, aa;
     var rd, gd, bd, ad;
@@ -213,19 +172,11 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         var idOmni = omnis[i].attributes.getNamedItem("id").value;
         var enabledOmni = omnis[i].attributes.getNamedItem("enabled").value;
 
-        if (enabledOmni === "1") {
-            enabledOmni = true;
-        } else {
-            enabledOmni = false;
-        }
-
         location = omnis[i].getElementsByTagName("location");
         lx = location[0].attributes.getNamedItem("x").value;
         ly = location[0].attributes.getNamedItem("y").value;
         lz = location[0].attributes.getNamedItem("z").value;
         lw = location[0].attributes.getNamedItem("w").value;
-
-        tempLocation = new Point(lx, ly, lz, lw);
 
         ambient = omnis[i].getElementsByTagName("ambient");
         ra = ambient[0].attributes.getNamedItem("r").value;
@@ -233,7 +184,7 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         ba = ambient[0].attributes.getNamedItem("b").value;
         aa = ambient[0].attributes.getNamedItem("a").value;
 
-        tempAmbient = new RGBA(ra, ga, ba, aa);
+        console.log(ra + "," + ga + "," + ba + "," + aa)
 
         diffuse = omnis[i].getElementsByTagName("diffuse");
         rd = diffuse[0].attributes.getNamedItem("r").value;
@@ -241,17 +192,11 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         bd = diffuse[0].attributes.getNamedItem("b").value;
         ad = diffuse[0].attributes.getNamedItem("a").value;
 
-        tempDiffuse = new RGBA(rd, gd, bd, ad);
-
         specular = omnis[i].getElementsByTagName("specular");
         rs = specular[0].attributes.getNamedItem("r").value;
         gs = specular[0].attributes.getNamedItem("g").value;
         bs = specular[0].attributes.getNamedItem("b").value;
         as = specular[0].attributes.getNamedItem("a").value;
-
-        tempSpecular = new RGBA(rs, gs, bs, as);
-
-        this.omniLights.push(new Omni(idOmni, tempLocation, tempAmbient, tempDiffuse, tempSpecular, enabledOmni));
 
     }
 
@@ -261,39 +206,18 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
 
         var idSpot = spots[i].attributes.getNamedItem("id").value;
         var enabledSpot = spots[i].attributes.getNamedItem("enabled").value;
-
-        if (enabledSpot === "1") {
-            enabledSpot = true;
-        } else {
-            enabledSpot = false;
-        }
-
         var angleSpot = spots[i].attributes.getNamedItem("angle").value;
         var exponentSpot = spots[i].attributes.getNamedItem("exponent").value;
-
-        console.log("ENABLED: " + enabledSpot);
 
         var target = spots[i].getElementsByTagName("target");
         var tx = target[0].attributes.getNamedItem("x").value;
         var ty = target[0].attributes.getNamedItem("y").value;
         var tz = target[0].attributes.getNamedItem("z").value;
 
-        tempTarget = new Point(tx, ty, tz, null);
-
         location = spots[i].getElementsByTagName("location");
         lx = location[0].attributes.getNamedItem("x").value;
         ly = location[0].attributes.getNamedItem("y").value;
         lz = location[0].attributes.getNamedItem("z").value;
-
-        tempLocation = new Point(lx, ly, lz, null);
-
-        ambient = spots[i].getElementsByTagName("ambient");
-        ra = ambient[0].attributes.getNamedItem("r").value;
-        ga = ambient[0].attributes.getNamedItem("g").value;
-        ba = ambient[0].attributes.getNamedItem("b").value;
-        aa = ambient[0].attributes.getNamedItem("a").value;
-
-        tempAmbient = new RGBA(ra, ga, ba, aa);
 
         diffuse = spots[i].getElementsByTagName("diffuse");
         rd = diffuse[0].attributes.getNamedItem("r").value;
@@ -301,27 +225,17 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         bd = diffuse[0].attributes.getNamedItem("b").value;
         ad = diffuse[0].attributes.getNamedItem("a").value;
 
-        tempDiffuse = new RGBA(rd, gd, bd, ad);
-
-        console.log("DiFFUSE: " + rd + gd + tempDiffuse.b + tempDiffuse.a);
-
         specular = spots[i].getElementsByTagName("specular");
         rs = specular[0].attributes.getNamedItem("r").value;
         gs = specular[0].attributes.getNamedItem("g").value;
         bs = specular[0].attributes.getNamedItem("b").value;
         as = specular[0].attributes.getNamedItem("a").value;
 
-        tempSpecular = new RGBA(rs, gs, bs, as);
-
-        this.spotLights.push(new Spot(idSpot, enabledSpot, exponentSpot, angleSpot, tempTarget, tempLocation, tempAmbient, tempDiffuse, tempSpecular));
-
     }
-
-    console.log("SIIIIIIII: " + this.spotLights.length);
 
 };
 
-
+//TODO: colocar a guardar
 MySceneGraph.prototype.parserToTextures = function(rootElement) {
 
 
@@ -348,11 +262,12 @@ MySceneGraph.prototype.parserToTextures = function(rootElement) {
         var length_s = texts[i].attributes.getNamedItem("length_s").value;
         var length_t = texts[i].attributes.getNamedItem("length_t").value;
 
-        this.textures[id] = [id, file, length_s, length_t];
+        console.log(id + "," + file + "," + length_s + "," + length_t + "\n");
 
     }
 
 };
+
 
 MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
@@ -365,6 +280,11 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
     console.log(allMaterials.length);
 
+//TODO está a dar dois materials não sei porque
+    /*if(allMaterials.length!=1){
+      return "Either zero or more than one 'illumination' element found.";
+    }*/
+
     var mats = allMaterials[0].getElementsByTagName('material');
 
     if (mats == null) {
@@ -375,52 +295,40 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
         var id = mats[i].attributes.getNamedItem("id").value;
 
-        if (this.materials[id] == null) {
+        var emission = mats[i].getElementsByTagName("emission");
+        var re = emission[0].attributes.getNamedItem("r").value;
+        var ge = emission[0].attributes.getNamedItem("g").value;
+        var be = emission[0].attributes.getNamedItem("b").value;
+        var ae = emission[0].attributes.getNamedItem("a").value;
 
-            var emission = mats[i].getElementsByTagName("emission");
-            var re = emission[0].attributes.getNamedItem("r").value;
-            var ge = emission[0].attributes.getNamedItem("g").value;
-            var be = emission[0].attributes.getNamedItem("b").value;
-            var ae = emission[0].attributes.getNamedItem("a").value;
+        var ambient = mats[i].getElementsByTagName("ambient");
+        var ra = ambient[0].attributes.getNamedItem("r").value;
+        var ga = ambient[0].attributes.getNamedItem("g").value;
+        var ba = ambient[0].attributes.getNamedItem("b").value;
+        var aa = ambient[0].attributes.getNamedItem("a").value;
 
-            var ambient = mats[i].getElementsByTagName("ambient");
-            var ra = ambient[0].attributes.getNamedItem("r").value;
-            var ga = ambient[0].attributes.getNamedItem("g").value;
-            var ba = ambient[0].attributes.getNamedItem("b").value;
-            var aa = ambient[0].attributes.getNamedItem("a").value;
+        var diffuse = mats[i].getElementsByTagName("diffuse");
+        var rd = diffuse[0].attributes.getNamedItem("r").value;
+        var gd = diffuse[0].attributes.getNamedItem("g").value;
+        var bd = diffuse[0].attributes.getNamedItem("b").value;
+        var ad = diffuse[0].attributes.getNamedItem("a").value;
 
-            var diffuse = mats[i].getElementsByTagName("diffuse");
-            var rd = diffuse[0].attributes.getNamedItem("r").value;
-            var gd = diffuse[0].attributes.getNamedItem("g").value;
-            var bd = diffuse[0].attributes.getNamedItem("b").value;
-            var ad = diffuse[0].attributes.getNamedItem("a").value;
+        var specular = mats[i].getElementsByTagName("specular");
+        var rs = specular[0].attributes.getNamedItem("r").value;
+        var gs = specular[0].attributes.getNamedItem("g").value;
+        var bs = specular[0].attributes.getNamedItem("b").value;
+        var as = specular[0].attributes.getNamedItem("a").value;
 
-            var specular = mats[i].getElementsByTagName("specular");
-            var rs = specular[0].attributes.getNamedItem("r").value;
-            var gs = specular[0].attributes.getNamedItem("g").value;
-            var bs = specular[0].attributes.getNamedItem("b").value;
-            var as = specular[0].attributes.getNamedItem("a").value;
+        var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
 
-            var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
-
-            console.log("MATERIAL GRAVADO");
-
-            this.materials[id] = [
-                [re, ge, be, ae],
-                [ra, ga, ba, aa],
-                [rd, gd, bd, ad],
-                [rs, gs, bs, as],
-                [shininess],
-                [id]
-            ];
-
-        }
+        console.log("AQUI:" + shininess);
 
     }
 
 
 };
 
+//TODO: guardar a informação
 MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
 
@@ -434,78 +342,24 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
         return "Either zero or more than one 'illumination' element found.";
     }
 
-    var transformation = transformations[0].getElementsByTagName('transformation');
-
-    console.log("TRANSFORMATIONS: " + transformation.length);
+    var transformation = transformations[0].getElementsByTagName('tranformation');
 
     for (var i = 0; i < transformation.length; i++) {
-
         var id = transformation[i].attributes.getNamedItem("id").value;
 
-        var transformationMatrix = mat4.create();
+        var translate = tranformation[i].getElementsByTagName("translate");
+        var tx = translate[0].attributes.getNamedItem("x").value;
+        var ty = translate[0].attributes.getNamedItem("y").value;
+        var tz = translate[0].attributes.getNamedItem("z").value;
 
-        var translate = transformation[i].getElementsByTagName("translate");
+        var rotate = tranformation[i].getElementsByTagName("rotate");
+        var axis = rotate[0].attributes.getNamedItem("axis").value;
+        var angle = rotate[0].attributes.getNamedItem("angle").value;
 
-        for (var j = 0; j < translate.length; j++) {
-            var tx = translate[j].attributes.getNamedItem("x").value;
-            var ty = translate[j].attributes.getNamedItem("y").value;
-            var tz = translate[j].attributes.getNamedItem("z").value;
-
-            var translateArray = [tx, ty, tz];
-
-            mat4.translate(transformationMatrix, transformationMatrix, translateArray);
-
-            console.log("tx: " + tx + ", ty: " + ty + ", tz: " + tz);
-
-        }
-
-
-        var rotate = transformation[i].getElementsByTagName("rotate");
-
-        for (var j = 0; j < rotate.length; j++) {
-
-            var axis = rotate[j].attributes.getNamedItem("axis").value;
-            var angle = rotate[j].attributes.getNamedItem("angle").value;
-
-            var rotationArray;
-
-            switch (axis) {
-                case 'x':
-                    rotationArray = [1, 0, 0];
-                    break;
-                case 'y':
-                    rotationArray = [0, 1, 0];
-                    break;
-                case 'z':
-                    rotationArray = [0, 0, 1];
-                    break;
-                default:
-                    break;
-            }
-            angle = angle * 2 * Math.PI / 360;
-
-            mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
-
-            console.log("angle: " + angle);
-        }
-
-
-        var scale = transformation[i].getElementsByTagName("scale");
-
-        for (var j = 0; j < scale.length; j++) {
-            var sx = scale[j].attributes.getNamedItem("x").value;
-            var sy = scale[j].attributes.getNamedItem("y").value;
-            var sz = scale[j].attributes.getNamedItem("z").value;
-
-            var scaleArray = [sx, sy, sz];
-
-            mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
-
-            console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
-
-        }
-
-        this.transformations[id] = transformationMatrix;
+        var scale = tranformation[i].getElementsByTagName("scale");
+        var sx = scale[0].attributes.getNamedItem("x").value;
+        var sy = scale[0].attributes.getNamedItem("y").value;
+        var sz = scale[0].attributes.getNamedItem("z").value;
 
     }
 
@@ -516,7 +370,11 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
     var primitives = rootElement.getElementsByTagName("primitives");
 
     if (primitives == null) {
-        return "primitives not defined.";
+        return "transformations not defined.";
+    }
+
+    if (primitives.length != 1) {
+        return "Either zero or more than one 'illumination' element found.";
     }
 
     var primitive = primitives[0].getElementsByTagName("primitive");
@@ -572,8 +430,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
             var radius = sphere[0].attributes.getNamedItem("radius").value;
             var slices = sphere[0].attributes.getNamedItem("slices").value;
             var stacks = sphere[0].attributes.getNamedItem("stacks").value;
-
-            this.objects[id] = new Sphere(this.scene, radius, slices, stacks);
+            this.objects[id] = [type, radius, slices, stacks];
         }
 
         var torus = primitive[i].getElementsByTagName("torus");
@@ -584,8 +441,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
             var outer = torus[0].attributes.getNamedItem("outer").value;
             var slices = torus[0].attributes.getNamedItem("slices").value;
             var loops = torus[0].attributes.getNamedItem("loops").value;
-
-            this.objects[id] = new Torus(this.scene, 0.5, 1, 50, 50);
+            this.objects[id] = [type, inner, outer, slices, loops];
         }
 
 
@@ -594,238 +450,13 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
 };
 
-MySceneGraph.prototype.parserToComponents = function(rootElement) {
-    var components = rootElement.getElementsByTagName("components")[0];
-
-    if (components == null) {
-        return "components not defined.";
-    }
-
-    for (let component of components.children) {
-        let id = component.attributes.getNamedItem("id").value;
-        let transformationsFlag = 0;
-        let materialsFlag = 0;
-        let textureFlag = 0;
-        let childrenFlag = 0;
-
-        this.transformationsArray = new Array();
-        this.materialsArray = new Array();
-        this.componentTexture;
-        this.componentChildren = new Array();
-        this.primitiveChildren = new Array();
-
-        //this alows for the attributes of the component to not be ordered
-        for (let attribute of component.children) {
-            let attributeName = attribute.nodeName;
-            switch (attributeName) {
-                case 'transformation':
-                    this.transformationsFlag = 1;
-                    let transformations = attribute;
-                    let transformationrefFlag = 0;
-                    for (let transformation of transformations.children) {
-                        var transformationMatrix = mat4.create();
-                        let type = transformation.nodeName;
-                        switch (type) {
-                            case 'transformationref':
-                                console.log("transformationref:");
-                                console.log(this.transformations[transformation.attributes.getNamedItem("id").value]);
-                                this.transformationsArray.push(this.transformations[transformation.attributes.getNamedItem("id").value]);
-                                transformationrefFlag = 1;
-                                break;
-                            case 'translate':
-                                if (!transformationrefFlag) {
-                                    var tx = transformation.attributes.getNamedItem("x").value;
-                                    var ty = transformation.attributes.getNamedItem("y").value;
-                                    var tz = transformation.attributes.getNamedItem("z").value;
-
-                                    var translateArray = [tx, ty, tz];
-
-                                    mat4.translate(transformationMatrix, transformationMatrix, translateArray);
-
-
-                                    console.log("transformationMatrix:");
-                                    console.log(transformationMatrix);
-                                    this.transformationsArray.push(transformationMatrix);
-                                }
-
-                                break;
-                            case 'rotate':
-                                if (!transformationrefFlag) {
-                                    var axis = transformation.attributes.getNamedItem("axis").value;
-                                    var angle = transformation.attributes.getNamedItem("angle").value;
-
-                                    var rotationArray;
-
-                                    switch (axis) {
-                                        case 'x':
-                                            rotationArray = [1, 0, 0];
-                                            break;
-                                        case 'y':
-                                            rotationArray = [0, 1, 0];
-                                            break;
-                                        case 'z':
-                                            rotationArray = [0, 0, 1];
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    angle = angle * 2 * Math.PI / 360;
-
-                                    mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
-
-                                    this.transformationsArray.push(transformationMatrix);
-                                }
-
-                                break;
-                            case 'scale':
-                                if (!transformationrefFlag) {
-                                    var sx = transformation.attributes.getNamedItem("x").value;
-                                    var sy = transformation.attributes.getNamedItem("y").value;
-                                    var sz = transformation.attributes.getNamedItem("z").value;
-
-                                    var scaleArray = [sx, sy, sz];
-
-                                    mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
-
-                                    console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
-
-
-                                    this.transformationsArray.push(transformationMatrix);
-                                }
-
-                                break;
-                        }
-                    }
-                    break;
-                case 'materials':
-                    console.log("MATERIALS");
-                    this.materialsFlag = 1;
-                    let materials = attribute;
-                    for (let material of materials.children) {
-                        if ((material.attributes.getNamedItem("id").value) == "inherit") {
-                            this.materialsArray.push([
-                                [0, 0, 0, 0],
-                                [0, 0, 0, 0],
-                                [0, 0, 0, 0],
-                                [0, 0, 0, 0],
-                                [0, 0, 0, 0],
-                                "inherit"
-                            ]);
-                        } else {
-                            this.materialsArray.push(this.materials[material.attributes.getNamedItem("id").value]);
-                        }
-
-                    }
-                    break;
-                case 'texture':
-                    console.log("TEXTURES");
-                    this.textureFlag = 1;
-                    let texture = attribute;
-                    if ((texture.attributes.getNamedItem("id").value) == "inherit") {
-                        this.componentTexture = [id, "inherit", 1, 1];
-                    } else {
-                        this.componentTexture = this.textures[(texture.attributes.getNamedItem("id").value)];
-                    }
-
-                    break;
-                case 'children':
-
-                    let childrens = attribute;
-                    for (let children of childrens.children) {
-                        let type = children.nodeName;
-                        switch (type) {
-                            case 'componentref':
-                                this.childrenFlag = 1;
-                                this.componentChildren.push(children.attributes.getNamedItem("id").value);
-                                break;
-                            case 'primitiveref':
-                                this.childrenFlag = 1;
-                                this.primitiveChildren.push(children.attributes.getNamedItem("id").value);
-                                break;
-                        }
-                    }
-                    break;
-            }
-
-
-        }
-
-        if (this.transformationsFlag) {
-            if (this.materialsFlag) {
-                if (this.textureFlag) {
-                    if (this.childrenFlag) {
-                        console.log("read all components");
-                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren);
-                    } else {
-                        console.log("No children objects defined");
-                    }
-                } else {
-                    console.log("No texture defined");
-                }
-            } else {
-                console.log("No materials defined");
-            }
-        } else {
-            console.log("No transformation defined");
-        }
-
-    }
-
-}
-
-MySceneGraph.prototype.displayComposedObjects = function(object) {
-    for (let primitive of this.composedObjects[object].getChildrenPrimitive()) {
-        if (this.composedObjects[object].getMaterials()[5] != "inherit") {
-            this.composedObjects[object].setMaterials(this.composedObjects[object].getMaterials());
-        }
-        if (this.composedObjects[object].getTexture()[0] != "inherit") {
-            this.composedObjects[object].getAppearance().apply();
-        }
-
-        this.objects[primitive].display();
-    }
-    for (let composedObject of this.composedObjects[object].getChildrenComponent()) {
-        this.scene.pushMatrix();
-        if (this.composedObjects[composedObject].getTransformations().length != 0) {
-            for (transformation of this.composedObjects[composedObject].getTransformations()) {
-                this.scene.multMatrix(transformation);
-            }
-        }
-        //console.log("Component:");
-        //console.log(composedObject);
-        if (this.composedObjects[composedObject].getMaterials()[0][5] != "inherit") {
-            this.fatherMaterials = this.composedObjects[composedObject].getMaterials();
-            this.composedObjects[composedObject].setMaterials(this.composedObjects[composedObject].getMaterials());
-        } else {
-            this.composedObjects[composedObject].setMaterials(this.fatherMaterials);
-        }
-        if (this.composedObjects[composedObject].getTexture()[0] != "inherit") {
-            this.composedObjects[composedObject].getAppearance().apply();
-        }
-        this.displayComposedObjects(composedObject);
-        this.scene.popMatrix();
-    }
-}
 
 MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
-    if (this.composedObjects[this.root] == undefined) {
-        console.log("No root object defined");
-    } //caso exista um objecto root, desenha toda a cena percorrendo esse root em profundidade
-    else {
-        this.scene.pushMatrix();
-        if (this.composedObjects[this.root].getTransformations().length != 0) {
-            for (transformation of this.composedObjects[this.root].getTransformations()) {
-                this.scene.multMatrix(transformation);
-            }
-        }
-        this.displayComposedObjects(this.root);
-        this.scene.popMatrix();
+    for (let object in this.objects) {
+        this.objects[object].display();
     }
-
-    //this.scene.multMatrix(this.transformations["t1"]);
-    //this.objects[5].display();
 
     this.scene.popMatrix();
 }
