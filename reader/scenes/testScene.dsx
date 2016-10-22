@@ -9,7 +9,7 @@
         </perspective>
 
         <perspective id="2" near="0.1" far="500" angle="0.4">
-            <from x="50" y="4" z="4"/>
+            <from x="100" y="40" z="40"/>
             <to x="0" y="4" z="4"/>
         </perspective>
 
@@ -596,7 +596,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="tap"/>
 
             <children>
                 <primitiveref id="front"/>
@@ -614,7 +614,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="tap"/>
 
             <children>
                 <componentref id="wing1"/>
@@ -633,7 +633,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="yellow"/>
+            <texture id="inherit"/>
 
             <children>
                 <componentref id="wingbody1"/>
@@ -652,7 +652,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="yellow"/>
+            <texture id="inherit"/>
 
             <children>
                 <componentref id="wingbody2"/>
@@ -672,7 +672,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="inherit"/>
 
             <children>
                 <primitiveref id="wing1"/>
@@ -691,7 +691,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="inherit"/>
 
             <children>
                 <primitiveref id="wing2"/>
@@ -711,7 +711,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="inherit"/>
 
             <children>
                 <primitiveref id="winglet1"/>
@@ -732,7 +732,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="inherit"/>
 
             <children>
                 <primitiveref id="winglet2"/>

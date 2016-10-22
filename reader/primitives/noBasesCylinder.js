@@ -51,7 +51,7 @@ noBasesCylinder.prototype.initBuffers = function() {
         for (var i = 0; i < sides; i++) {
             this.vertices.push(inc * Math.cos(i * n), inc * Math.sin(i * n), q * this.deltaHeight);
             this.normals.push(Math.cos(i * n), Math.sin(i * n), 0);
-            this.texCoords.push(xCoord, yCoord);
+            this.texCoords.push(yCoord, xCoord);
             xCoord += patchLengthx;
         }
         xCoord = 0;
