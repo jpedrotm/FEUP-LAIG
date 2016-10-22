@@ -124,6 +124,32 @@ XMLscene.prototype.updateLights = function () {
 
 };
 
+XMLscene.prototype.switchMaterials = function(){
+
+  for(component in this.graph.composedObjects)
+  {
+    var matsLength=this.graph.composedObjects[component].materials.length;
+    var currI=this.graph.composedObjects[component].currMatIndice;
+
+    console.log("COMPONENT: "+this.graph.composedObjects[component].materials.length);
+
+
+    if(currI === matsLength-1)
+    {
+      currI=0;
+    }
+    else {
+      currI++;
+    }
+
+    this.graph.composedObjects[component].currMatIndice=currI;
+
+    console.log("INDICE: "+this.graph.composedObjects[component].currMatIndice);
+
+  }
+
+};
+
 XMLscene.prototype.initCameras = function() {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(150, 150, 150), vec3.fromValues(0, 0, 0));
 };

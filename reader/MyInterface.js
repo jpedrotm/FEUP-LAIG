@@ -31,9 +31,15 @@ MyInterface.prototype.processKeyDown = function(event) {
 
 	switch (event.keyCode)
 	{
+		case(77):
+			this.scene.switchMaterials();
+			break;
     case (86):
       this.scene.switchView();
       break;
+		case(109):
+			this.scene.switchMaterials();
+			break;
 		case (118):
 	    this.scene.switchView();
 			break;
