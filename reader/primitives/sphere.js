@@ -23,20 +23,20 @@ Sphere.prototype.display = function() {
     this.topSphere.display();
     this.scene.popMatrix();
 
-    this.scene.pushMatrix();
+    /*this.scene.pushMatrix();
     this.scene.scale(this.radius, this.radius, this.radius);
     this.scene.rotate(Math.PI / 2, 1, 0, 0);
     this.bottomSphere.display();
-    this.scene.popMatrix();
+    this.scene.popMatrix();*/
 
 };
 
 Sphere.prototype.updateTexCoords = function(length_s, length_t) {
 
-  console.log("SPHERE");
-  if(length_s != 1 || length_t != 1){
-    this.topSphere.updateTexCoords(length_s,length_t);
-    this.bottomSphere.updateTexCoords(length_s,length_t);
-  }
+    console.log("SPHERE");
+    if (length_s != 1 || length_t != 1) {
+        this.topSphere.updateTexCoords(length_s, length_t);
+        this.bottomSphere.updateTexCoords(length_s, length_t);
+    }
 
 };

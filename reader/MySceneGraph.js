@@ -11,7 +11,7 @@ function MySceneGraph(filename, scene) {
     this.root;
     this.axis_length;
     //Parser das views
-    this.viewsIndice=0;
+    this.viewsIndice = 0;
     this.perspectives = [];
 
     //Parser das luzes
@@ -121,35 +121,34 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
 
         //Obter os valores da perspective
         var id = perspective[i].attributes.getNamedItem("id").value;
-        var near = perspective[i].attributes.getNamedItem("near").value*1.0;
-        var far = perspective[i].attributes.getNamedItem("far").value*1.0;
-        var angle = perspective[i].attributes.getNamedItem("angle").value*1.0;
-
+        var near = perspective[i].attributes.getNamedItem("near").value * 1.0;
+        var far = perspective[i].attributes.getNamedItem("far").value * 1.0;
+        var angle = perspective[i].attributes.getNamedItem("angle").value * 1.0;
+        angle = angle * Math.PI / 180;
         //Obter o que está definido dentro de cada perspective (from e to) e obter os valores de estes
         var from = perspective[i].getElementsByTagName('from');
-        var xf=from[0].attributes.getNamedItem("x").value*1.0;
-        var yf=from[0].attributes.getNamedItem("y").value*1.0;
-        var zf=from[0].attributes.getNamedItem("z").value*1.0;
+        var xf = from[0].attributes.getNamedItem("x").value * 1.0;
+        var yf = from[0].attributes.getNamedItem("y").value * 1.0;
+        var zf = from[0].attributes.getNamedItem("z").value * 1.0;
 
         var to = perspective[i].getElementsByTagName('to');
-        var xt=to[0].attributes.getNamedItem("x").value*1.0;
-        var yt=to[0].attributes.getNamedItem("y").value*1.0;
-        var zt=to[0].attributes.getNamedItem("z").value*1.0;
+        var xt = to[0].attributes.getNamedItem("x").value * 1.0;
+        var yt = to[0].attributes.getNamedItem("y").value * 1.0;
+        var zt = to[0].attributes.getNamedItem("z").value * 1.0;
 
-        console.log(id+","+near+","+far+","+angle+","+xf+","+yf+","+zf+","+xt+","+yt+","+zt);
+        console.log(id + "," + near + "," + far + "," + angle + "," + xf + "," + yf + "," + zf + "," + xt + "," + yt + "," + zt);
 
-        var tempCamera=new CGFcamera(angle, near, far,
-            vec3.fromValues(xf,yf,zf),
-            vec3.fromValues(xt,yt,zt));
+        var tempCamera = new CGFcamera(angle, near, far,
+            vec3.fromValues(xf, yf, zf),
+            vec3.fromValues(xt, yt, zt));
 
-        var tempView=new GraphView(id,tempCamera);
+        var tempView = new GraphView(id, tempCamera);
 
         this.perspectives.push(tempView);
 
-        if(id === viewDefault)
-        {
-          console.log("ENTROU"+i);
-          this.viewsIndice=i;
+        if (id === viewDefault) {
+            console.log("ENTROU" + i);
+            this.viewsIndice = i;
         }
 
     }
@@ -813,12 +812,12 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
             this.fatherMaterials = this.composedObjects[composedObject].getMaterials();
             this.composedObjects[composedObject].setMaterials(this.composedObjects[composedObject].getMaterials());
         } else {
-          //TODO : não sei se é aqui que devo fazer a alteração das texCoords
-          console.log("ID COMPONENT: "+tempId);
-            var tempId=this.composedObjects[composedObject].childrenPrimitive;
-            var length_s=this.composedObjects[composedObject].texture[2];//length_s
-            var length_t=this.composedObjects[composedObject].texture[3];//length_t
-            this.objects[tempId].updateTexCoords(length_s,length_t);
+            //TODO : não sei se é aqui que devo fazer a alteração das texCoords
+            console.log("ID COMPONENT: " + tempId);
+            var tempId = this.composedObjects[composedObject].childrenPrimitive;
+            var length_s = this.composedObjects[composedObject].texture[2]; //length_s
+            var length_t = this.composedObjects[composedObject].texture[3]; //length_t
+            this.objects[tempId].updateTexCoords(length_s, length_t);
             this.composedObjects[composedObject].setMaterials(this.fatherMaterials);
         }
         if (this.composedObjects[composedObject].getTexture()[0] != "inherit") {
