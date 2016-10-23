@@ -433,7 +433,9 @@ MySceneGraph.prototype.parserToTextures = function(rootElement) {
         var length_s = texts[i].attributes.getNamedItem("length_s").value;
         var length_t = texts[i].attributes.getNamedItem("length_t").value;
 
-        this.textures[id] = [id, file, length_s, length_t];
+        if(this.textures[id]==null){
+          this.textures[id] = [id, file, length_s, length_t];
+        }
 
     }
 
@@ -534,70 +536,73 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
         var id = transformation[i].attributes.getNamedItem("id").value;
 
-        var transformationMatrix = mat4.create();
+        if(this.transformations[id]==null)
+        {
+          var transformationMatrix = mat4.create();
 
-        var translate = transformation[i].getElementsByTagName("translate");
+          var translate = transformation[i].getElementsByTagName("translate");
 
-        for (var j = 0; j < translate.length; j++) {
-            var tx = translate[j].attributes.getNamedItem("x").value;
-            var ty = translate[j].attributes.getNamedItem("y").value;
-            var tz = translate[j].attributes.getNamedItem("z").value;
+          for (var j = 0; j < translate.length; j++) {
+              var tx = translate[j].attributes.getNamedItem("x").value;
+              var ty = translate[j].attributes.getNamedItem("y").value;
+              var tz = translate[j].attributes.getNamedItem("z").value;
 
-            var translateArray = [tx, ty, tz];
+              var translateArray = [tx, ty, tz];
 
-            mat4.translate(transformationMatrix, transformationMatrix, translateArray);
+              mat4.translate(transformationMatrix, transformationMatrix, translateArray);
 
-            console.log("tx: " + tx + ", ty: " + ty + ", tz: " + tz);
+              console.log("tx: " + tx + ", ty: " + ty + ", tz: " + tz);
 
+          }
+
+
+          var rotate = transformation[i].getElementsByTagName("rotate");
+
+          for (var j = 0; j < rotate.length; j++) {
+
+              var axis = rotate[j].attributes.getNamedItem("axis").value;
+              var angle = rotate[j].attributes.getNamedItem("angle").value;
+
+              var rotationArray;
+
+              switch (axis) {
+                  case 'x':
+                      rotationArray = [1, 0, 0];
+                      break;
+                  case 'y':
+                      rotationArray = [0, 1, 0];
+                      break;
+                  case 'z':
+                      rotationArray = [0, 0, 1];
+                      break;
+                  default:
+                      break;
+              }
+              angle = angle * 2 * Math.PI / 360;
+
+              mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
+
+              console.log("angle: " + angle);
+          }
+
+
+          var scale = transformation[i].getElementsByTagName("scale");
+
+          for (var j = 0; j < scale.length; j++) {
+              var sx = scale[j].attributes.getNamedItem("x").value;
+              var sy = scale[j].attributes.getNamedItem("y").value;
+              var sz = scale[j].attributes.getNamedItem("z").value;
+
+              var scaleArray = [sx, sy, sz];
+
+              mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
+
+              console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
+
+          }
+
+          this.transformations[id] = transformationMatrix;
         }
-
-
-        var rotate = transformation[i].getElementsByTagName("rotate");
-
-        for (var j = 0; j < rotate.length; j++) {
-
-            var axis = rotate[j].attributes.getNamedItem("axis").value;
-            var angle = rotate[j].attributes.getNamedItem("angle").value;
-
-            var rotationArray;
-
-            switch (axis) {
-                case 'x':
-                    rotationArray = [1, 0, 0];
-                    break;
-                case 'y':
-                    rotationArray = [0, 1, 0];
-                    break;
-                case 'z':
-                    rotationArray = [0, 0, 1];
-                    break;
-                default:
-                    break;
-            }
-            angle = angle * 2 * Math.PI / 360;
-
-            mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
-
-            console.log("angle: " + angle);
-        }
-
-
-        var scale = transformation[i].getElementsByTagName("scale");
-
-        for (var j = 0; j < scale.length; j++) {
-            var sx = scale[j].attributes.getNamedItem("x").value;
-            var sy = scale[j].attributes.getNamedItem("y").value;
-            var sz = scale[j].attributes.getNamedItem("z").value;
-
-            var scaleArray = [sx, sy, sz];
-
-            mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
-
-            console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
-
-        }
-
-        this.transformations[id] = transformationMatrix;
 
     }
 
@@ -620,72 +625,73 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
 
         var id = primitive[i].attributes.getNamedItem("id").value;
-        var rectangle = primitive[i].getElementsByTagName("rectangle");
+
+        if(this.objects[id]==null)
+        {
+          var rectangle = primitive[i].getElementsByTagName("rectangle");
 
 
-        if (rectangle.length == 1) {
-            var type = "rectangle";
-            var rx1 = rectangle[0].attributes.getNamedItem("x1").value;
-            var rx2 = rectangle[0].attributes.getNamedItem("x2").value;
-            var ry1 = rectangle[0].attributes.getNamedItem("y1").value;
-            var ry2 = rectangle[0].attributes.getNamedItem("y2").value;
-            this.objects[id] = new Rectangle(this.scene, rx1, ry1, rx2, ry2);
-            console.log(rx1 + "," + rx2 + "," + ry1 + "," + ry2);
+          if (rectangle.length == 1) {
+              var type = "rectangle";
+              var rx1 = rectangle[0].attributes.getNamedItem("x1").value;
+              var rx2 = rectangle[0].attributes.getNamedItem("x2").value;
+              var ry1 = rectangle[0].attributes.getNamedItem("y1").value;
+              var ry2 = rectangle[0].attributes.getNamedItem("y2").value;
+              this.objects[id] = new Rectangle(this.scene, rx1, ry1, rx2, ry2);
+              console.log(rx1 + "," + rx2 + "," + ry1 + "," + ry2);
+          }
+
+          var triangle = primitive[i].getElementsByTagName("triangle");
+
+          if (triangle.length == 1) {
+              var type = "triangle";
+              var tx1 = triangle[0].attributes.getNamedItem("x1").value;
+              var tx2 = triangle[0].attributes.getNamedItem("x2").value;
+              var tx3 = triangle[0].attributes.getNamedItem("x3").value;
+              var ty1 = triangle[0].attributes.getNamedItem("y1").value;
+              var ty2 = triangle[0].attributes.getNamedItem("y2").value;
+              var ty3 = triangle[0].attributes.getNamedItem("y3").value;
+              var tz1 = triangle[0].attributes.getNamedItem("z1").value;
+              var tz2 = triangle[0].attributes.getNamedItem("z2").value;
+              var tz3 = triangle[0].attributes.getNamedItem("z3").value;
+              this.objects[id] = new Triangle(this.scene, tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3);
+          }
+
+          var cylinder = primitive[i].getElementsByTagName("cylinder");
+
+          if (cylinder.length == 1) {
+              var type = "cylinder";
+              var base = cylinder[0].attributes.getNamedItem("base").value;
+              var top = cylinder[0].attributes.getNamedItem("top").value;
+              var height = cylinder[0].attributes.getNamedItem("height").value;
+              var slices = cylinder[0].attributes.getNamedItem("slices").value;
+              var stacks = cylinder[0].attributes.getNamedItem("stacks").value;
+              this.objects[id] = new Cylinder(this.scene, base, top, height, slices, stacks);
+          }
+
+          var sphere = primitive[i].getElementsByTagName("sphere");
+
+          if (sphere.length == 1) {
+              var type = "sphere";
+              var radius = sphere[0].attributes.getNamedItem("radius").value;
+              var slices = sphere[0].attributes.getNamedItem("slices").value;
+              var stacks = sphere[0].attributes.getNamedItem("stacks").value;
+
+              this.objects[id] = new Sphere(this.scene, radius, slices, stacks);
+          }
+
+          var torus = primitive[i].getElementsByTagName("torus");
+
+          if (torus.length == 1) {
+              var type = "torus";
+              var inner = torus[0].attributes.getNamedItem("inner").value*1.0;
+              var outer = torus[0].attributes.getNamedItem("outer").value*1.0;
+              var slices = torus[0].attributes.getNamedItem("slices").value*1.0;
+              var loops = torus[0].attributes.getNamedItem("loops").value*1.0;
+
+              this.objects[id] = new Torus(this.scene,inner,outer, slices, loops);
+          }
         }
-
-        var triangle = primitive[i].getElementsByTagName("triangle");
-
-        if (triangle.length == 1) {
-            var type = "triangle";
-            var tx1 = triangle[0].attributes.getNamedItem("x1").value;
-            var tx2 = triangle[0].attributes.getNamedItem("x2").value;
-            var tx3 = triangle[0].attributes.getNamedItem("x3").value;
-            var ty1 = triangle[0].attributes.getNamedItem("y1").value;
-            var ty2 = triangle[0].attributes.getNamedItem("y2").value;
-            var ty3 = triangle[0].attributes.getNamedItem("y3").value;
-            var tz1 = triangle[0].attributes.getNamedItem("z1").value;
-            var tz2 = triangle[0].attributes.getNamedItem("z2").value;
-            var tz3 = triangle[0].attributes.getNamedItem("z3").value;
-            this.objects[id] = new Triangle(this.scene, tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3);
-        }
-
-        var cylinder = primitive[i].getElementsByTagName("cylinder");
-
-        if (cylinder.length == 1) {
-            var type = "cylinder";
-            var base = cylinder[0].attributes.getNamedItem("base").value;
-            var top = cylinder[0].attributes.getNamedItem("top").value;
-            var height = cylinder[0].attributes.getNamedItem("height").value;
-            var slices = cylinder[0].attributes.getNamedItem("slices").value;
-            var stacks = cylinder[0].attributes.getNamedItem("stacks").value;
-            this.objects[id] = new Cylinder(this.scene, base, top, height, slices, stacks);
-        }
-
-        var sphere = primitive[i].getElementsByTagName("sphere");
-
-        if (sphere.length == 1) {
-            var type = "sphere";
-            var radius = sphere[0].attributes.getNamedItem("radius").value;
-            var slices = sphere[0].attributes.getNamedItem("slices").value;
-            var stacks = sphere[0].attributes.getNamedItem("stacks").value;
-
-            this.objects[id] = new Sphere(this.scene, radius, slices, stacks);
-        }
-
-        var torus = primitive[i].getElementsByTagName("torus");
-
-        if (torus.length == 1) {
-            var type = "torus";
-            var inner = torus[0].attributes.getNamedItem("inner").value*1.0;
-            var outer = torus[0].attributes.getNamedItem("outer").value*1.0;
-            var slices = torus[0].attributes.getNamedItem("slices").value*1.0;
-            var loops = torus[0].attributes.getNamedItem("loops").value*1.0;
-
-            this.objects[id] = new Torus(this.scene,inner,outer, slices, loops);
-        }
-
-
-
     }
 
 };
@@ -935,9 +941,6 @@ MySceneGraph.prototype.display = function() {
         this.displayComposedObjects(this.root);
         this.scene.popMatrix();
     }
-
-    //this.scene.multMatrix(this.transformations["t1"]);
-    //this.objects[5].display();
 
     this.scene.popMatrix();
 }
