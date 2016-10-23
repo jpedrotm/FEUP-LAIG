@@ -5,6 +5,7 @@
 function Component(scene, transformations, materials, texture, childrenComponent, childrenPrimitive) {
     CGFobject.call(this, scene);
 
+    this.fatherTexture;
     this.texture = texture;
     this.materials = materials;
     this.currentMaterial = this.materials[0];
@@ -12,23 +13,16 @@ function Component(scene, transformations, materials, texture, childrenComponent
     this.childrenComponent = childrenComponent;
     this.childrenPrimitive = childrenPrimitive;
     this.appearance = new CGFappearance(this.scene);
-    if (this.texture[1] == "inherit") {
-        this.appearance.loadTexture("");
-    } else if (this.texture[1] == "none") {
-        this.appearance.setTexture(null);
-    } else {
-        this.appearance.loadTexture(this.texture[1]);
 
-    }
 
     this.currMatIndice = 0;
 
 };
 
 /**
-* Function responsible to set the appearance according to the material.
-* @param {Array} materials
-*/
+ * Function responsible to set the appearance according to the material.
+ * @param {Array} materials
+ */
 Component.prototype.setMaterials = function(materials) {
     this.materials = materials;
     this.currentMaterial = this.materials[this.currMatIndice];
@@ -53,44 +47,64 @@ Component.prototype.setMaterials = function(materials) {
 */
 
 /**
-* Function that returns the indice of the current material.
-*/
+ * Function that returns the indice of the current material.
+ */
 Component.prototype.getCurrMatIndice = function() {
     return this.currMatIndice;
 }
-/**
-* Function that returns the texture the component.
-*/
+
+Component.prototype.loadTexture = function() {
+        if (this.texture[1] == "inherit") {
+            console.log("inherit:");
+            console.log(this.fatherTexture[1]);
+            this.appearance.loadTexture(this.fatherTexture[1]);
+        } else if (this.texture[1] == "none") {
+            console.log("sadnmaksljdlsamdklasmdlksaml");
+        } else {
+            console.log(this.texture[1]);
+            this.appearance.loadTexture(this.texture[1]);
+        }
+    }
+    /**
+     * Function that returns the texture the component.
+     */
 Component.prototype.getTexture = function() {
-    return this.texture;
-}
-/**
-* Function that returns the array with all the materials of the component.
-*/
+        return this.texture;
+    }
+    /**
+     * Function that sets a new texture for the component.
+     */
+
+Component.prototype.setFatherTexture = function(texture) {
+        this.fatherTexture = texture;
+    }
+    /**
+     * Function that saves the texture of the father.
+     */
 Component.prototype.getMaterials = function() {
-    return this.materials;
-}
-/**
-* Function that return the transformations matrix of the component.
-*/
+        return this.materials;
+    }
+    /**
+     * Function that return the transformations matrix of the component.
+     */
 Component.prototype.getTransformations = function() {
-    return this.transformations;
-}
-/**
-* Returns the children components.
-*/
+        return this.transformations;
+    }
+    /**
+     * Returns the children components.
+     */
 Component.prototype.getChildrenComponent = function() {
-    return this.childrenComponent;
-}
-/**
-* Returns the children primitives.
-*/
+        return this.childrenComponent;
+    }
+    /**
+     * Returns the children primitives.
+     */
 Component.prototype.getChildrenPrimitive = function() {
-    return this.childrenPrimitive;
-}
-/**
-* Function that returns the CGFappearance of the component.
-*/
+        return this.childrenPrimitive;
+    }
+    /**
+     * Function that returns the CGFappearance of the component.
+     */
 Component.prototype.getAppearance = function() {
     return this.appearance;
 }

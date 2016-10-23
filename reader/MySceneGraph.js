@@ -89,8 +89,20 @@ MySceneGraph.prototype.parser = function(rootElement) {
     this.parserToTransformations(rootElement);
     this.parserToPrimitives(rootElement);
     this.parserToComponents(rootElement);
+    this.loadTextures(this.root, this.composedObjects[this.root].getTexture());
 
 };
+
+MySceneGraph.prototype.loadTextures = function(root, rootTexture) {
+    if (this.composedObjects[root].getTexture() != "inherit") {
+        rootTexture = this.composedObjects[root].getTexture();
+    }
+    for (let composedObject of this.composedObjects[root].getChildrenComponent()) {
+        this.composedObjects[composedObject].setFatherTexture(rootTexture);
+        this.composedObjects[composedObject].loadTexture();
+        this.loadTextures(composedObject, rootTexture);
+    }
+}
 
 MySceneGraph.prototype.parserToViews = function(rootElement) {
 
@@ -798,12 +810,14 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
         if (this.composedObjects[object].getMaterials()[5] != "inherit") {
             this.composedObjects[object].setMaterials(this.composedObjects[object].getMaterials());
         }
-        if (this.composedObjects[object].getTexture()[0] != "inherit") {
-            this.composedObjects[object].getAppearance().apply();
-        }
+        /*  if (this.composedObjects[object].getTexture()[0] != "inherit") {
+              this.composedObjects[object].getAppearance().apply();
+          }*/
+        this.composedObjects[object].getAppearance().apply();
         this.objects[primitive].updateTexCoords(length_s, length_t);
         this.objects[primitive].display();
     }
+    var fatherTexture = this.composedObjects[object].getTexture();
     for (let composedObject of this.composedObjects[object].getChildrenComponent()) {
         this.scene.pushMatrix();
         if (this.composedObjects[composedObject].getTransformations().length != 0) {
@@ -817,9 +831,10 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
         } else {
             this.composedObjects[composedObject].setMaterials(this.fatherMaterials);
         }
-        if (this.composedObjects[composedObject].getTexture()[0] != "inherit") {
-            this.composedObjects[composedObject].getAppearance().apply();
-        }
+        /*    if (this.composedObjects[composedObject].getTexture()[0] != "inherit") {
+                this.composedObjects[composedObject].getAppearance().apply();
+            }*/
+        this.composedObjects[composedObject].getAppearance().apply();
         this.displayComposedObjects(composedObject);
         this.scene.popMatrix();
     }

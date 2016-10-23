@@ -495,7 +495,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="none"/>
 
             <children>
                 <componentref id="backCone"/>
@@ -517,7 +517,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="inherit"/>
 
             <children>
                 <primitiveref id="back"/>
@@ -536,7 +536,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="tap"/>
 
             <children>
                 <primitiveref id="backTopWinglet"/>
@@ -554,10 +554,10 @@
             </transformation>
 
             <materials>
-                <material id="metal"/>
+                <material id="inherit"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="tap"/>
 
             <children>
                 <primitiveref id="backRightWinglet"/>
@@ -575,10 +575,10 @@
             </transformation>
 
             <materials>
-                <material id="metal"/>
+                <material id="inherit"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="tap"/>
 
             <children>
                 <primitiveref id="backLeftWinglet"/>
