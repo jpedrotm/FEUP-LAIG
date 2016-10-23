@@ -55,8 +55,6 @@ Component.prototype.getCurrMatIndice = function() {
 
 Component.prototype.loadTexture = function() {
         if (this.texture[1] == "inherit") {
-            console.log("inherit:");
-            console.log(this.fatherTexture[1]);
             if (this.fatherTexture[1] != "none")
                 this.appearance.loadTexture(this.fatherTexture[1]);
         } else if (this.texture[1] == "none") {
@@ -75,6 +73,10 @@ Component.prototype.getTexture = function() {
     /**
      * Function that sets a new texture for the component.
      */
+
+Component.prototype.getFatherTexture = function(texture) {
+    return this.fatherTexture;
+}
 
 Component.prototype.setFatherTexture = function(texture) {
         this.fatherTexture = texture;

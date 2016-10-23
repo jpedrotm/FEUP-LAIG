@@ -94,14 +94,19 @@ MySceneGraph.prototype.parser = function(rootElement) {
 };
 
 MySceneGraph.prototype.loadTextures = function(root, rootTexture) {
-    if (this.composedObjects[root].getTexture() != "inherit") {
-        rootTexture = this.composedObjects[root].getTexture();
+    var rTexture = rootTexture;
+    if (this.composedObjects[root].getTexture()[1] != "inherit") {
+        rTexture = this.composedObjects[root].getTexture();
+        console.log("rTexture:");
+        console.log(rTexture[0]);
     }
     for (let composedObject of this.composedObjects[root].getChildrenComponent()) {
-        this.composedObjects[composedObject].setFatherTexture(rootTexture);
-        this.composedObjects[composedObject].loadTexture();
-        this.loadTextures(composedObject, rootTexture);
+        this.composedObjects[composedObject].setFatherTexture(rTexture);
+        this.composedObjects[composedObject].loadTexture(rTexture);
+        this.loadTextures(composedObject, rTexture);
+
     }
+
 }
 
 MySceneGraph.prototype.parserToViews = function(rootElement) {
