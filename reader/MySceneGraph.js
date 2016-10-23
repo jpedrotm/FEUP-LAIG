@@ -36,6 +36,7 @@ function MySceneGraph(filename, scene) {
     //components
     this.composedObjects = {};
 
+    //object that saves the father materials which will be used in the display
     this.fatherMaterials;
     //--------------------------------------------------------------------------------------------------------
 
@@ -68,7 +69,9 @@ MySceneGraph.prototype.onXMLReady = function() {
     // As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
     this.scene.onGraphLoaded();
 };
-
+/*
+ * Function that reads all elements from the dsx files
+ */
 
 MySceneGraph.prototype.parser = function(rootElement) {
     var scene;
@@ -81,9 +84,9 @@ MySceneGraph.prototype.parser = function(rootElement) {
     this.root = scene[0].attributes.getNamedItem("root").value;
     this.axis_length = scene[0].attributes.getNamedItem("axis_length").value;
 
-    this.parserToViews(rootElement); //almost completed
+    this.parserToViews(rootElement);
     this.parserToIllumination(rootElement);
-    this.parserToLights(rootElement); //almost completed
+    this.parserToLights(rootElement);
     this.parserToTextures(rootElement);
     this.parserToMaterials(rootElement);
     this.parserToTransformations(rootElement);
@@ -92,7 +95,9 @@ MySceneGraph.prototype.parser = function(rootElement) {
     this.loadTextures(this.root, this.composedObjects[this.root].getTexture());
 
 };
-
+/*
+ * Loads all the textures and sets the father textures in all components
+ */
 MySceneGraph.prototype.loadTextures = function(root, rootTexture) {
     var rTexture = rootTexture;
     if (this.composedObjects[root].getTexture()[1] != "inherit") {
@@ -108,6 +113,10 @@ MySceneGraph.prototype.loadTextures = function(root, rootTexture) {
     }
 
 }
+
+/*
+ * Loads the views from the dsx file
+ */
 
 MySceneGraph.prototype.parserToViews = function(rootElement) {
 
@@ -175,6 +184,10 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
 
 };
 
+/*
+ * Loads the illumination from the dsx file
+ */
+
 MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 
 
@@ -210,6 +223,9 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 
 };
 
+/*
+ * Loads the lights from the dsx file
+ */
 MySceneGraph.prototype.parserToLights = function(rootElement) {
 
 
@@ -354,6 +370,10 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
 
 };
 
+/*
+ * Loads the textures from the dsx file
+ */
+
 MySceneGraph.prototype.parserToTextures = function(rootElement) {
 
 
@@ -386,6 +406,9 @@ MySceneGraph.prototype.parserToTextures = function(rootElement) {
 
 };
 
+/*
+ * Loads the materials from the dsx file
+ */
 MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
 
@@ -453,6 +476,10 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
 };
 
+
+/*
+ * Loads the transformations from the dsx file
+ */
 MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
 
@@ -543,6 +570,10 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
 };
 
+/*
+ * Loads the primitives from the dsx file
+ */
+
 MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
     var primitives = rootElement.getElementsByTagName("primitives");
@@ -626,6 +657,9 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
 };
 
+/*
+ * Loads the components from the dsx file
+ */
 MySceneGraph.prototype.parserToComponents = function(rootElement) {
     var components = rootElement.getElementsByTagName("components")[0];
 
@@ -807,6 +841,10 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 
 }
 
+/*
+ * Displays recursivly the components
+ */
+
 MySceneGraph.prototype.displayComposedObjects = function(object) {
     for (let primitive of this.composedObjects[object].getChildrenPrimitive()) {
         var length_s = this.composedObjects[object].texture[2]; //length_s
@@ -845,6 +883,9 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
     }
 }
 
+/*
+ * Displays the scene
+ */
 MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
