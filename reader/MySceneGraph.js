@@ -224,30 +224,23 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 };
 
 
-MySceneGraph.prototype.existsLight = function(id,type){
+MySceneGraph.prototype.existsLight = function(id, type) {
 
-  if(type=="spot")
-  {
-    for(var i=0;i<this.spotLights.length;i++)
-    {
-      if(this.spotLights[i].id==id)
-      {
-        return true;
-      }
+    if (type == "spot") {
+        for (var i = 0; i < this.spotLights.length; i++) {
+            if (this.spotLights[i].id == id) {
+                return true;
+            }
+        }
+    } else if (type == "omni") {
+        for (var i = 0; i < this.omniLights.length; i++) {
+            if (this.omniLights[i].id == id) {
+                return true;
+            }
+        }
     }
-  }
-  else if(type=="omni")
-  {
-    for(var i=0;i<this.omniLights.length;i++)
-    {
-      if(this.omniLights[i].id==id)
-      {
-        return true;
-      }
-    }
-  }
 
-  return false;
+    return false;
 
 };
 
@@ -290,46 +283,46 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         var idOmni = omnis[i].attributes.getNamedItem("id").value;
         var enabledOmni = omnis[i].attributes.getNamedItem("enabled").value;
 
-        if(!this.existsLight(idOmni,"omni")){
-          if (enabledOmni === "1") {
-              enabledOmni = true;
-          } else {
-              enabledOmni = false;
-          }
+        if (!this.existsLight(idOmni, "omni")) {
+            if (enabledOmni === "1") {
+                enabledOmni = true;
+            } else {
+                enabledOmni = false;
+            }
 
-          location = omnis[i].getElementsByTagName("location");
-          lx = location[0].attributes.getNamedItem("x").value;
-          ly = location[0].attributes.getNamedItem("y").value;
-          lz = location[0].attributes.getNamedItem("z").value;
-          lw = location[0].attributes.getNamedItem("w").value;
+            location = omnis[i].getElementsByTagName("location");
+            lx = location[0].attributes.getNamedItem("x").value;
+            ly = location[0].attributes.getNamedItem("y").value;
+            lz = location[0].attributes.getNamedItem("z").value;
+            lw = location[0].attributes.getNamedItem("w").value;
 
-          tempLocation = new Point(lx, ly, lz, lw);
+            tempLocation = new Point(lx, ly, lz, lw);
 
-          ambient = omnis[i].getElementsByTagName("ambient");
-          ra = ambient[0].attributes.getNamedItem("r").value;
-          ga = ambient[0].attributes.getNamedItem("g").value;
-          ba = ambient[0].attributes.getNamedItem("b").value;
-          aa = ambient[0].attributes.getNamedItem("a").value;
+            ambient = omnis[i].getElementsByTagName("ambient");
+            ra = ambient[0].attributes.getNamedItem("r").value;
+            ga = ambient[0].attributes.getNamedItem("g").value;
+            ba = ambient[0].attributes.getNamedItem("b").value;
+            aa = ambient[0].attributes.getNamedItem("a").value;
 
-          tempAmbient = new RGBA(ra, ga, ba, aa);
+            tempAmbient = new RGBA(ra, ga, ba, aa);
 
-          diffuse = omnis[i].getElementsByTagName("diffuse");
-          rd = diffuse[0].attributes.getNamedItem("r").value;
-          gd = diffuse[0].attributes.getNamedItem("g").value;
-          bd = diffuse[0].attributes.getNamedItem("b").value;
-          ad = diffuse[0].attributes.getNamedItem("a").value;
+            diffuse = omnis[i].getElementsByTagName("diffuse");
+            rd = diffuse[0].attributes.getNamedItem("r").value;
+            gd = diffuse[0].attributes.getNamedItem("g").value;
+            bd = diffuse[0].attributes.getNamedItem("b").value;
+            ad = diffuse[0].attributes.getNamedItem("a").value;
 
-          tempDiffuse = new RGBA(rd, gd, bd, ad);
+            tempDiffuse = new RGBA(rd, gd, bd, ad);
 
-          specular = omnis[i].getElementsByTagName("specular");
-          rs = specular[0].attributes.getNamedItem("r").value;
-          gs = specular[0].attributes.getNamedItem("g").value;
-          bs = specular[0].attributes.getNamedItem("b").value;
-          as = specular[0].attributes.getNamedItem("a").value;
+            specular = omnis[i].getElementsByTagName("specular");
+            rs = specular[0].attributes.getNamedItem("r").value;
+            gs = specular[0].attributes.getNamedItem("g").value;
+            bs = specular[0].attributes.getNamedItem("b").value;
+            as = specular[0].attributes.getNamedItem("a").value;
 
-          tempSpecular = new RGBA(rs, gs, bs, as);
+            tempSpecular = new RGBA(rs, gs, bs, as);
 
-          this.omniLights.push(new Omni(idOmni, tempLocation, tempAmbient, tempDiffuse, tempSpecular, enabledOmni));
+            this.omniLights.push(new Omni(idOmni, tempLocation, tempAmbient, tempDiffuse, tempSpecular, enabledOmni));
         }
 
     }
@@ -341,60 +334,59 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         var idSpot = spots[i].attributes.getNamedItem("id").value;
         var enabledSpot = spots[i].attributes.getNamedItem("enabled").value;
 
-        if(!this.existsLight(idSpot,"spot"))
-        {
-          if (enabledSpot === "1") {
-              enabledSpot = true;
-          } else {
-              enabledSpot = false;
-          }
+        if (!this.existsLight(idSpot, "spot")) {
+            if (enabledSpot === "1") {
+                enabledSpot = true;
+            } else {
+                enabledSpot = false;
+            }
 
-          var angleSpot = spots[i].attributes.getNamedItem("angle").value;
-          var exponentSpot = spots[i].attributes.getNamedItem("exponent").value;
+            var angleSpot = spots[i].attributes.getNamedItem("angle").value;
+            var exponentSpot = spots[i].attributes.getNamedItem("exponent").value;
 
-          console.log("ENABLED: " + enabledSpot);
+            console.log("ENABLED: " + enabledSpot);
 
-          var target = spots[i].getElementsByTagName("target");
-          var tx = target[0].attributes.getNamedItem("x").value;
-          var ty = target[0].attributes.getNamedItem("y").value;
-          var tz = target[0].attributes.getNamedItem("z").value;
+            var target = spots[i].getElementsByTagName("target");
+            var tx = target[0].attributes.getNamedItem("x").value;
+            var ty = target[0].attributes.getNamedItem("y").value;
+            var tz = target[0].attributes.getNamedItem("z").value;
 
-          tempTarget = new Point(tx, ty, tz, null);
+            tempTarget = new Point(tx, ty, tz, null);
 
-          location = spots[i].getElementsByTagName("location");
-          lx = location[0].attributes.getNamedItem("x").value;
-          ly = location[0].attributes.getNamedItem("y").value;
-          lz = location[0].attributes.getNamedItem("z").value;
+            location = spots[i].getElementsByTagName("location");
+            lx = location[0].attributes.getNamedItem("x").value;
+            ly = location[0].attributes.getNamedItem("y").value;
+            lz = location[0].attributes.getNamedItem("z").value;
 
-          tempLocation = new Point(lx, ly, lz, null);
+            tempLocation = new Point(lx, ly, lz, null);
 
-          ambient = spots[i].getElementsByTagName("ambient");
-          ra = ambient[0].attributes.getNamedItem("r").value;
-          ga = ambient[0].attributes.getNamedItem("g").value;
-          ba = ambient[0].attributes.getNamedItem("b").value;
-          aa = ambient[0].attributes.getNamedItem("a").value;
+            ambient = spots[i].getElementsByTagName("ambient");
+            ra = ambient[0].attributes.getNamedItem("r").value;
+            ga = ambient[0].attributes.getNamedItem("g").value;
+            ba = ambient[0].attributes.getNamedItem("b").value;
+            aa = ambient[0].attributes.getNamedItem("a").value;
 
-          tempAmbient = new RGBA(ra, ga, ba, aa);
+            tempAmbient = new RGBA(ra, ga, ba, aa);
 
-          diffuse = spots[i].getElementsByTagName("diffuse");
-          rd = diffuse[0].attributes.getNamedItem("r").value;
-          gd = diffuse[0].attributes.getNamedItem("g").value;
-          bd = diffuse[0].attributes.getNamedItem("b").value;
-          ad = diffuse[0].attributes.getNamedItem("a").value;
+            diffuse = spots[i].getElementsByTagName("diffuse");
+            rd = diffuse[0].attributes.getNamedItem("r").value;
+            gd = diffuse[0].attributes.getNamedItem("g").value;
+            bd = diffuse[0].attributes.getNamedItem("b").value;
+            ad = diffuse[0].attributes.getNamedItem("a").value;
 
-          tempDiffuse = new RGBA(rd, gd, bd, ad);
+            tempDiffuse = new RGBA(rd, gd, bd, ad);
 
-          console.log("DiFFUSE: " + rd + gd + tempDiffuse.b + tempDiffuse.a);
+            console.log("DiFFUSE: " + rd + gd + tempDiffuse.b + tempDiffuse.a);
 
-          specular = spots[i].getElementsByTagName("specular");
-          rs = specular[0].attributes.getNamedItem("r").value;
-          gs = specular[0].attributes.getNamedItem("g").value;
-          bs = specular[0].attributes.getNamedItem("b").value;
-          as = specular[0].attributes.getNamedItem("a").value;
+            specular = spots[i].getElementsByTagName("specular");
+            rs = specular[0].attributes.getNamedItem("r").value;
+            gs = specular[0].attributes.getNamedItem("g").value;
+            bs = specular[0].attributes.getNamedItem("b").value;
+            as = specular[0].attributes.getNamedItem("a").value;
 
-          tempSpecular = new RGBA(rs, gs, bs, as);
+            tempSpecular = new RGBA(rs, gs, bs, as);
 
-          this.spotLights.push(new Spot(idSpot, enabledSpot, exponentSpot, angleSpot, tempTarget, tempLocation, tempAmbient, tempDiffuse, tempSpecular));
+            this.spotLights.push(new Spot(idSpot, enabledSpot, exponentSpot, angleSpot, tempTarget, tempLocation, tempAmbient, tempDiffuse, tempSpecular));
         }
 
     }
@@ -433,8 +425,8 @@ MySceneGraph.prototype.parserToTextures = function(rootElement) {
         var length_s = texts[i].attributes.getNamedItem("length_s").value;
         var length_t = texts[i].attributes.getNamedItem("length_t").value;
 
-        if(this.textures[id]==null){
-          this.textures[id] = [id, file, length_s, length_t];
+        if (this.textures[id] == null) {
+            this.textures[id] = [id, file, length_s, length_t];
         }
 
     }
@@ -536,72 +528,71 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 
         var id = transformation[i].attributes.getNamedItem("id").value;
 
-        if(this.transformations[id]==null)
-        {
-          var transformationMatrix = mat4.create();
+        if (this.transformations[id] == null) {
+            var transformationMatrix = mat4.create();
 
-          var translate = transformation[i].getElementsByTagName("translate");
+            var translate = transformation[i].getElementsByTagName("translate");
 
-          for (var j = 0; j < translate.length; j++) {
-              var tx = translate[j].attributes.getNamedItem("x").value;
-              var ty = translate[j].attributes.getNamedItem("y").value;
-              var tz = translate[j].attributes.getNamedItem("z").value;
+            for (var j = 0; j < translate.length; j++) {
+                var tx = translate[j].attributes.getNamedItem("x").value;
+                var ty = translate[j].attributes.getNamedItem("y").value;
+                var tz = translate[j].attributes.getNamedItem("z").value;
 
-              var translateArray = [tx, ty, tz];
+                var translateArray = [tx, ty, tz];
 
-              mat4.translate(transformationMatrix, transformationMatrix, translateArray);
+                mat4.translate(transformationMatrix, transformationMatrix, translateArray);
 
-              console.log("tx: " + tx + ", ty: " + ty + ", tz: " + tz);
+                console.log("tx: " + tx + ", ty: " + ty + ", tz: " + tz);
 
-          }
-
-
-          var rotate = transformation[i].getElementsByTagName("rotate");
-
-          for (var j = 0; j < rotate.length; j++) {
-
-              var axis = rotate[j].attributes.getNamedItem("axis").value;
-              var angle = rotate[j].attributes.getNamedItem("angle").value;
-
-              var rotationArray;
-
-              switch (axis) {
-                  case 'x':
-                      rotationArray = [1, 0, 0];
-                      break;
-                  case 'y':
-                      rotationArray = [0, 1, 0];
-                      break;
-                  case 'z':
-                      rotationArray = [0, 0, 1];
-                      break;
-                  default:
-                      break;
-              }
-              angle = angle * 2 * Math.PI / 360;
-
-              mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
-
-              console.log("angle: " + angle);
-          }
+            }
 
 
-          var scale = transformation[i].getElementsByTagName("scale");
+            var rotate = transformation[i].getElementsByTagName("rotate");
 
-          for (var j = 0; j < scale.length; j++) {
-              var sx = scale[j].attributes.getNamedItem("x").value;
-              var sy = scale[j].attributes.getNamedItem("y").value;
-              var sz = scale[j].attributes.getNamedItem("z").value;
+            for (var j = 0; j < rotate.length; j++) {
 
-              var scaleArray = [sx, sy, sz];
+                var axis = rotate[j].attributes.getNamedItem("axis").value;
+                var angle = rotate[j].attributes.getNamedItem("angle").value;
 
-              mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
+                var rotationArray;
 
-              console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
+                switch (axis) {
+                    case 'x':
+                        rotationArray = [1, 0, 0];
+                        break;
+                    case 'y':
+                        rotationArray = [0, 1, 0];
+                        break;
+                    case 'z':
+                        rotationArray = [0, 0, 1];
+                        break;
+                    default:
+                        break;
+                }
+                angle = angle * 2 * Math.PI / 360;
 
-          }
+                mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
 
-          this.transformations[id] = transformationMatrix;
+                console.log("angle: " + angle);
+            }
+
+
+            var scale = transformation[i].getElementsByTagName("scale");
+
+            for (var j = 0; j < scale.length; j++) {
+                var sx = scale[j].attributes.getNamedItem("x").value;
+                var sy = scale[j].attributes.getNamedItem("y").value;
+                var sz = scale[j].attributes.getNamedItem("z").value;
+
+                var scaleArray = [sx, sy, sz];
+
+                mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
+
+                console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
+
+            }
+
+            this.transformations[id] = transformationMatrix;
         }
 
     }
@@ -626,71 +617,70 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
         var id = primitive[i].attributes.getNamedItem("id").value;
 
-        if(this.objects[id]==null)
-        {
-          var rectangle = primitive[i].getElementsByTagName("rectangle");
+        if (this.objects[id] == null) {
+            var rectangle = primitive[i].getElementsByTagName("rectangle");
 
 
-          if (rectangle.length == 1) {
-              var type = "rectangle";
-              var rx1 = rectangle[0].attributes.getNamedItem("x1").value;
-              var rx2 = rectangle[0].attributes.getNamedItem("x2").value;
-              var ry1 = rectangle[0].attributes.getNamedItem("y1").value;
-              var ry2 = rectangle[0].attributes.getNamedItem("y2").value;
-              this.objects[id] = new Rectangle(this.scene, rx1, ry1, rx2, ry2);
-              console.log(rx1 + "," + rx2 + "," + ry1 + "," + ry2);
-          }
+            if (rectangle.length == 1) {
+                var type = "rectangle";
+                var rx1 = rectangle[0].attributes.getNamedItem("x1").value;
+                var rx2 = rectangle[0].attributes.getNamedItem("x2").value;
+                var ry1 = rectangle[0].attributes.getNamedItem("y1").value;
+                var ry2 = rectangle[0].attributes.getNamedItem("y2").value;
+                this.objects[id] = new Rectangle(this.scene, rx1, ry1, rx2, ry2);
+                console.log(rx1 + "," + rx2 + "," + ry1 + "," + ry2);
+            }
 
-          var triangle = primitive[i].getElementsByTagName("triangle");
+            var triangle = primitive[i].getElementsByTagName("triangle");
 
-          if (triangle.length == 1) {
-              var type = "triangle";
-              var tx1 = triangle[0].attributes.getNamedItem("x1").value;
-              var tx2 = triangle[0].attributes.getNamedItem("x2").value;
-              var tx3 = triangle[0].attributes.getNamedItem("x3").value;
-              var ty1 = triangle[0].attributes.getNamedItem("y1").value;
-              var ty2 = triangle[0].attributes.getNamedItem("y2").value;
-              var ty3 = triangle[0].attributes.getNamedItem("y3").value;
-              var tz1 = triangle[0].attributes.getNamedItem("z1").value;
-              var tz2 = triangle[0].attributes.getNamedItem("z2").value;
-              var tz3 = triangle[0].attributes.getNamedItem("z3").value;
-              this.objects[id] = new Triangle(this.scene, tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3);
-          }
+            if (triangle.length == 1) {
+                var type = "triangle";
+                var tx1 = triangle[0].attributes.getNamedItem("x1").value;
+                var tx2 = triangle[0].attributes.getNamedItem("x2").value;
+                var tx3 = triangle[0].attributes.getNamedItem("x3").value;
+                var ty1 = triangle[0].attributes.getNamedItem("y1").value;
+                var ty2 = triangle[0].attributes.getNamedItem("y2").value;
+                var ty3 = triangle[0].attributes.getNamedItem("y3").value;
+                var tz1 = triangle[0].attributes.getNamedItem("z1").value;
+                var tz2 = triangle[0].attributes.getNamedItem("z2").value;
+                var tz3 = triangle[0].attributes.getNamedItem("z3").value;
+                this.objects[id] = new Triangle(this.scene, tx1, ty1, tz1, tx2, ty2, tz2, tx3, ty3, tz3);
+            }
 
-          var cylinder = primitive[i].getElementsByTagName("cylinder");
+            var cylinder = primitive[i].getElementsByTagName("cylinder");
 
-          if (cylinder.length == 1) {
-              var type = "cylinder";
-              var base = cylinder[0].attributes.getNamedItem("base").value;
-              var top = cylinder[0].attributes.getNamedItem("top").value;
-              var height = cylinder[0].attributes.getNamedItem("height").value;
-              var slices = cylinder[0].attributes.getNamedItem("slices").value;
-              var stacks = cylinder[0].attributes.getNamedItem("stacks").value;
-              this.objects[id] = new Cylinder(this.scene, base, top, height, slices, stacks);
-          }
+            if (cylinder.length == 1) {
+                var type = "cylinder";
+                var base = cylinder[0].attributes.getNamedItem("base").value;
+                var top = cylinder[0].attributes.getNamedItem("top").value;
+                var height = cylinder[0].attributes.getNamedItem("height").value;
+                var slices = cylinder[0].attributes.getNamedItem("slices").value;
+                var stacks = cylinder[0].attributes.getNamedItem("stacks").value;
+                this.objects[id] = new Cylinder(this.scene, base, top, height, slices, stacks);
+            }
 
-          var sphere = primitive[i].getElementsByTagName("sphere");
+            var sphere = primitive[i].getElementsByTagName("sphere");
 
-          if (sphere.length == 1) {
-              var type = "sphere";
-              var radius = sphere[0].attributes.getNamedItem("radius").value;
-              var slices = sphere[0].attributes.getNamedItem("slices").value;
-              var stacks = sphere[0].attributes.getNamedItem("stacks").value;
+            if (sphere.length == 1) {
+                var type = "sphere";
+                var radius = sphere[0].attributes.getNamedItem("radius").value;
+                var slices = sphere[0].attributes.getNamedItem("slices").value;
+                var stacks = sphere[0].attributes.getNamedItem("stacks").value;
 
-              this.objects[id] = new Sphere(this.scene, radius, slices, stacks);
-          }
+                this.objects[id] = new Sphere(this.scene, radius, slices, stacks);
+            }
 
-          var torus = primitive[i].getElementsByTagName("torus");
+            var torus = primitive[i].getElementsByTagName("torus");
 
-          if (torus.length == 1) {
-              var type = "torus";
-              var inner = torus[0].attributes.getNamedItem("inner").value*1.0;
-              var outer = torus[0].attributes.getNamedItem("outer").value*1.0;
-              var slices = torus[0].attributes.getNamedItem("slices").value*1.0;
-              var loops = torus[0].attributes.getNamedItem("loops").value*1.0;
+            if (torus.length == 1) {
+                var type = "torus";
+                var inner = torus[0].attributes.getNamedItem("inner").value * 1.0;
+                var outer = torus[0].attributes.getNamedItem("outer").value * 1.0;
+                var slices = torus[0].attributes.getNamedItem("slices").value * 1.0;
+                var loops = torus[0].attributes.getNamedItem("loops").value * 1.0;
 
-              this.objects[id] = new Torus(this.scene,inner,outer, slices, loops);
-          }
+                this.objects[id] = new Torus(this.scene, inner, outer, slices, loops);
+            }
         }
     }
 
@@ -814,7 +804,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                                 [0, 0, 0, 0],
                                 [0, 0, 0, 0],
                                 [0, 0, 0, 0],
-                                "inherit"
+                                ["inherit"]
                             ]);
                         } else {
                             this.materialsArray.push(this.materials[material.attributes.getNamedItem("id").value]);
@@ -888,8 +878,7 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
     for (let primitive of this.composedObjects[object].getChildrenPrimitive()) {
         var length_s = this.composedObjects[object].texture[2]; //length_s
         var length_t = this.composedObjects[object].texture[3]; //length_t
-
-        if (this.composedObjects[object].getMaterials()[5] != "inherit") {
+        if (this.composedObjects[object].getMaterials()[0][5][0] != "inherit") {
             this.composedObjects[object].setMaterials(this.composedObjects[object].getMaterials());
         }
         /*  if (this.composedObjects[object].getTexture()[0] != "inherit") {
@@ -907,7 +896,7 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
                 this.scene.multMatrix(transformation);
             }
         }
-        if (this.composedObjects[composedObject].getMaterials()[0][5] != "inherit") {
+        if (this.composedObjects[composedObject].getMaterials()[0][5][0] != "inherit") {
             this.fatherMaterials = this.composedObjects[composedObject].getMaterials();
             this.composedObjects[composedObject].setMaterials(this.composedObjects[composedObject].getMaterials());
         } else {
