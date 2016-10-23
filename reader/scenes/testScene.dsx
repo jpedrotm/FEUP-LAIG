@@ -213,7 +213,7 @@
               <material id="metal"/>
           </materials>
 
-          <texture id="yellow"/>
+          <texture id="tap"/>
 
           <children>
                 <componentref id="tracksignal1"/>
