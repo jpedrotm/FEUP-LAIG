@@ -309,7 +309,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="metal"/>
+            <texture id="tap"/>
 
             <children>
                 <componentref id="body"/>
@@ -331,7 +331,7 @@
                 <material id="wood"/>
             </materials>
 
-            <texture id="tap"/>
+            <texture id="inherit"/>
 
             <children>
                 <primitiveref id="planeBody"/>
