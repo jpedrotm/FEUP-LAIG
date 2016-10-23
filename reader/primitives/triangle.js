@@ -1,5 +1,5 @@
 /**
- * Triangle
+ * Triangle.
  * @constructor
  */
 function Triangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
@@ -67,7 +67,6 @@ Triangle.prototype.initBuffers = function() {
 
 Triangle.prototype.updateTexCoords = function(length_s, length_t) {
 
-    console.log("TRIANGLE");
     if (length_s != 1 || length_t != 1) {
         for (let i = 0; i < this.initialTexCoords.length; i += 2) {
             this.texCoords[i] = this.initialTexCoords[i] / length_s;

@@ -1,5 +1,5 @@
 /**
- * Component
+ * Component.
  * @constructor
  */
 function Component(scene, transformations, materials, texture, childrenComponent, childrenPrimitive) {
@@ -25,6 +25,10 @@ function Component(scene, transformations, materials, texture, childrenComponent
 
 };
 
+/**
+* Function responsible to set the appearance according to the material.
+* @param {Array} materials
+*/
 Component.prototype.setMaterials = function(materials) {
     this.materials = materials;
     this.currentMaterial = this.materials[this.currMatIndice];
@@ -48,30 +52,45 @@ Component.prototype.setMaterials = function(materials) {
 }
 */
 
+/**
+* Function that returns the indice of the current material.
+*/
 Component.prototype.getCurrMatIndice = function() {
     return this.currMatIndice;
 }
-
+/**
+* Function that returns the texture the component.
+*/
 Component.prototype.getTexture = function() {
     return this.texture;
 }
-
+/**
+* Function that returns the array with all the materials of the component.
+*/
 Component.prototype.getMaterials = function() {
     return this.materials;
 }
-
+/**
+* Function that return the transformations matrix of the component.
+*/
 Component.prototype.getTransformations = function() {
     return this.transformations;
 }
-
+/**
+* Returns the children components.
+*/
 Component.prototype.getChildrenComponent = function() {
     return this.childrenComponent;
 }
-
+/**
+* Returns the children primitives.
+*/
 Component.prototype.getChildrenPrimitive = function() {
     return this.childrenPrimitive;
 }
-
+/**
+* Function that returns the CGFappearance of the component.
+*/
 Component.prototype.getAppearance = function() {
     return this.appearance;
 }

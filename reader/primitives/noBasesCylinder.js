@@ -1,5 +1,5 @@
 /**
- * noBasesCylinder
+ * noBasesCylinder.
  * @constructor
  */
 function noBasesCylinder(scene, base, top, height, slices, stacks) {

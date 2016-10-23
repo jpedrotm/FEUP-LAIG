@@ -1,5 +1,5 @@
 /**
- * Torus
+ * Torus.
  * @constructor
  */
  function Torus(scene, inner, outter, slices, loops) {
@@ -74,7 +74,6 @@ Torus.prototype.initBuffers = function(){
 
 Torus.prototype.updateTexCoords = function(length_s, length_t) {
 
-  console.log("TORUS");
   if(length_s != 1 || length_t != 1){
     for (let i = 0; i < this.initialTexCoords.length; i += 2) {
         this.texCoords[i] = this.initialTexCoords[i] / length_s;

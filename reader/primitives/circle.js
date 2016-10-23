@@ -1,5 +1,5 @@
 /**
- * MyPrism
+ * Circle.
  * @constructor
  */
 function Circle(scene, slices, size) {
@@ -58,8 +58,6 @@ Circle.prototype.initBuffers = function() {
 };
 
 Circle.prototype.updateTexCoords = function(length_s, length_t) {
-
-  console.log("CIRCLE");
 
   if(length_s != 1 || length_t != 1){
     for (let i = 0; i < this.initialTexCoords.length; i += 2) {

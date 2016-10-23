@@ -2,8 +2,6 @@
  * MyInterface
  * @constructor
  */
-
-
 function MyInterface() {
 
 	CGFinterface.call(this);
@@ -12,7 +10,10 @@ function MyInterface() {
 MyInterface.prototype = Object.create(CGFinterface.prototype);
 MyInterface.prototype.constructor = MyInterface;
 
-
+/**
+ * initialize the interface.
+ * @param {CGFapplication} application
+ */
 MyInterface.prototype.init = function(application) {
 
 	CGFinterface.prototype.init.call(this, application);
@@ -25,7 +26,10 @@ MyInterface.prototype.init = function(application) {
   return true;
 };
 
-
+/**
+* Function that receives the inputs of the keyboard.
+* @param {Event} event
+*/
 MyInterface.prototype.processKeyDown = function(event) {
 
 
@@ -47,6 +51,11 @@ MyInterface.prototype.processKeyDown = function(event) {
 	};
 };
 
+/**
+* Adds the lights to the interface by receiving the indice and the id of the light to be added.
+* @param {number} i
+* @param {number} id
+*/
 MyInterface.prototype.addLight = function(i, id) {
 
 	this.lights.add(this.scene.infoLights, i, this.scene.infoLights[i]).name(id);

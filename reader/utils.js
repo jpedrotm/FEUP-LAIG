@@ -1,3 +1,7 @@
+/**
+* Point.
+* @constructor
+*/
 class Point{
   constructor(x,y,z,w){
     this.x=x;
@@ -6,7 +10,10 @@ class Point{
     this.w=w;
   }
 };
-
+/**
+* RGBA.
+* @constructor
+*/
 class RGBA{
   constructor(r,g,b,a){
     this.r=r;
@@ -15,7 +22,10 @@ class RGBA{
     this.a=a;
   }
 };
-
+/**
+* Omni.
+* @constructor
+*/
 class Omni{
   constructor(id,location,ambient,diffuse,specular,enable){
     this.id=id;
@@ -26,7 +36,10 @@ class Omni{
     this.enable=enable;
   }
 };
-
+/**
+* Spot.
+* @constructor
+*/
 class Spot{
   constructor(id,enable,exponent,angle,target,location,ambient,diffuse,specular){
     this.id=id;
@@ -39,7 +52,10 @@ class Spot{
     this.exponent=exponent;
   }
 };
-
+/**
+* GraphView.
+* @constructor
+*/
 class GraphView{
   constructor(id,camera){
     this.id=id;

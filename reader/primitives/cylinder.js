@@ -1,5 +1,5 @@
 /**
- * Cylinder
+ * Cylinder.
  * @constructor
  */
 function Cylinder(scene, base, top, height, slices, stacks) {
@@ -51,7 +51,6 @@ Cylinder.prototype.display=function(){
 
 Cylinder.prototype.updateTexCoords = function(length_s, length_t) {
 
-  console.log("CYLINDER");
 if(length_s != 1 || length_t != 1){
     this.noBasesCylinder.updateTexCoords(length_s,length_t);
     this.baseCircle.updateTexCoords(length_s,length_t);

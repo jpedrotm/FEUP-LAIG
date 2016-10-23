@@ -1,3 +1,7 @@
+/**
+* XMLscene.
+* @constructor
+*/
 function XMLscene(myInterface) {
     CGFscene.call(this);
 
@@ -32,7 +36,9 @@ XMLscene.prototype.initLights = function() {
   this.lights[0].update();
 
 };
-
+/**
+* Function that loads the lights from the graph to XMLscene and the interface.
+*/
 XMLscene.prototype.graphLights = function(){
 
   console.log("GRAPH LIGHTS: "+this.graph.omniLights.length);
@@ -110,7 +116,9 @@ XMLscene.prototype.graphLights = function(){
 
 
 };
-
+/**
+* Function called in display to verify if a light should be on or off.
+*/
 XMLscene.prototype.updateLights = function () {
 
   for (var i = 0; i < this.infoLights.length; i++) {
@@ -123,7 +131,9 @@ XMLscene.prototype.updateLights = function () {
   }
 
 };
-
+/**
+* Function called every time that the keys m/M are pressed, to switch the material of each component.
+*/
 XMLscene.prototype.switchMaterials = function(){
 
   for(component in this.graph.composedObjects)
@@ -171,7 +181,9 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.graphViews();
     this.graphLights();
 };
-
+/**
+* Function that loads the initial camera to XMLscene.
+*/
 XMLscene.prototype.graphViews = function() {
 
     var tempIndice=this.graph.viewsIndice;
@@ -180,7 +192,9 @@ XMLscene.prototype.graphViews = function() {
     this.interface.setActiveCamera(this.camera);
 
 };
-
+/**
+* Switch the view every time the keys v/V are pressed.
+*/
 XMLscene.prototype.switchView=function(){
 
   var tempIndice=this.graph.viewsIndice;

@@ -1,5 +1,5 @@
 /**
- * MyObject
+ * Rectangle.
  * @constructor
  */
 function Rectangle(scene, minX, minY, maxX, maxY) {
@@ -62,7 +62,6 @@ Rectangle.prototype.initBuffers = function() {
 
 Rectangle.prototype.updateTexCoords = function(length_s, length_t) {
 
-  console.log("RECTANGLE");
   if(length_s != 1 || length_t != 1){
     for (let i = 0; i < this.initialTexCoords.length; i += 2) {
         this.texCoords[i] = this.initialTexCoords[i] / length_s;
