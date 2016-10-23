@@ -57,7 +57,8 @@ Component.prototype.loadTexture = function() {
         if (this.texture[1] == "inherit") {
             console.log("inherit:");
             console.log(this.fatherTexture[1]);
-            this.appearance.loadTexture(this.fatherTexture[1]);
+            if (this.fatherTexture[1] != "none")
+                this.appearance.loadTexture(this.fatherTexture[1]);
         } else if (this.texture[1] == "none") {
             console.log("sadnmaksljdlsamdklasmdlksaml");
         } else {
