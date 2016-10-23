@@ -12,12 +12,16 @@ function Component(scene, transformations, materials, texture, childrenComponent
     this.childrenComponent = childrenComponent;
     this.childrenPrimitive = childrenPrimitive;
     this.appearance = new CGFappearance(this.scene);
-    if (this.texture[1] == "inherit")
+    if (this.texture[1] == "inherit") {
         this.appearance.loadTexture("");
-    else
+    } else if (this.texture[1] == "none") {
+        this.appearance.setTexture("");
+    } else {
         this.appearance.loadTexture(this.texture[1]);
 
-    this.currMatIndice=0;
+    }
+
+    this.currMatIndice = 0;
 
 };
 
@@ -29,8 +33,8 @@ Component.prototype.setMaterials = function(materials) {
     this.appearance.setDiffuse(this.currentMaterial[2][0], this.currentMaterial[2][1], this.currentMaterial[2][2], this.currentMaterial[2][3]);
     this.appearance.setSpecular(this.currentMaterial[3][0], this.currentMaterial[3][1], this.currentMaterial[3][2], this.currentMaterial[3][3]);
     this.appearance.setShininess(this.currentMaterial[4][0]);
-    if(this.texture[2]!=1 || this.texture[3]!=1){
-      this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+    if (this.texture[2] != 1 || this.texture[3] != 1) {
+        this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     }
 }
 
@@ -44,8 +48,8 @@ Component.prototype.setMaterials = function(materials) {
 }
 */
 
-Component.prototype.getCurrMatIndice = function(){
-  return this.currMatIndice;
+Component.prototype.getCurrMatIndice = function() {
+    return this.currMatIndice;
 }
 
 Component.prototype.getTexture = function() {

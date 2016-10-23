@@ -737,7 +737,9 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     this.textureFlag = 1;
                     let texture = attribute;
                     if ((texture.attributes.getNamedItem("id").value) == "inherit") {
-                        this.componentTexture = [id, "inherit", 1, 1];
+                        this.componentTexture = ["inherit", "inherit", 1, 1];
+                    } else if ((texture.attributes.getNamedItem("id").value) == "none") {
+                        this.componentTexture = ["none", "none", 1, 1];
                     } else {
                         this.componentTexture = this.textures[(texture.attributes.getNamedItem("id").value)];
                     }
@@ -806,8 +808,6 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
                 this.scene.multMatrix(transformation);
             }
         }
-        //console.log("Component:");
-        //console.log(composedObject);
         if (this.composedObjects[composedObject].getMaterials()[0][5] != "inherit") {
             this.fatherMaterials = this.composedObjects[composedObject].getMaterials();
             this.composedObjects[composedObject].setMaterials(this.composedObjects[composedObject].getMaterials());
