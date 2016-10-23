@@ -48,3 +48,14 @@ Cylinder.prototype.display=function(){
   this.scene.popMatrix();
 
 };
+
+Cylinder.prototype.updateTexCoords = function(length_s, length_t) {
+
+  console.log("CYLINDER");
+if(length_s != 1 || length_t != 1){
+    this.noBasesCylinder.updateTexCoords(length_s,length_t);
+    this.baseCircle.updateTexCoords(length_s,length_t);
+    this.topCirlce.updateTexCoords(length_s,length_t);
+  }
+
+};
