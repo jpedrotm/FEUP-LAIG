@@ -272,7 +272,7 @@
               <material id="inherit"/>
           </materials>
 
-          <texture id="inherit"/>
+          <texture id="tap"/>
 
           <children>
               <primitiveref id="warningTriangle"/>
