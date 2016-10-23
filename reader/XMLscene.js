@@ -85,7 +85,7 @@ XMLscene.prototype.graphLights = function(){
 
     this.lights[lightsIndice].setPosition(spotLight.location.x,spotLight.location.y,spotLight.location.z,1);
     this.lights[lightsIndice].setSpotExponent(spotLight.exponent);
-    this.lights[lightsIndice].setSpotDirection(spotLight.target.x, spotLight.target.y, spotLight.target.z);
+    this.lights[lightsIndice].setSpotDirection(spotLight.target.x-spotLight.location.x, spotLight.target.y-spotLight.location.y, spotLight.target.z-spotLight.location.z);
     this.lights[lightsIndice].setAmbient(spotLight.ambient.r,spotLight.ambient.g,spotLight.ambient.b,spotLight.ambient.a);
     this.lights[lightsIndice].setDiffuse(spotLight.diffuse.r, spotLight.diffuse.g, spotLight.diffuse.b, spotLight.diffuse.a);
     this.lights[lightsIndice].setSpecular(spotLight.specular.r, spotLight.specular.g, spotLight.specular.b, spotLight.specular.a);

@@ -223,6 +223,34 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 
 };
 
+
+MySceneGraph.prototype.existsLight = function(id,type){
+
+  if(type=="spot")
+  {
+    for(var i=0;i<this.spotLights.length;i++)
+    {
+      if(this.spotLights[i].id==id)
+      {
+        return true;
+      }
+    }
+  }
+  else if(type=="omni")
+  {
+    for(var i=0;i<this.omniLights.length;i++)
+    {
+      if(this.omniLights[i].id==id)
+      {
+        return true;
+      }
+    }
+  }
+
+  return false;
+
+};
+
 /*
  * Loads the lights from the dsx file
  */
@@ -262,45 +290,47 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         var idOmni = omnis[i].attributes.getNamedItem("id").value;
         var enabledOmni = omnis[i].attributes.getNamedItem("enabled").value;
 
-        if (enabledOmni === "1") {
-            enabledOmni = true;
-        } else {
-            enabledOmni = false;
+        if(!this.existsLight(idOmni,"omni")){
+          if (enabledOmni === "1") {
+              enabledOmni = true;
+          } else {
+              enabledOmni = false;
+          }
+
+          location = omnis[i].getElementsByTagName("location");
+          lx = location[0].attributes.getNamedItem("x").value;
+          ly = location[0].attributes.getNamedItem("y").value;
+          lz = location[0].attributes.getNamedItem("z").value;
+          lw = location[0].attributes.getNamedItem("w").value;
+
+          tempLocation = new Point(lx, ly, lz, lw);
+
+          ambient = omnis[i].getElementsByTagName("ambient");
+          ra = ambient[0].attributes.getNamedItem("r").value;
+          ga = ambient[0].attributes.getNamedItem("g").value;
+          ba = ambient[0].attributes.getNamedItem("b").value;
+          aa = ambient[0].attributes.getNamedItem("a").value;
+
+          tempAmbient = new RGBA(ra, ga, ba, aa);
+
+          diffuse = omnis[i].getElementsByTagName("diffuse");
+          rd = diffuse[0].attributes.getNamedItem("r").value;
+          gd = diffuse[0].attributes.getNamedItem("g").value;
+          bd = diffuse[0].attributes.getNamedItem("b").value;
+          ad = diffuse[0].attributes.getNamedItem("a").value;
+
+          tempDiffuse = new RGBA(rd, gd, bd, ad);
+
+          specular = omnis[i].getElementsByTagName("specular");
+          rs = specular[0].attributes.getNamedItem("r").value;
+          gs = specular[0].attributes.getNamedItem("g").value;
+          bs = specular[0].attributes.getNamedItem("b").value;
+          as = specular[0].attributes.getNamedItem("a").value;
+
+          tempSpecular = new RGBA(rs, gs, bs, as);
+
+          this.omniLights.push(new Omni(idOmni, tempLocation, tempAmbient, tempDiffuse, tempSpecular, enabledOmni));
         }
-
-        location = omnis[i].getElementsByTagName("location");
-        lx = location[0].attributes.getNamedItem("x").value;
-        ly = location[0].attributes.getNamedItem("y").value;
-        lz = location[0].attributes.getNamedItem("z").value;
-        lw = location[0].attributes.getNamedItem("w").value;
-
-        tempLocation = new Point(lx, ly, lz, lw);
-
-        ambient = omnis[i].getElementsByTagName("ambient");
-        ra = ambient[0].attributes.getNamedItem("r").value;
-        ga = ambient[0].attributes.getNamedItem("g").value;
-        ba = ambient[0].attributes.getNamedItem("b").value;
-        aa = ambient[0].attributes.getNamedItem("a").value;
-
-        tempAmbient = new RGBA(ra, ga, ba, aa);
-
-        diffuse = omnis[i].getElementsByTagName("diffuse");
-        rd = diffuse[0].attributes.getNamedItem("r").value;
-        gd = diffuse[0].attributes.getNamedItem("g").value;
-        bd = diffuse[0].attributes.getNamedItem("b").value;
-        ad = diffuse[0].attributes.getNamedItem("a").value;
-
-        tempDiffuse = new RGBA(rd, gd, bd, ad);
-
-        specular = omnis[i].getElementsByTagName("specular");
-        rs = specular[0].attributes.getNamedItem("r").value;
-        gs = specular[0].attributes.getNamedItem("g").value;
-        bs = specular[0].attributes.getNamedItem("b").value;
-        as = specular[0].attributes.getNamedItem("a").value;
-
-        tempSpecular = new RGBA(rs, gs, bs, as);
-
-        this.omniLights.push(new Omni(idOmni, tempLocation, tempAmbient, tempDiffuse, tempSpecular, enabledOmni));
 
     }
 
@@ -311,58 +341,61 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
         var idSpot = spots[i].attributes.getNamedItem("id").value;
         var enabledSpot = spots[i].attributes.getNamedItem("enabled").value;
 
-        if (enabledSpot === "1") {
-            enabledSpot = true;
-        } else {
-            enabledSpot = false;
+        if(!this.existsLight(idSpot,"spot"))
+        {
+          if (enabledSpot === "1") {
+              enabledSpot = true;
+          } else {
+              enabledSpot = false;
+          }
+
+          var angleSpot = spots[i].attributes.getNamedItem("angle").value;
+          var exponentSpot = spots[i].attributes.getNamedItem("exponent").value;
+
+          console.log("ENABLED: " + enabledSpot);
+
+          var target = spots[i].getElementsByTagName("target");
+          var tx = target[0].attributes.getNamedItem("x").value;
+          var ty = target[0].attributes.getNamedItem("y").value;
+          var tz = target[0].attributes.getNamedItem("z").value;
+
+          tempTarget = new Point(tx, ty, tz, null);
+
+          location = spots[i].getElementsByTagName("location");
+          lx = location[0].attributes.getNamedItem("x").value;
+          ly = location[0].attributes.getNamedItem("y").value;
+          lz = location[0].attributes.getNamedItem("z").value;
+
+          tempLocation = new Point(lx, ly, lz, null);
+
+          ambient = spots[i].getElementsByTagName("ambient");
+          ra = ambient[0].attributes.getNamedItem("r").value;
+          ga = ambient[0].attributes.getNamedItem("g").value;
+          ba = ambient[0].attributes.getNamedItem("b").value;
+          aa = ambient[0].attributes.getNamedItem("a").value;
+
+          tempAmbient = new RGBA(ra, ga, ba, aa);
+
+          diffuse = spots[i].getElementsByTagName("diffuse");
+          rd = diffuse[0].attributes.getNamedItem("r").value;
+          gd = diffuse[0].attributes.getNamedItem("g").value;
+          bd = diffuse[0].attributes.getNamedItem("b").value;
+          ad = diffuse[0].attributes.getNamedItem("a").value;
+
+          tempDiffuse = new RGBA(rd, gd, bd, ad);
+
+          console.log("DiFFUSE: " + rd + gd + tempDiffuse.b + tempDiffuse.a);
+
+          specular = spots[i].getElementsByTagName("specular");
+          rs = specular[0].attributes.getNamedItem("r").value;
+          gs = specular[0].attributes.getNamedItem("g").value;
+          bs = specular[0].attributes.getNamedItem("b").value;
+          as = specular[0].attributes.getNamedItem("a").value;
+
+          tempSpecular = new RGBA(rs, gs, bs, as);
+
+          this.spotLights.push(new Spot(idSpot, enabledSpot, exponentSpot, angleSpot, tempTarget, tempLocation, tempAmbient, tempDiffuse, tempSpecular));
         }
-
-        var angleSpot = spots[i].attributes.getNamedItem("angle").value;
-        var exponentSpot = spots[i].attributes.getNamedItem("exponent").value;
-
-        console.log("ENABLED: " + enabledSpot);
-
-        var target = spots[i].getElementsByTagName("target");
-        var tx = target[0].attributes.getNamedItem("x").value;
-        var ty = target[0].attributes.getNamedItem("y").value;
-        var tz = target[0].attributes.getNamedItem("z").value;
-
-        tempTarget = new Point(tx, ty, tz, null);
-
-        location = spots[i].getElementsByTagName("location");
-        lx = location[0].attributes.getNamedItem("x").value;
-        ly = location[0].attributes.getNamedItem("y").value;
-        lz = location[0].attributes.getNamedItem("z").value;
-
-        tempLocation = new Point(lx, ly, lz, null);
-
-        ambient = spots[i].getElementsByTagName("ambient");
-        ra = ambient[0].attributes.getNamedItem("r").value;
-        ga = ambient[0].attributes.getNamedItem("g").value;
-        ba = ambient[0].attributes.getNamedItem("b").value;
-        aa = ambient[0].attributes.getNamedItem("a").value;
-
-        tempAmbient = new RGBA(ra, ga, ba, aa);
-
-        diffuse = spots[i].getElementsByTagName("diffuse");
-        rd = diffuse[0].attributes.getNamedItem("r").value;
-        gd = diffuse[0].attributes.getNamedItem("g").value;
-        bd = diffuse[0].attributes.getNamedItem("b").value;
-        ad = diffuse[0].attributes.getNamedItem("a").value;
-
-        tempDiffuse = new RGBA(rd, gd, bd, ad);
-
-        console.log("DiFFUSE: " + rd + gd + tempDiffuse.b + tempDiffuse.a);
-
-        specular = spots[i].getElementsByTagName("specular");
-        rs = specular[0].attributes.getNamedItem("r").value;
-        gs = specular[0].attributes.getNamedItem("g").value;
-        bs = specular[0].attributes.getNamedItem("b").value;
-        as = specular[0].attributes.getNamedItem("a").value;
-
-        tempSpecular = new RGBA(rs, gs, bs, as);
-
-        this.spotLights.push(new Spot(idSpot, enabledSpot, exponentSpot, angleSpot, tempTarget, tempLocation, tempAmbient, tempDiffuse, tempSpecular));
 
     }
 
@@ -643,12 +676,12 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
         if (torus.length == 1) {
             var type = "torus";
-            var inner = torus[0].attributes.getNamedItem("inner").value;
-            var outer = torus[0].attributes.getNamedItem("outer").value;
-            var slices = torus[0].attributes.getNamedItem("slices").value;
-            var loops = torus[0].attributes.getNamedItem("loops").value;
+            var inner = torus[0].attributes.getNamedItem("inner").value*1.0;
+            var outer = torus[0].attributes.getNamedItem("outer").value*1.0;
+            var slices = torus[0].attributes.getNamedItem("slices").value*1.0;
+            var loops = torus[0].attributes.getNamedItem("loops").value*1.0;
 
-            this.objects[id] = new Torus(this.scene, 0.5, 1, 50, 50);
+            this.objects[id] = new Torus(this.scene,inner,outer, slices, loops);
         }
 
 
