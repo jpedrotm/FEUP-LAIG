@@ -51,8 +51,24 @@ Rectangle.prototype.initBuffers = function() {
         this.minS, this.maxT
     ];
 
+    this.initialTexCoords=[];
+    this.initialTexCoords=this.texCoords;
+
 
 
     this.initGLBuffers();
 
 };
+
+Rectangle.prototype.updateTexCoords = function(length_s, length_t) {
+
+  console.log("RECTANGLE");
+  if(length_s != 1 || length_t != 1){
+    for (let i = 0; i < this.initialTexCoords.length; i += 2) {
+        this.texCoords[i] = this.initialTexCoords[i] / length_s;
+        this.texCoords[i + 1] = this.initialTexCoords[i + 1] / length_t;
+    }
+  }
+
+  this.updateTexCoordsGLBuffers();
+}
