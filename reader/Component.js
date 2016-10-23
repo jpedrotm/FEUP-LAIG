@@ -15,7 +15,7 @@ function Component(scene, transformations, materials, texture, childrenComponent
     if (this.texture[1] == "inherit") {
         this.appearance.loadTexture("");
     } else if (this.texture[1] == "none") {
-        this.appearance.setTexture("");
+        this.appearance.setTexture(null);
     } else {
         this.appearance.loadTexture(this.texture[1]);
 

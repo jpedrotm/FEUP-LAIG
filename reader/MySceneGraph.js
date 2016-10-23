@@ -792,13 +792,16 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 
 MySceneGraph.prototype.displayComposedObjects = function(object) {
     for (let primitive of this.composedObjects[object].getChildrenPrimitive()) {
+        var length_s = this.composedObjects[object].texture[2]; //length_s
+        var length_t = this.composedObjects[object].texture[3]; //length_t
+
         if (this.composedObjects[object].getMaterials()[5] != "inherit") {
             this.composedObjects[object].setMaterials(this.composedObjects[object].getMaterials());
         }
         if (this.composedObjects[object].getTexture()[0] != "inherit") {
             this.composedObjects[object].getAppearance().apply();
         }
-
+        this.objects[primitive].updateTexCoords(length_s, length_t);
         this.objects[primitive].display();
     }
     for (let composedObject of this.composedObjects[object].getChildrenComponent()) {
@@ -812,12 +815,6 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
             this.fatherMaterials = this.composedObjects[composedObject].getMaterials();
             this.composedObjects[composedObject].setMaterials(this.composedObjects[composedObject].getMaterials());
         } else {
-            //TODO : não sei se é aqui que devo fazer a alteração das texCoords
-            console.log("ID COMPONENT: " + tempId);
-            var tempId = this.composedObjects[composedObject].childrenPrimitive;
-            var length_s = this.composedObjects[composedObject].texture[2]; //length_s
-            var length_t = this.composedObjects[composedObject].texture[3]; //length_t
-            this.objects[tempId].updateTexCoords(length_s, length_t);
             this.composedObjects[composedObject].setMaterials(this.fatherMaterials);
         }
         if (this.composedObjects[composedObject].getTexture()[0] != "inherit") {
