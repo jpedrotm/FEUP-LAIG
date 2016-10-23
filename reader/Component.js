@@ -29,9 +29,6 @@ Component.prototype.setMaterials = function(materials) {
     this.appearance.setDiffuse(this.currentMaterial[2][0], this.currentMaterial[2][1], this.currentMaterial[2][2], this.currentMaterial[2][3]);
     this.appearance.setSpecular(this.currentMaterial[3][0], this.currentMaterial[3][1], this.currentMaterial[3][2], this.currentMaterial[3][3]);
     this.appearance.setShininess(this.currentMaterial[4][0]);
-    if(this.texture[2]!=1 || this.texture[3]!=1){
-      this.appearance.setTextureWrap('REPEAT', 'REPEAT');
-    }
 }
 
 /*Component.prototype.changeCurrentMaterial = function(index) {

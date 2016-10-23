@@ -167,7 +167,8 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     this.gl.clearColor(this.graph.background.r, this.graph.background.g, this.graph.background.b, this.graph.background.a);
     this.setGlobalAmbientLight(this.graph.ambient.r, this.graph.ambient.g, this.graph.ambient.b, this.graph.ambient.a);
-    this.axis=new CGFaxis(this,this.graph.axis_length, 0.2);
+    this.lights[0].setVisible(true);
+    this.lights[0].enable();
     this.graphViews();
     this.graphLights();
 };

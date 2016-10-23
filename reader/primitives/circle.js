@@ -20,7 +20,6 @@ Circle.prototype.initBuffers = function() {
     this.indices = new Array();
     this.normals = new Array();
     this.texCoords = new Array();
-    this.initialTexCoords = new Array();
 
     var ang = Math.PI * 2 / this.slices;
     var nSlices = this.slices;
@@ -50,23 +49,7 @@ Circle.prototype.initBuffers = function() {
 
     this.indices.push(0, i - 1, count - 1);
 
-    this.initialTexCoords=this.texCoords;
-
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();
-};
-
-Circle.prototype.updateTexCoords = function(length_s, length_t) {
-
-  console.log("CIRCLE");
-
-  if(length_s != 1 || length_t != 1){
-    for (let i = 0; i < this.initialTexCoords.length; i += 2) {
-        this.texCoords[i] = this.initialTexCoords[i] / length_s;
-        this.texCoords[i + 1] = this.initialTexCoords[i + 1] / length_t;
-    }
-  }
-
-  this.updateTexCoordsGLBuffers();
 };

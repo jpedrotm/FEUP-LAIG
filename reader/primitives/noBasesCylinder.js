@@ -37,8 +37,6 @@ noBasesCylinder.prototype.initBuffers = function() {
     this.normals = [];
     this.indices = [];
     this.texCoords = [];
-    this.initialTexCoords=[];
-
     var patchLengthx = 1 / this.slices;
     var patchLengthy = 1 / this.stacks;
     var xCoord = 0;
@@ -53,7 +51,7 @@ noBasesCylinder.prototype.initBuffers = function() {
         for (var i = 0; i < sides; i++) {
             this.vertices.push(inc * Math.cos(i * n), inc * Math.sin(i * n), q * this.deltaHeight);
             this.normals.push(Math.cos(i * n), Math.sin(i * n), 0);
-            this.texCoords.push(xCoord, yCoord);
+            this.texCoords.push(yCoord, xCoord);
             xCoord += patchLengthx;
         }
         xCoord = 0;
@@ -79,21 +77,7 @@ noBasesCylinder.prototype.initBuffers = function() {
 
     }
 
-    this.initialTexCoords=this.texCoords;
-
     this.primitiveType = this.scene.gl.TRIANGLES;
 
     this.initGLBuffers();
-};
-
-noBasesCylinder.prototype.updateTexCoords = function(length_s, length_t) {
-
-  if(length_s != 1 || length_t != 1){
-    for (let i = 0; i < this.initialTexCoords.length; i += 2) {
-        this.texCoords[i] = this.initialTexCoords[i] / length_s;
-        this.texCoords[i + 1] = this.initialTexCoords[i + 1] / length_t;
-      }
-    }
-
-  this.updateTexCoordsGLBuffers();
 };
