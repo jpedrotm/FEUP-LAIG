@@ -1,4 +1,8 @@
-function XMLscene() {
+/**
+* XMLscene.
+* @constructor
+*/
+function XMLscene(myInterface) {
     CGFscene.call(this);
 }
 
@@ -28,6 +32,129 @@ XMLscene.prototype.initLights = function() {
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
     this.lights[0].update();
 };
+/**
+* Function that loads the lights from the graph to XMLscene and the interface.
+*/
+XMLscene.prototype.graphLights = function(){
+
+  console.log("GRAPH LIGHTS: "+this.graph.omniLights.length);
+
+  console.log("AQUIIIIII: "+this.lights.length);
+
+  var lightsIndice=0;
+
+  for(var i=0;i<this.graph.omniLights.length;i++)
+  {
+
+    var omniLight=this.graph.omniLights[i];
+
+    this.lights[i].setPosition(omniLight.location.x, omniLight.location.y, omniLight.location.z, omniLight.location.w);
+    this.lights[i].setAmbient(omniLight.ambient.r, omniLight.ambient.g, omniLight.ambient.b, omniLight.ambient.a);
+    this.lights[i].setDiffuse(omniLight.diffuse.r, omniLight.diffuse.g, omniLight.diffuse.b, omniLight.diffuse.a);
+    this.lights[i].setSpecular(omniLight.specular.r, omniLight.specular.g, omniLight.specular.b, omniLight.specular.a);
+
+    console.log(omniLight.location.x+","+omniLight.location.y+","+omniLight.location.z+","+omniLight.location.w)
+
+    console.log("ENABLE: "+omniLight.enable);
+
+    if (omniLight.enable){
+      this.lights[i].enable();
+    }
+    else if(omniLight.enable){
+      this.lights[i].disable();
+    }
+
+
+      this.lights[i].setVisible(true);
+      this.lights[i].update();
+
+      this.infoLights.push(omniLight.enable);
+      this.interface.addLight(i,omniLight.id);
+
+      lightsIndice++;
+
+  }
+
+  for(var i=0;i<this.graph.spotLights.length;i++)
+  {
+    var spotLight=this.graph.spotLights[i];
+
+    this.lights[lightsIndice].setPosition(spotLight.location.x,spotLight.location.y,spotLight.location.z,1);
+    this.lights[lightsIndice].setSpotExponent(spotLight.exponent);
+    this.lights[lightsIndice].setSpotDirection(spotLight.target.x-spotLight.location.x, spotLight.target.y-spotLight.location.y, spotLight.target.z-spotLight.location.z);
+    this.lights[lightsIndice].setAmbient(spotLight.ambient.r,spotLight.ambient.g,spotLight.ambient.b,spotLight.ambient.a);
+    this.lights[lightsIndice].setDiffuse(spotLight.diffuse.r, spotLight.diffuse.g, spotLight.diffuse.b, spotLight.diffuse.a);
+    this.lights[lightsIndice].setSpecular(spotLight.specular.r, spotLight.specular.g, spotLight.specular.b, spotLight.specular.a);
+
+    console.log("ENABLED: "+spotLight.enable);
+
+    if (spotLight.enable){
+      console.log("ENTROU SPOT");
+      this.lights[lightsIndice].enable();
+    }
+    else if(spotLight.enable){
+      this.lights[lightsIndice].disable();
+    }
+
+
+      this.lights[lightsIndice].setVisible(true);
+      this.lights[lightsIndice].update();
+
+      this.infoLights.push(spotLight.enable);
+      this.interface.addLight(lightsIndice,spotLight.id);
+
+      console.log("UPDATE LIGHTS");
+
+      lightsIndice++;
+
+  }
+
+
+
+};
+/**
+* Function called in display to verify if a light should be on or off.
+*/
+XMLscene.prototype.updateLights = function () {
+
+  for (var i = 0; i < this.infoLights.length; i++) {
+    if(this.infoLights[i])
+      this.lights[i].enable();
+    else
+      this.lights[i].disable();
+
+      this.lights[i].update();
+  }
+
+};
+/**
+* Function called every time that the keys m/M are pressed, to switch the material of each component.
+*/
+XMLscene.prototype.switchMaterials = function(){
+
+  for(component in this.graph.composedObjects)
+  {
+    var matsLength=this.graph.composedObjects[component].materials.length;
+    var currI=this.graph.composedObjects[component].currMatIndice;
+
+    console.log("COMPONENT: "+this.graph.composedObjects[component].materials.length);
+
+
+    if(currI === matsLength-1)
+    {
+      currI=0;
+    }
+    else {
+      currI++;
+    }
+
+    this.graph.composedObjects[component].currMatIndice=currI;
+
+    console.log("INDICE: "+this.graph.composedObjects[component].currMatIndice);
+
+  }
+
+};
 
 XMLscene.prototype.initCameras = function() {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
@@ -43,10 +170,46 @@ XMLscene.prototype.setDefaultAppearance = function() {
 // Handler called when the graph is finally loaded.
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function() {
-    this.gl.clearColor(this.graph.background['r'], this.graph.background['g'], this.graph.background['b'], this.graph.background['a']);
-    this.setGlobalAmbientLight(this.graph.ambient['r'], this.graph.ambient['g'], this.graph.ambient['b'], this.graph.ambient['a']);
-    this.lights[0].setVisible(true);
-    this.lights[0].enable();
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    this.gl.clearColor(this.graph.background.r, this.graph.background.g, this.graph.background.b, this.graph.background.a);
+    this.setGlobalAmbientLight(this.graph.ambient.r, this.graph.ambient.g, this.graph.ambient.b, this.graph.ambient.a);
+    this.axis=new CGFaxis(this,this.graph.axis_length, 0.2);
+    this.graphViews();
+    this.graphLights();
+};
+/**
+* Function that loads the initial camera to XMLscene.
+*/
+XMLscene.prototype.graphViews = function() {
+
+    var tempIndice=this.graph.viewsIndice;
+
+    this.camera=this.graph.perspectives[tempIndice].camera;
+    this.interface.setActiveCamera(this.camera);
+
+};
+/**
+* Switch the view every time the keys v/V are pressed.
+*/
+XMLscene.prototype.switchView=function(){
+
+  var tempIndice=this.graph.viewsIndice;
+  var numCameras=this.graph.perspectives.length;
+
+  if(tempIndice==numCameras-1)
+  {
+    this.graph.viewsIndice=0;
+  }
+  else
+  {
+    this.graph.viewsIndice++;
+  }
+
+  tempIndice=this.graph.viewsIndice;
+
+  this.camera=this.graph.perspectives[tempIndice].camera;
+  this.interface.setActiveCamera(this.camera);
+
 };
 
 XMLscene.prototype.display = function() {

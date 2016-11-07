@@ -1,8 +1,8 @@
 /**
- * Cylinder.
+ * noBasesCylinder.
  * @constructor
  */
-function Cylinder(scene, base, top, height, slices, stacks) {
+function noBasesCylinder(scene, base, top, height, slices, stacks) {
     CGFobject.call(this, scene);
 
     //if slices not define, set to 6
@@ -22,35 +22,42 @@ function Cylinder(scene, base, top, height, slices, stacks) {
     this.initBuffers();
 };
 
-Cylinder.prototype = Object.create(CGFobject.prototype);
-Cylinder.prototype.constructor = Cylinder;
+noBasesCylinder.prototype = Object.create(CGFobject.prototype);
+noBasesCylinder.prototype.constructor = noBasesCylinder;
 
-Cylinder.prototype.initBuffers = function() {
-
-    //TODO: add top and bottom face
+noBasesCylinder.prototype.initBuffers = function() {
 
     //Sets the number os sides;
     var sides = this.slices;
     var stacks = this.stacks;
 
-    var n = 2 * Math.PI / sides;
+    var n = -2 * Math.PI / sides;
 
     this.vertices = [];
     this.normals = [];
     this.indices = [];
     this.texCoords = [];
+    this.initialTexCoords = [];
+
+    var patchLengthx = 1 / this.slices;
+    var patchLengthy = 1 / this.stacks;
+    var xCoord = 0;
+    var yCoord = 0;
+
 
     for (var q = 0; q < this.stacks + 1; q++) {
 
         var z = (q * this.deltaHeight / this.stacks);
-        var inc = ((q + 1) * this.delta) + this.base;
+        var inc = (q * this.delta) + this.base;
 
         for (var i = 0; i < sides; i++) {
             this.vertices.push(inc * Math.cos(i * n), inc * Math.sin(i * n), q * this.deltaHeight);
             this.normals.push(Math.cos(i * n), Math.sin(i * n), 0);
-            this.texCoords.push(0.5 * i / sides, 0.5 * i / sides, 0);
-            this.texCoords.push(0.5 * i / sides, 0.5 * i / sides, z);
+            this.texCoords.push(xCoord, yCoord);
+            xCoord += patchLengthx;
         }
+        xCoord = 0;
+        yCoord += patchLengthy;
 
     }
 
@@ -72,22 +79,21 @@ Cylinder.prototype.initBuffers = function() {
 
     }
 
-
-
-
-
+    this.initialTexCoords = this.texCoords;
 
     this.primitiveType = this.scene.gl.TRIANGLES;
 
     this.initGLBuffers();
 };
 
-Cylinder.prototype.updateTexCoords = function(length_s, length_t) {
+noBasesCylinder.prototype.updateTexCoords = function(length_s, length_t) {
 
-if(length_s != 1 || length_t != 1){
-    this.noBasesCylinder.updateTexCoords(length_s,length_t);
-    this.baseCircle.updateTexCoords(length_s,length_t);
-    this.topCirlce.updateTexCoords(length_s,length_t);
-  }
+    if (length_s != 1 || length_t != 1) {
+        for (let i = 0; i < this.initialTexCoords.length; i += 2) {
+            this.texCoords[i] = this.initialTexCoords[i] / length_s;
+            this.texCoords[i + 1] = this.initialTexCoords[i + 1] / length_t;
+        }
+    }
 
+    this.updateTexCoordsGLBuffers();
 };

@@ -1,5 +1,5 @@
 /**
- * Triangle
+ * Triangle.
  * @constructor
  */
 function Triangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
@@ -14,6 +14,11 @@ function Triangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
     this.x3 = x3;
     this.y3 = y3;
     this.z3 = z3;
+
+    this.minS = 0;
+    this.minT = 0;
+    this.maxS = 1;
+    this.maxT = 1;
 
     this.initBuffers();
 };
@@ -41,15 +46,35 @@ Triangle.prototype.initBuffers = function() {
         0, 0, 1
     ];
 
+    var side1 = Math.sqrt(Math.pow(this.x2 - this.x1, 2) + Math.pow(this.y2 - this.y1, 2) + Math.pow(this.z2 - this.z1, 2));
+    var side2 = Math.sqrt(Math.pow(this.x2 - this.x3, 2) + Math.pow(this.y2 - this.y3, 2) + Math.pow(this.z2 - this.z3, 2));
+    var side3 = Math.sqrt(Math.pow(this.x1 - this.x3, 2) + Math.pow(this.y1 - this.y3, 2) + Math.pow(this.z1 - this.z3, 2));
+    var angle = Math.acos((Math.pow(side2, 2) + Math.pow(side1, 2) - Math.pow(side3, 2)) / (2 * side1 * side2));
+    var textCord5 = (side1 - side2 * Math.cos(angle)) / side1;
+    var textCord6 = side2 * Math.sin(angle) / side1;
+
     this.texCoords = [
-
-        this.x1, this.y1, this.z1,
-        this.x2, this.y2, this.z2,
-        this.x3, this.y3, this.z3
-
+        this.maxS, this.minT,
+        this.minS, this.minT,
+        textCord5, textCord6
     ];
+
+    this.initialTexCoords = [];
+    this.initialTexCoords = this.texCoords;
 
 
 
     this.initGLBuffers();
+};
+
+Triangle.prototype.updateTexCoords = function(length_s, length_t) {
+
+    if (length_s != 1 || length_t != 1) {
+        for (let i = 0; i < this.initialTexCoords.length; i += 2) {
+            this.texCoords[i] = this.initialTexCoords[i] / length_s;
+            this.texCoords[i + 1] = this.initialTexCoords[i + 1] / length_t;
+        }
+    }
+
+    this.updateTexCoordsGLBuffers();
 };
