@@ -13,20 +13,32 @@ function MySceneGraph(filename, scene) {
     //Parser das views
     this.viewsIndice = 0;
     this.perspectives = [];
-    this.cfgCameras = [];
-    this.textures = [].fill(new Array(3));; //[id][0...1...2] 0-file 1-length_s 2-length_t
-    this.materials = [];
+
+    //Parser das luzes
+    this.omniLights = [];
+    this.spotLights = [];
+
+    //Parser das textures
+    this.textures = {};
+
+    //Parser dos materials
+    this.materials = {};
+
+    //Parser das transformations
+    this.transformations = {};
 
     //Parser illumination
     this.background = [];
     this.ambient = [];
 
+    //primitives
     this.objects = {};
+    //components
+    this.composedObjects = {};
 
     //object that saves the father materials which will be used in the display
     this.fatherMaterials;
     //--------------------------------------------------------------------------------------------------------
-
 
     /*
      * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -62,6 +74,8 @@ MySceneGraph.prototype.onXMLReady = function() {
  */
 
 MySceneGraph.prototype.parser = function(rootElement) {
+    var scene;
+    scene = rootElement.getElementsByTagName('scene');
 
     if (scene == null) {
         return "Views are missing.";
@@ -120,7 +134,7 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
     var viewDefault = views[0].attributes.getNamedItem("default").value;
 
 
-    this.perspectives = views[0].getElementsByTagName('perspective');
+    var perspective = views[0].getElementsByTagName('perspective');
 
     if (this.perspectives == null) {
         return "Perspectives are missing.";
@@ -128,7 +142,7 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
 
 
 
-    for (var i = 0; i < this.perspectives.length; i++) {
+    for (var i = 0; i < perspective.length; i++) {
 
 
         //Obter os valores da perspective
@@ -164,6 +178,10 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
         }
 
     }
+
+    console.log("perspectives: " + this.perspectives.length);
+
+
 };
 
 /*
@@ -187,16 +205,20 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
     var local = illumination[0].attributes.getNamedItem("local");
 
     var ambientTemp = illumination[0].getElementsByTagName("ambient");
-    this.ambient['r'] = ambientTemp[0].attributes.getNamedItem("r").value;
-    this.ambient['g'] = ambientTemp[0].attributes.getNamedItem("g").value;
-    this.ambient['b'] = ambientTemp[0].attributes.getNamedItem("b").value;
-    this.ambient['a'] = ambientTemp[0].attributes.getNamedItem("a").value;
+    var ra = ambientTemp[0].attributes.getNamedItem("r").value;
+    var ga = ambientTemp[0].attributes.getNamedItem("g").value;
+    var ba = ambientTemp[0].attributes.getNamedItem("b").value;
+    var aa = ambientTemp[0].attributes.getNamedItem("a").value;
+
+    this.ambient = new RGBA(ra, ga, ba, aa);
 
     var backgroundTemp = illumination[0].getElementsByTagName("background");
-    this.background['r'] = backgroundTemp[0].attributes.getNamedItem("r").value;
-    this.background['g'] = backgroundTemp[0].attributes.getNamedItem("g").value;
-    this.background['b'] = backgroundTemp[0].attributes.getNamedItem("b").value;
-    this.background['a'] = backgroundTemp[0].attributes.getNamedItem("a").value;
+    var rb = backgroundTemp[0].attributes.getNamedItem("r").value;
+    var gb = backgroundTemp[0].attributes.getNamedItem("g").value;
+    var bb = backgroundTemp[0].attributes.getNamedItem("b").value;
+    var ab = backgroundTemp[0].attributes.getNamedItem("a").value;
+
+    this.background = new RGBA(rb, gb, bb, ab);
 
 
 };
@@ -244,6 +266,11 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
     var ambient;
     var diffuse;
     var specular;
+    var tempLocation;
+    var tempAmbient;
+    var tempDiffuse;
+    var tempSpecular;
+    var tempTarget;
     var lx, ly, lz, lw;
     var ra, ga, ba, aa;
     var rd, gd, bd, ad;
@@ -364,6 +391,8 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
 
     }
 
+    console.log("SIIIIIIII: " + this.spotLights.length);
+
 };
 
 /*
@@ -418,11 +447,6 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
     console.log(allMaterials.length);
 
-//TODO está a dar dois materials não sei porque
-    /*if(allMaterials.length!=1){
-      return "Either zero or more than one 'illumination' element found.";
-    }*/
-
     var mats = allMaterials[0].getElementsByTagName('material');
 
     if (mats == null) {
@@ -433,33 +457,46 @@ MySceneGraph.prototype.parserToMaterials = function(rootElement) {
 
         var id = mats[i].attributes.getNamedItem("id").value;
 
-        var emission = mats[i].getElementsByTagName("emission");
-        var re = emission[0].attributes.getNamedItem("r").value;
-        var ge = emission[0].attributes.getNamedItem("g").value;
-        var be = emission[0].attributes.getNamedItem("b").value;
-        var ae = emission[0].attributes.getNamedItem("a").value;
+        if (this.materials[id] == null) {
 
-        var ambient = mats[i].getElementsByTagName("ambient");
-        var ra = ambient[0].attributes.getNamedItem("r").value;
-        var ga = ambient[0].attributes.getNamedItem("g").value;
-        var ba = ambient[0].attributes.getNamedItem("b").value;
-        var aa = ambient[0].attributes.getNamedItem("a").value;
+            var emission = mats[i].getElementsByTagName("emission");
+            var re = emission[0].attributes.getNamedItem("r").value;
+            var ge = emission[0].attributes.getNamedItem("g").value;
+            var be = emission[0].attributes.getNamedItem("b").value;
+            var ae = emission[0].attributes.getNamedItem("a").value;
 
-        var diffuse = mats[i].getElementsByTagName("diffuse");
-        var rd = diffuse[0].attributes.getNamedItem("r").value;
-        var gd = diffuse[0].attributes.getNamedItem("g").value;
-        var bd = diffuse[0].attributes.getNamedItem("b").value;
-        var ad = diffuse[0].attributes.getNamedItem("a").value;
+            var ambient = mats[i].getElementsByTagName("ambient");
+            var ra = ambient[0].attributes.getNamedItem("r").value;
+            var ga = ambient[0].attributes.getNamedItem("g").value;
+            var ba = ambient[0].attributes.getNamedItem("b").value;
+            var aa = ambient[0].attributes.getNamedItem("a").value;
 
-        var specular = mats[i].getElementsByTagName("specular");
-        var rs = specular[0].attributes.getNamedItem("r").value;
-        var gs = specular[0].attributes.getNamedItem("g").value;
-        var bs = specular[0].attributes.getNamedItem("b").value;
-        var as = specular[0].attributes.getNamedItem("a").value;
+            var diffuse = mats[i].getElementsByTagName("diffuse");
+            var rd = diffuse[0].attributes.getNamedItem("r").value;
+            var gd = diffuse[0].attributes.getNamedItem("g").value;
+            var bd = diffuse[0].attributes.getNamedItem("b").value;
+            var ad = diffuse[0].attributes.getNamedItem("a").value;
 
-        var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
+            var specular = mats[i].getElementsByTagName("specular");
+            var rs = specular[0].attributes.getNamedItem("r").value;
+            var gs = specular[0].attributes.getNamedItem("g").value;
+            var bs = specular[0].attributes.getNamedItem("b").value;
+            var as = specular[0].attributes.getNamedItem("a").value;
 
-        console.log("AQUI:" + shininess);
+            var shininess = mats[i].getElementsByTagName("shininess")[0].attributes.getNamedItem("value").value;
+
+            console.log("MATERIAL GRAVADO");
+
+            this.materials[id] = [
+                [re, ge, be, ae],
+                [ra, ga, ba, aa],
+                [rd, gd, bd, ad],
+                [rs, gs, bs, as],
+                [shininess],
+                [id]
+            ];
+
+        }
 
     }
 
@@ -483,9 +520,12 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
         return "Either zero or more than one 'illumination' element found.";
     }
 
-    var transformation = transformations[0].getElementsByTagName('tranformation');
+    var transformation = transformations[0].getElementsByTagName('transformation');
+
+    console.log("TRANSFORMATIONS: " + transformation.length);
 
     for (var i = 0; i < transformation.length; i++) {
+
         var id = transformation[i].attributes.getNamedItem("id").value;
 
         if (this.transformations[id] == null) {
@@ -568,11 +608,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
     var primitives = rootElement.getElementsByTagName("primitives");
 
     if (primitives == null) {
-        return "transformations not defined.";
-    }
-
-    if (primitives.length != 1) {
-        return "Either zero or more than one 'illumination' element found.";
+        return "primitives not defined.";
     }
 
     var primitive = primitives[0].getElementsByTagName("primitive");
@@ -881,8 +917,18 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
 MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
-    for (let object in this.objects) {
-        this.objects[object].display();
+    if (this.composedObjects[this.root] == undefined) {
+        console.log("No root object defined");
+    } //caso exista um objecto root, desenha toda a cena percorrendo esse root em profundidade
+    else {
+        this.scene.pushMatrix();
+        if (this.composedObjects[this.root].getTransformations().length != 0) {
+            for (transformation of this.composedObjects[this.root].getTransformations()) {
+                this.scene.multMatrix(transformation);
+            }
+        }
+        this.displayComposedObjects(this.root);
+        this.scene.popMatrix();
     }
 
     this.scene.popMatrix();

@@ -4,6 +4,8 @@
 */
 function XMLscene(myInterface) {
     CGFscene.call(this);
+
+    this.interface = myInterface;
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -22,15 +24,17 @@ XMLscene.prototype.init = function(application) {
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
-
+    this.enableTextures(true);
+    this.infoLights=[];
     this.axis = new CGFaxis(this);
 };
 
 XMLscene.prototype.initLights = function() {
 
-    this.lights[0].setPosition(2, 3, 3, 1);
-    this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
-    this.lights[0].update();
+  this.lights[0].setPosition(10, 10, 10, 1);
+  this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
+  this.lights[0].update();
+
 };
 /**
 * Function that loads the lights from the graph to XMLscene and the interface.
@@ -157,7 +161,7 @@ XMLscene.prototype.switchMaterials = function(){
 };
 
 XMLscene.prototype.initCameras = function() {
-    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(150, 150, 150), vec3.fromValues(0, 0, 0));
 };
 
 XMLscene.prototype.setDefaultAppearance = function() {
@@ -229,6 +233,7 @@ XMLscene.prototype.display = function() {
     // Draw axis
     this.axis.display();
 
+
     this.setDefaultAppearance();
 
     // ---- END Background, camera and axis setup
@@ -238,6 +243,7 @@ XMLscene.prototype.display = function() {
     // This is one possible way to do it
     if (this.graph.loadedOk) {
         this.lights[0].update();
+        this.updateLights();
         this.graph.display();
     };
 };

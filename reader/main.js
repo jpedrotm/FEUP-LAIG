@@ -42,13 +42,26 @@ function getUrlVars() {
     return vars;
 }
 
-serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'primitives/rectangle.js', 'primitives/triangle.js', 'primitives/cylinder.js',
+serialInclude(['../lib/CGF.js',
+    'XMLscene.js',
+    'MySceneGraph.js',
+    'primitives/rectangle.js',
+    'primitives/triangle.js',
+    'primitives/noBasesCylinder.js',
+    'primitives/circle.js',
+    'primitives/cylinder.js',
+    'primitives/semisphere.js',
+    'primitives/sphere.js',
+    'primitives/torus.js',
+    'MyInterface.js',
+    'Component.js',
+    'utils.js',
 
     main = function() {
         // Standard application, scene and interface setup
         var app = new CGFapplication(document.body);
-        var myScene = new XMLscene();
-        var myInterface = new CGFinterface();
+        var myInterface = new MyInterface();
+        var myScene = new XMLscene(myInterface);
 
         app.init();
 
@@ -60,7 +73,7 @@ serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'primitives/re
         // get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml
         // or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor)
 
-        var filename = getUrlVars()['file'] || "testScene.xml";
+        var filename = getUrlVars()['file'] || "testScene.dsx";
 
         // create and load graph, and associate it to scene.
         // Check console for loading errors
