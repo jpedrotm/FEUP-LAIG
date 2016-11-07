@@ -25,26 +25,26 @@
     <lights>
 
     <omni id="omni1" enabled="1">
-        <location x="10.0" y="10" z="10" w="1.0"/>
-        <ambient r="1.0" g="1.0" b="1.0" a="1.0"/>
-        <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
-        <specular r="1.0" g="1.0" b="1.0" a="0.0"/>
+        <location x="10" y="10" z="10" w="1.0"/>
+        <ambient r="1.0" g="1.0" b="1.0" a="0.2"/>
+        <diffuse r="1.0" g="1.0" b="1.0" a="0.8"/>
+        <specular r="1.0" g="1.0" b="1.0" a="0.2"/>
     </omni>
 
     <omni id="omni2" enabled="1">
         <location x="0" y="10" z="60" w="1.0"/>
-        <ambient r="1.0" g="1.0" b="1.0" a="1.0"/>
-        <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
-        <specular r="1.0" g="1.0" b="1.0" a="0.0"/>
+        <ambient r="1.0" g="1.0" b="1.0" a="0.4"/>
+        <diffuse r="1.0" g="1.0" b="1.0" a="0.6"/>
+        <specular r="1.0" g="1.0" b="1.0" a="0.4"/>
     </omni>
 
         <spot id="spot1" enabled="1" angle="30.0" exponent="1.0">
             <!-- atencao, "target" e' diferente de "direction" -->
             <target x="1" y="1" z="1"/>
             <location x="-10" y="10" z="10"/>
-            <ambient r="1.0" g="1.0" b="1.0" a="0.3"/>
+            <ambient r="0.0" g="0.0" b="0.0" a="0.3"/>
             <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
-            <specular r="1.0" g="1.0" b="1.0" a="0.4"/>
+            <specular r="1.0" g="1.0" b="1.0" a="0.0"/>
         </spot>
     </lights>
 
@@ -53,7 +53,7 @@
         <texture id="metal" file="./scenes/img/metal.jpg" length_s="1.0" length_t="1.0"/>
         <texture id="yellow" file="./scenes/img/yellow.png" length_s="1.0" length_t="1.0"/>
         <texture id="tap" file="./scenes/img/tap.png" length_s="1.0" length_t="1.0"/>
-        <texture id="track" file="./scenes/img/track.png" length_s="1.0" length_t="1.0"/>
+        <texture id="track" file="./scenes/img/track.png" length_s="0.2" length_t="0.3"/>
         <texture id="tire" file="./scenes/img/tire.jpg" length_s="1.0" length_t="1.0"/>
 
     </textures>
@@ -75,10 +75,10 @@
             <shininess value="0.5"/>
         </material>
         <material id="wood">
-            <emission r="0.2" g="0.2" b="0.2" a="0.2"/>
+            <emission r="0.8" g="0.8" b="0.8" a="0.2"/>
             <ambient r="0.6" g="0.2" b="0.2" a="1.0"/>
             <diffuse r="0.6" g="0.2" b="0.2" a="1.0"/>
-            <specular r="0.6" g="0.2" b="0.2" a="0.4"/>
+            <specular r="0.6" g="0.2" b="0.2" a="1.0"/>
             <shininess value="0.1"/>
         </material>
 
@@ -160,6 +160,15 @@
 
 
     </primitives>
+
+    <animations>
+     <animation id="animation1" span="20.0" type="linear">
+         <controlpoint xx="1.0" yy="1.0" zz="1.0" />
+     </animation>
+     <animation id="animation2" span="18.0" type="circular" center="1.0 2.0 3.0" radius="60.0" startang="40.0" rotang="90.0" />
+    </animations>
+
+
     <components>
 
       <component id="airport">
@@ -633,7 +642,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="inherit"/>
+            <texture id="track"/>
 
             <children>
                 <componentref id="wingbody1"/>
@@ -652,7 +661,7 @@
                 <material id="metal"/>
             </materials>
 
-            <texture id="none"/>
+            <texture id="inherit"/>
 
             <children>
                 <componentref id="wingbody2"/>

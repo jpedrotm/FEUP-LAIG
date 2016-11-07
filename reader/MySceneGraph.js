@@ -84,6 +84,7 @@ MySceneGraph.prototype.parser = function(rootElement) {
     this.root = scene[0].attributes.getNamedItem("root").value;
     this.axis_length = scene[0].attributes.getNamedItem("axis_length").value;
 
+    this.parserToAnimations(rootElement);
     this.parserToViews(rootElement);
     this.parserToIllumination(rootElement);
     this.parserToLights(rootElement);
@@ -685,6 +686,67 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
     }
 
 };
+
+MySceneGraph.prototype.parserToAnimations = function(rootElement){
+
+  var animations = rootElement.getElementsByTagName("animations");
+
+  if (animations == null) {
+      return "primitives not defined.";
+  }
+
+  var animation = animations[0].getElementsByTagName("animation");
+
+  for (var i = 0; i < animation.length; i++) {
+
+    var id = animation[i].attributes.getNamedItem("id").value;
+    var time = animation[i].attributes.getNamedItem("span").value;
+    var type = animation[i].attributes.getNamedItem("type").value;
+
+    if(type=="linear"){
+
+      controlPoint = animation[i].getElementsByTagName("controlpoint");
+
+      var controlPointArray =new Array();
+
+      for(var j=0;j<controlPoint.length;j++)
+      {
+        var xx = controlPoint[j].attributes.getNamedItem("xx").value;
+        var yy = controlPoint[j].attributes.getNamedItem("yy").value;
+        var zz = controlPoint[j].attributes.getNamedItem("zz").value;
+
+        controlPointArray.push(new Point(xx,yy,zz,null));
+
+      }
+
+    } else if(type=="circular") {
+
+      console.log("CIRCULAR");
+
+      var center = animation[i].attributes.getNamedItem("center").value;
+      var radius = animation[i].attributes.getNamedItem("radius").value;
+      var startang = animation[i].attributes.getNamedItem("startang").value;
+      var rotang = animation[i].attributes.getNamedItem("rotang").value;
+
+      var xc =center.substr(0,center.indexOf(' '));
+      center = center.substr(center.indexOf(' ')+1);
+
+      var yc= center.substr(0,center.indexOf(' '));
+      center = center.substr(center.indexOf(' ')+1);
+
+      var zc = center;
+
+      console.log("AQUI X Y Z: "+xc+yc+zc);
+
+    }
+    else {
+      return "No such type of animation.";
+    }
+
+  }
+
+
+}
 
 /*
  * Loads the components from the dsx file
