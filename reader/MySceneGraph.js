@@ -36,6 +36,11 @@ function MySceneGraph(filename, scene) {
     //components
     this.composedObjects = {};
 
+    //parser das animações
+    this.animations = {};
+
+    this.currTime = 0;
+
     //object that saves the father materials which will be used in the display
     this.fatherMaterials;
     //--------------------------------------------------------------------------------------------------------
@@ -47,6 +52,8 @@ function MySceneGraph(filename, scene) {
      */
 
     this.reader.open('scenes/' + filename, this);
+
+
 }
 
 /*
@@ -687,63 +694,57 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
 };
 
-MySceneGraph.prototype.parserToAnimations = function(rootElement){
+MySceneGraph.prototype.parserToAnimations = function(rootElement) {
 
-  var animations = rootElement.getElementsByTagName("animations");
+    var animations = rootElement.getElementsByTagName("animations");
 
-  if (animations == null) {
-      return "primitives not defined.";
-  }
-
-  var animation = animations[0].getElementsByTagName("animation");
-
-  for (var i = 0; i < animation.length; i++) {
-
-    var id = animation[i].attributes.getNamedItem("id").value;
-    var time = animation[i].attributes.getNamedItem("span").value;
-    var type = animation[i].attributes.getNamedItem("type").value;
-
-    if(type=="linear"){
-
-      controlPoint = animation[i].getElementsByTagName("controlpoint");
-
-      var controlPointArray =new Array();
-
-      for(var j=0;j<controlPoint.length;j++)
-      {
-        var xx = controlPoint[j].attributes.getNamedItem("xx").value;
-        var yy = controlPoint[j].attributes.getNamedItem("yy").value;
-        var zz = controlPoint[j].attributes.getNamedItem("zz").value;
-
-        controlPointArray.push(new Point(xx,yy,zz,null));
-
-      }
-
-    } else if(type=="circular") {
-
-      console.log("CIRCULAR");
-
-      var center = animation[i].attributes.getNamedItem("center").value;
-      var radius = animation[i].attributes.getNamedItem("radius").value;
-      var startang = animation[i].attributes.getNamedItem("startang").value;
-      var rotang = animation[i].attributes.getNamedItem("rotang").value;
-
-      var xc =center.substr(0,center.indexOf(' '));
-      center = center.substr(center.indexOf(' ')+1);
-
-      var yc= center.substr(0,center.indexOf(' '));
-      center = center.substr(center.indexOf(' ')+1);
-
-      var zc = center;
-
-      console.log("AQUI X Y Z: "+xc+yc+zc);
-
-    }
-    else {
-      return "No such type of animation.";
+    if (animations == null) {
+        return "primitives not defined.";
     }
 
-  }
+    var animation = animations[0].getElementsByTagName("animation");
+
+    for (var i = 0; i < animation.length; i++) {
+
+        var id = animation[i].attributes.getNamedItem("id").value;
+        var time = animation[i].attributes.getNamedItem("span").value;
+        var type = animation[i].attributes.getNamedItem("type").value;
+
+        if (type == "linear") {
+
+            controlPoint = animation[i].getElementsByTagName("controlpoint");
+
+            var controlPointArray = new Array();
+
+            for (var j = 0; j < controlPoint.length; j++) {
+                var xx = controlPoint[j].attributes.getNamedItem("xx").value;
+                var yy = controlPoint[j].attributes.getNamedItem("yy").value;
+                var zz = controlPoint[j].attributes.getNamedItem("zz").value;
+
+                controlPointArray.push(new Point(xx, yy, zz, null));
+
+            }
+            let tempAnimation = new linearAnimation(id, time, controlPointArray);
+            this.animations[id] = tempAnimation;
+        } else if (type == "circular") {
+
+            console.log("CIRCULAR");
+
+            var centerx = animation[i].attributes.getNamedItem("centerx").value;
+            var centery = animation[i].attributes.getNamedItem("centery").value;
+            var centerz = animation[i].attributes.getNamedItem("centerz").value;
+            var radius = animation[i].attributes.getNamedItem("radius").value;
+            var startAng = animation[i].attributes.getNamedItem("startang").value;
+            var rotAng = animation[i].attributes.getNamedItem("rotang").value;
+
+            console.log("AQUI X Y Z: " + xc + yc + zc);
+            let tempAnimation = new circularAnimation(id, time, [centerx, centery, centerz], radius, startAng, rotAng);
+            this.animations[id] = tempAnimation;
+        } else {
+            return "No such type of animation.";
+        }
+
+    }
 
 
 }
@@ -976,6 +977,9 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
 /*
  * Displays the scene
  */
+
+
+
 MySceneGraph.prototype.display = function() {
 
     this.scene.pushMatrix();
