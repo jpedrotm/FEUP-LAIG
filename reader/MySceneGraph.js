@@ -771,6 +771,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
         this.componentTexture;
         this.componentChildren = new Array();
         this.primitiveChildren = new Array();
+        this.animationsArray = new Array();
 
         //this alows for the attributes of the component to not be ordered
         for (let attribute of component.children) {
@@ -905,6 +906,14 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                         }
                     }
                     break;
+                case 'animation':
+
+                    let animations = attribute;
+                    for (let animation of animations.children) {
+                        let id = material.attributes.getNamedItem("id").value;
+                        this.animationsArray.push(this.animations[id]);
+                    }
+                    break;
             }
 
 
@@ -915,7 +924,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                 if (this.textureFlag) {
                     if (this.childrenFlag) {
                         console.log("read all components");
-                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren);
+                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren, this.animationsArray);
                     } else {
                         console.log("No children objects defined");
                     }
@@ -954,6 +963,7 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
     var fatherTexture = this.composedObjects[object].getTexture();
     for (let composedObject of this.composedObjects[object].getChildrenComponent()) {
         this.scene.pushMatrix();
+        this.composedObjects[composedObject].animate(currTime);
         if (this.composedObjects[composedObject].getTransformations().length != 0) {
             for (transformation of this.composedObjects[composedObject].getTransformations()) {
                 this.scene.multMatrix(transformation);

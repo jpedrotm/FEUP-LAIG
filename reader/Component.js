@@ -2,7 +2,7 @@
  * Component.
  * @constructor
  */
-function Component(scene, transformations, materials, texture, childrenComponent, childrenPrimitive) {
+function Component(scene, transformations, materials, texture, childrenComponent, childrenPrimitive, animationsArray) {
     CGFobject.call(this, scene);
 
     this.fatherTexture;
@@ -13,8 +13,9 @@ function Component(scene, transformations, materials, texture, childrenComponent
     this.childrenComponent = childrenComponent;
     this.childrenPrimitive = childrenPrimitive;
     this.appearance = new CGFappearance(this.scene);
-
-
+    this.animations = animationsArray;
+    this.currentAnimation = 0;
+    this.animations[currentAnimation].currentAnimation = true;
     this.currMatIndice = 0;
 
 };
@@ -110,4 +111,20 @@ Component.prototype.getChildrenPrimitive = function() {
      */
 Component.prototype.getAppearance = function() {
     return this.appearance;
+}
+
+Component.prototype.animate = function(currTime) {
+    if (this.animations[currentAnimation].currentAnimation == true) {
+        this.animations[currentAnimation].animate(currTime);
+    } else {
+        this.animations[currentAnimation].currentAnimation = false;
+        if (this.currentAnimation < this.animations.size() - 1) {
+            this.currentAnimation++;
+        } else {
+            this.currentAnimation = 0;
+        }
+
+        this.animations[currentAnimation].currentAnimation = true;
+        this.animations[currentAnimation].animate(currTime);
+    }
 }

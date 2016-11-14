@@ -10,7 +10,6 @@ function linearAnimation(scene, id, span, controlPoints) {
     this.timeEachPoints = [];
     this.vectors = [];
     this.lastTime;
-
     this.subtractTime = 0;
 
     this.initVariables();
@@ -59,6 +58,7 @@ linearAnimation.prototype.animate(time) {
     this.currTime += difTime;
 
     if (this.currTime >= this.span) {
+        this.currentAnimation = false;
         return;
     } else {
         if (this.currTime >= this.timeEachPoints[this.Indice]) {

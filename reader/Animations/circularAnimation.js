@@ -14,8 +14,11 @@ circularAnimation.prototype = Object.create(animation.prototype);
 circularAnimation.prototype.animate = function(currtime) {
     this.scene.pushMatrix();
     this.scene.translate(radius, 0, 0);
-    if (this.deltaTime >= this.span)
+    if (this.deltaTime >= this.span) {
         this.previousTime = 0;
+        this.currentAnimation = false;
+    }
+
     if (this.previousTime == 0) {
         this.rotation = this.initialAngle;
         this.previousTime = currtime;
