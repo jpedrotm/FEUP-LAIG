@@ -1,3 +1,7 @@
-function Animation(id, duration) {
-    this.init(id, duration);
+function Animation(scene,id, duration) {
+
+  this.scene=scene;
+  this.id=id;
+  this.duration=duration;
+
 }
