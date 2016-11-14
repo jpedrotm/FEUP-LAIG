@@ -1,11 +1,3 @@
-function Animation() {
-
-}
-
-Animation.prototype.constructor = Animation;
-
-Animation.prototype.init = function(id, duration) {
-	this.id = id;
-  this.duration=duration;
-
+function Animation(id, duration) {
+    this.init(id, duration);
 }
