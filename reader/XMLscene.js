@@ -8,7 +8,7 @@ function XMLscene(myInterface) {
     this.interface = myInterface;
 
 
-}
+};
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;

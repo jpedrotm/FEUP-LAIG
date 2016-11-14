@@ -1,6 +1,6 @@
-function linearAnimation(scene, id, span, controlPoints) {
+function linearAnimation(scene, id, span, type, controlPoints) {
 
-    animation.call(this, scene, id, span);
+    Animation.call(this, scene, id, span, type);
 
     this.currTime = 0;
     this.currDistance = 0;
@@ -11,10 +11,11 @@ function linearAnimation(scene, id, span, controlPoints) {
     this.vectors = [];
     this.lastTime;
     this.subtractTime = 0;
+    this.controlPoints = controlPoints;
 
-    this.initVariables();
+    this.initVariables(this.lasTime);
 
-    this.ang = Math.atan(this.vectors[this.Indice].x / this.vectors[this.Indice].z);
+    //this.ang = Math.atan(this.vectors[this.Indice].x / this.vectors[this.Indice].z);
 
 
 
@@ -23,10 +24,10 @@ function linearAnimation(scene, id, span, controlPoints) {
 
 }
 
-linearAnimation.prototype = Object.create(animation.prototype);
+linearAnimation.prototype = Object.create(Animation.prototype);
 linearAnimation.prototype.constructor = linearAnimation;
 
-linearAnimation.prototype.initVariables(lastTime) {
+linearAnimation.prototype.initVariables = function(lastTime) {
 
     var tmpDis = 0;
     var tmpVec;
@@ -49,7 +50,7 @@ linearAnimation.prototype.initVariables(lastTime) {
 
 };
 
-linearAnimation.prototype.animate(time) {
+linearAnimation.prototype.animate = function(time) {
 
     var difTime = (time - this.lastTime);
 

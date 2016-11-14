@@ -165,7 +165,7 @@
      <animation id="animation1" span="20.0" type="linear">
          <controlpoint xx="1.0" yy="1.0" zz="1.0" />
      </animation>
-     <animation id="animation2" span="18.0" type="circular" center="1.0 2.0 3.0" radius="60.0" startang="40.0" rotang="90.0" />
+     <animation id="animation2" span="18.0" type="circular" centerx="10" centery="10" centerz="10" radius="15" startang="40.0" rotang="20.0" />
     </animations>
 
 

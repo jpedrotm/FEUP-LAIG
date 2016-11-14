@@ -54,7 +54,7 @@ function MySceneGraph(filename, scene) {
     this.reader.open('scenes/' + filename, this);
 
 
-}
+};
 
 /*
  * Callback to be executed after successful reading
@@ -724,8 +724,8 @@ MySceneGraph.prototype.parserToAnimations = function(rootElement) {
                 controlPointArray.push(new Point(xx, yy, zz, null));
 
             }
-            let tempAnimation = new linearAnimation(id, time, controlPointArray);
-            this.animations[id] = tempAnimation;
+
+            this.animations[id] = new linearAnimation(this.scene, id, time, type, controlPointArray);
         } else if (type == "circular") {
 
             console.log("CIRCULAR");
@@ -737,9 +737,9 @@ MySceneGraph.prototype.parserToAnimations = function(rootElement) {
             var startAng = animation[i].attributes.getNamedItem("startang").value;
             var rotAng = animation[i].attributes.getNamedItem("rotang").value;
 
-            console.log("AQUI X Y Z: " + xc + yc + zc);
-            let tempAnimation = new circularAnimation(id, time, [centerx, centery, centerz], radius, startAng, rotAng);
-            this.animations[id] = tempAnimation;
+            //console.log("AQUI X Y Z: " + xc + yc + zc);
+
+            this.animations[id] = new circularAnimation(this.scene, id, time, type, new Point(centerx, centery, centerz, null), radius, startAng, rotAng);
         } else {
             return "No such type of animation.";
         }
@@ -753,198 +753,201 @@ MySceneGraph.prototype.parserToAnimations = function(rootElement) {
  * Loads the components from the dsx file
  */
 MySceneGraph.prototype.parserToComponents = function(rootElement) {
-    var components = rootElement.getElementsByTagName("components")[0];
+        var components = rootElement.getElementsByTagName("components")[0];
 
-    if (components == null) {
-        return "components not defined.";
-    }
-
-    for (let component of components.children) {
-        let id = component.attributes.getNamedItem("id").value;
-        let transformationsFlag = 0;
-        let materialsFlag = 0;
-        let textureFlag = 0;
-        let childrenFlag = 0;
-
-        this.transformationsArray = new Array();
-        this.materialsArray = new Array();
-        this.componentTexture;
-        this.componentChildren = new Array();
-        this.primitiveChildren = new Array();
-        this.animationsArray = new Array();
-
-        //this alows for the attributes of the component to not be ordered
-        for (let attribute of component.children) {
-            let attributeName = attribute.nodeName;
-            switch (attributeName) {
-                case 'transformation':
-                    this.transformationsFlag = 1;
-                    let transformations = attribute;
-                    let transformationrefFlag = 0;
-                    for (let transformation of transformations.children) {
-                        var transformationMatrix = mat4.create();
-                        let type = transformation.nodeName;
-                        switch (type) {
-                            case 'transformationref':
-                                console.log("transformationref:");
-                                console.log(this.transformations[transformation.attributes.getNamedItem("id").value]);
-                                this.transformationsArray.push(this.transformations[transformation.attributes.getNamedItem("id").value]);
-                                transformationrefFlag = 1;
-                                break;
-                            case 'translate':
-                                if (!transformationrefFlag) {
-                                    var tx = transformation.attributes.getNamedItem("x").value;
-                                    var ty = transformation.attributes.getNamedItem("y").value;
-                                    var tz = transformation.attributes.getNamedItem("z").value;
-
-                                    var translateArray = [tx, ty, tz];
-
-                                    mat4.translate(transformationMatrix, transformationMatrix, translateArray);
-
-
-                                    console.log("transformationMatrix:");
-                                    console.log(transformationMatrix);
-                                    this.transformationsArray.push(transformationMatrix);
-                                }
-
-                                break;
-                            case 'rotate':
-                                if (!transformationrefFlag) {
-                                    var axis = transformation.attributes.getNamedItem("axis").value;
-                                    var angle = transformation.attributes.getNamedItem("angle").value;
-
-                                    var rotationArray;
-
-                                    switch (axis) {
-                                        case 'x':
-                                            rotationArray = [1, 0, 0];
-                                            break;
-                                        case 'y':
-                                            rotationArray = [0, 1, 0];
-                                            break;
-                                        case 'z':
-                                            rotationArray = [0, 0, 1];
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    angle = angle * 2 * Math.PI / 360;
-
-                                    mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
-
-                                    this.transformationsArray.push(transformationMatrix);
-                                }
-
-                                break;
-                            case 'scale':
-                                if (!transformationrefFlag) {
-                                    var sx = transformation.attributes.getNamedItem("x").value;
-                                    var sy = transformation.attributes.getNamedItem("y").value;
-                                    var sz = transformation.attributes.getNamedItem("z").value;
-
-                                    var scaleArray = [sx, sy, sz];
-
-                                    mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
-
-                                    console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
-
-
-                                    this.transformationsArray.push(transformationMatrix);
-                                }
-
-                                break;
-                        }
-                    }
-                    break;
-                case 'materials':
-                    console.log("MATERIALS");
-                    this.materialsFlag = 1;
-                    let materials = attribute;
-                    for (let material of materials.children) {
-                        if ((material.attributes.getNamedItem("id").value) == "inherit") {
-                            this.materialsArray.push([
-                                [0, 0, 0, 0],
-                                [0, 0, 0, 0],
-                                [0, 0, 0, 0],
-                                [0, 0, 0, 0],
-                                [0, 0, 0, 0],
-                                ["inherit"]
-                            ]);
-                        } else {
-                            this.materialsArray.push(this.materials[material.attributes.getNamedItem("id").value]);
-                        }
-
-                    }
-                    break;
-                case 'texture':
-                    console.log("TEXTURES");
-                    this.textureFlag = 1;
-                    let texture = attribute;
-                    if ((texture.attributes.getNamedItem("id").value) == "inherit") {
-                        this.componentTexture = ["inherit", "inherit", 1, 1];
-                    } else if ((texture.attributes.getNamedItem("id").value) == "none") {
-                        this.componentTexture = ["none", "none", 1, 1];
-                    } else {
-                        this.componentTexture = this.textures[(texture.attributes.getNamedItem("id").value)];
-                    }
-
-                    break;
-                case 'children':
-
-                    let childrens = attribute;
-                    for (let children of childrens.children) {
-                        let type = children.nodeName;
-                        switch (type) {
-                            case 'componentref':
-                                this.childrenFlag = 1;
-                                this.componentChildren.push(children.attributes.getNamedItem("id").value);
-                                break;
-                            case 'primitiveref':
-                                this.childrenFlag = 1;
-                                this.primitiveChildren.push(children.attributes.getNamedItem("id").value);
-                                break;
-                        }
-                    }
-                    break;
-                case 'animation':
-
-                    let animations = attribute;
-                    for (let animation of animations.children) {
-                        let id = material.attributes.getNamedItem("id").value;
-                        this.animationsArray.push(this.animations[id]);
-                    }
-                    break;
-            }
-
-
+        if (components == null) {
+            return "components not defined.";
         }
 
-        if (this.transformationsFlag) {
-            if (this.materialsFlag) {
-                if (this.textureFlag) {
-                    if (this.childrenFlag) {
-                        console.log("read all components");
-                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren, this.animationsArray);
+        for (let component of components.children) {
+            let id = component.attributes.getNamedItem("id").value;
+            let transformationsFlag = 0;
+            let materialsFlag = 0;
+            let textureFlag = 0;
+            let childrenFlag = 0;
+
+            this.transformationsArray = new Array();
+            this.materialsArray = new Array();
+            this.componentTexture;
+            this.componentChildren = new Array();
+            this.primitiveChildren = new Array();
+            this.animationsArray = new Array();
+
+            //this alows for the attributes of the component to not be ordered
+            for (let attribute of component.children) {
+                let attributeName = attribute.nodeName;
+                switch (attributeName) {
+                    case 'transformation':
+                        this.transformationsFlag = 1;
+                        let transformations = attribute;
+                        let transformationrefFlag = 0;
+                        for (let transformation of transformations.children) {
+                            var transformationMatrix = mat4.create();
+                            let type = transformation.nodeName;
+                            switch (type) {
+                                case 'transformationref':
+                                    console.log("transformationref:");
+                                    console.log(this.transformations[transformation.attributes.getNamedItem("id").value]);
+                                    this.transformationsArray.push(this.transformations[transformation.attributes.getNamedItem("id").value]);
+                                    transformationrefFlag = 1;
+                                    break;
+                                case 'translate':
+                                    if (!transformationrefFlag) {
+                                        var tx = transformation.attributes.getNamedItem("x").value;
+                                        var ty = transformation.attributes.getNamedItem("y").value;
+                                        var tz = transformation.attributes.getNamedItem("z").value;
+
+                                        var translateArray = [tx, ty, tz];
+
+                                        mat4.translate(transformationMatrix, transformationMatrix, translateArray);
+
+
+                                        console.log("transformationMatrix:");
+                                        console.log(transformationMatrix);
+                                        this.transformationsArray.push(transformationMatrix);
+                                    }
+
+                                    break;
+                                case 'rotate':
+                                    if (!transformationrefFlag) {
+                                        var axis = transformation.attributes.getNamedItem("axis").value;
+                                        var angle = transformation.attributes.getNamedItem("angle").value;
+
+                                        var rotationArray;
+
+                                        switch (axis) {
+                                            case 'x':
+                                                rotationArray = [1, 0, 0];
+                                                break;
+                                            case 'y':
+                                                rotationArray = [0, 1, 0];
+                                                break;
+                                            case 'z':
+                                                rotationArray = [0, 0, 1];
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        angle = angle * 2 * Math.PI / 360;
+
+                                        mat4.rotate(transformationMatrix, transformationMatrix, angle, rotationArray);
+
+                                        this.transformationsArray.push(transformationMatrix);
+                                    }
+
+                                    break;
+                                case 'scale':
+                                    if (!transformationrefFlag) {
+                                        var sx = transformation.attributes.getNamedItem("x").value;
+                                        var sy = transformation.attributes.getNamedItem("y").value;
+                                        var sz = transformation.attributes.getNamedItem("z").value;
+
+                                        var scaleArray = [sx, sy, sz];
+
+                                        mat4.scale(transformationMatrix, transformationMatrix, scaleArray);
+
+                                        console.log("sx: " + sx + ", sy: " + sy + ", sz: " + sz);
+
+
+                                        this.transformationsArray.push(transformationMatrix);
+                                    }
+
+                                    break;
+                            }
+                        }
+                        break;
+                    case 'materials':
+                        console.log("MATERIALS");
+                        this.materialsFlag = 1;
+                        let materials = attribute;
+                        for (let material of materials.children) {
+                            if ((material.attributes.getNamedItem("id").value) == "inherit") {
+                                this.materialsArray.push([
+                                    [0, 0, 0, 0],
+                                    [0, 0, 0, 0],
+                                    [0, 0, 0, 0],
+                                    [0, 0, 0, 0],
+                                    [0, 0, 0, 0],
+                                    ["inherit"]
+                                ]);
+                            } else {
+                                this.materialsArray.push(this.materials[material.attributes.getNamedItem("id").value]);
+                            }
+
+                        }
+                        break;
+                    case 'texture':
+                        console.log("TEXTURES");
+                        this.textureFlag = 1;
+                        let texture = attribute;
+                        if ((texture.attributes.getNamedItem("id").value) == "inherit") {
+                            this.componentTexture = ["inherit", "inherit", 1, 1];
+                        } else if ((texture.attributes.getNamedItem("id").value) == "none") {
+                            this.componentTexture = ["none", "none", 1, 1];
+                        } else {
+                            this.componentTexture = this.textures[(texture.attributes.getNamedItem("id").value)];
+                        }
+
+                        break;
+                    case 'children':
+
+                        let childrens = attribute;
+                        for (let children of childrens.children) {
+                            let type = children.nodeName;
+                            switch (type) {
+                                case 'componentref':
+                                    this.childrenFlag = 1;
+                                    this.componentChildren.push(children.attributes.getNamedItem("id").value);
+                                    break;
+                                case 'primitiveref':
+                                    this.childrenFlag = 1;
+                                    this.primitiveChildren.push(children.attributes.getNamedItem("id").value);
+                                    break;
+                            }
+                        }
+                        break;
+                    case 'animation':
+
+                        let animations = attribute;
+                        for (let animation of animations.children) {
+                            let id = material.attributes.getNamedItem("id").value;
+                            if (this.animations[id].type == "linear") {
+                                this.animationsArray.push(new linearAnimation(this.scene, id, this.animations[id].span, this.animations[id].type, this.animations[id].controlPoints));
+                            } else {
+                                this.animationsArray.push(new linearAnimation(this.scene, id, this.animations[id].span, this.animations[id].type, this.animations[id].center, this.animations[id].radius, this.animations[id].initialAngle, this.animations[id].rotationAngle));
+                            }
+
+                        }
+
+                        break;
+                }
+
+                if (this.transformationsFlag) {
+                    if (this.materialsFlag) {
+                        if (this.textureFlag) {
+                            if (this.childrenFlag) {
+                                console.log("read all components");
+                                this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren, this.animationsArray);
+                            } else {
+                                console.log("No children objects defined");
+                            }
+                        } else {
+                            console.log("No texture defined");
+                        }
                     } else {
-                        console.log("No children objects defined");
+                        console.log("No materials defined");
                     }
                 } else {
-                    console.log("No texture defined");
+                    console.log("No transformation defined");
                 }
-            } else {
-                console.log("No materials defined");
+
             }
-        } else {
-            console.log("No transformation defined");
+
         }
-
     }
-
-}
-
-/*
- * Displays recursivly the components
- */
+    /*
+     * Displays recursivly the components
+     */
 
 MySceneGraph.prototype.displayComposedObjects = function(object) {
     for (let primitive of this.composedObjects[object].getChildrenPrimitive()) {
@@ -963,7 +966,7 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
     var fatherTexture = this.composedObjects[object].getTexture();
     for (let composedObject of this.composedObjects[object].getChildrenComponent()) {
         this.scene.pushMatrix();
-        this.composedObjects[composedObject].animate(currTime);
+        this.composedObjects[composedObject].animate(this.currTime);
         if (this.composedObjects[composedObject].getTransformations().length != 0) {
             for (transformation of this.composedObjects[composedObject].getTransformations()) {
                 this.scene.multMatrix(transformation);

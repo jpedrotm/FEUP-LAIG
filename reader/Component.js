@@ -15,7 +15,8 @@ function Component(scene, transformations, materials, texture, childrenComponent
     this.appearance = new CGFappearance(this.scene);
     this.animations = animationsArray;
     this.currentAnimation = 0;
-    this.animations[currentAnimation].currentAnimation = true;
+    if (this.animations.length > 0)
+        this.animations[this.currentAnimation].currentAnimation = true;
     this.currMatIndice = 0;
 
 };
@@ -114,17 +115,18 @@ Component.prototype.getAppearance = function() {
 }
 
 Component.prototype.animate = function(currTime) {
-    if (this.animations[currentAnimation].currentAnimation == true) {
-        this.animations[currentAnimation].animate(currTime);
-    } else {
-        this.animations[currentAnimation].currentAnimation = false;
-        if (this.currentAnimation < this.animations.size() - 1) {
-            this.currentAnimation++;
+    if (this.animations.length > 0)
+        if (this.animations[currentAnimation].currentAnimation == true) {
+            this.animations[currentAnimation].animate(currTime);
         } else {
-            this.currentAnimation = 0;
-        }
+            this.animations[currentAnimation].currentAnimation = false;
+            if (this.currentAnimation < this.animations.size() - 1) {
+                this.currentAnimation++;
+            } else {
+                this.currentAnimation = 0;
+            }
 
-        this.animations[currentAnimation].currentAnimation = true;
-        this.animations[currentAnimation].animate(currTime);
-    }
+            this.animations[currentAnimation].currentAnimation = true;
+            this.animations[currentAnimation].animate(currTime);
+        }
 }

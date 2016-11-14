@@ -1,5 +1,5 @@
-function circularAnimation(scene, id, span, center, radius, initialAngle, rotationAngle) {
-    animation.call(this, id, span);
+function circularAnimation(scene, id, span, type, center, radius, initialAngle, rotationAngle) {
+    Animation.call(this, id, span, type);
     this.center = center;
     this.radius = radius;
     this.initialAngle = initialAngle;
@@ -9,7 +9,8 @@ function circularAnimation(scene, id, span, center, radius, initialAngle, rotati
     this.rotation = 0;
 }
 
-circularAnimation.prototype = Object.create(animation.prototype);
+circularAnimation.prototype = Object.create(Animation.prototype);
+linearAnimation.prototype.constructor = circularAnimation;
 
 circularAnimation.prototype.animate = function(currtime) {
     this.scene.pushMatrix();
@@ -28,6 +29,6 @@ circularAnimation.prototype.animate = function(currtime) {
         this.previousTime = currtime;
     }
     this.scene.rotate(this.rotation, 0, y, 0);
-    this.scene.translate(center[0], center[1], center[2]);
+    this.scene.translate(center.x, 0, center.z);
     this.scene.popMatrix();
 }
