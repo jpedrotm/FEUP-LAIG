@@ -53,12 +53,12 @@ serialInclude(['../lib/CGF.js',
     'primitives/semisphere.js',
     'primitives/sphere.js',
     'primitives/torus.js',
-    'Animations/animation.js',
-    'Animations/linearAnimation.js',
-    'Animations/circularAnimation.js',
     'MyInterface.js',
     'Component.js',
     'utils.js',
+    'Animations/animation.js',
+    'Animations/linearAnimation.js',
+    'Animations/circularAnimation.js',
 
     main = function() {
         // Standard application, scene and interface setup

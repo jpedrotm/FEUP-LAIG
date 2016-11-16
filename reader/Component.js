@@ -2,7 +2,7 @@
  * Component.
  * @constructor
  */
-function Component(scene, transformations, materials, texture, childrenComponent, childrenPrimitive, animationsArray) {
+function Component(scene, transformations, materials, texture, childrenComponent, childrenPrimitive,componentAnimations) {
     CGFobject.call(this, scene);
 
     this.fatherTexture;
@@ -13,10 +13,15 @@ function Component(scene, transformations, materials, texture, childrenComponent
     this.childrenComponent = childrenComponent;
     this.childrenPrimitive = childrenPrimitive;
     this.appearance = new CGFappearance(this.scene);
-    this.animations = animationsArray;
-    this.currentAnimation = 0;
-    if (this.animations.length > 0)
-        this.animations[this.currentAnimation].currentAnimation = true;
+    this.animations = componentAnimations;
+
+    if(this.animations.length != 0)
+    {
+      console.log("LENGTHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH "+this.animations.length);
+      this.currAnimation=0;
+      this.animations[this.currAnimation].inUse=true;
+    }
+
     this.currMatIndice = 0;
 
 };
@@ -114,19 +119,48 @@ Component.prototype.getAppearance = function() {
     return this.appearance;
 }
 
-Component.prototype.animate = function(currTime) {
-    if (this.animations.length > 0)
-        if (this.animations[currentAnimation].currentAnimation == true) {
-            this.animations[currentAnimation].animate(currTime);
-        } else {
-            this.animations[currentAnimation].currentAnimation = false;
-            if (this.currentAnimation < this.animations.size() - 1) {
-                this.currentAnimation++;
-            } else {
-                this.currentAnimation = 0;
-            }
+Component.prototype.animate = function(dTime){
 
-            this.animations[currentAnimation].currentAnimation = true;
-            this.animations[currentAnimation].animate(currTime);
-        }
-}
+  if(this.animations.length != 0){
+
+    if(this.animations[this.currAnimation].inUse)
+    {
+      this.animations[this.currAnimation].updateAnimation(dTime);
+    }
+    else
+    {
+
+      this.animations[this.currAnimation].resetAnimation();
+
+      this.updateCurrAnimation();
+
+      this.animations[this.currAnimation].inUse=true;
+
+    }
+
+  }
+
+};
+
+Component.prototype.updateCurrAnimation = function() {
+
+  if(this.currAnimation == this.animations.length-1)
+  {
+    this.currAnimation=0;
+  }
+  else {
+    this.currAnimation++;
+  }
+
+};
+
+
+
+Component.prototype.display = function(){
+
+  if(this.animations.length != 0)
+  {
+    this.animations[this.currAnimation].displayAnimation();
+  }
+
+};

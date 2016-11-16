@@ -1,34 +1,69 @@
 function circularAnimation(scene, id, span, type, center, radius, initialAngle, rotationAngle) {
-    Animation.call(this, id, span, type);
+    Animation.call(this, scene,id, span, type);
     this.center = center;
     this.radius = radius;
-    this.initialAngle = initialAngle;
-    this.rotationAngle = rotationAngle;
-    this.previousTime = 0;
-    this.deltaTime = 0;
-    this.rotation = 0;
+
+    this.radAng=Math.PI/180;
+
+    this.initialAngle = initialAngle*this.radAng;
+    this.rotationAngle = rotationAngle*this.radAng;
+    console.log("START ANG: "+this.initialAngle);
+    console.log("ROTATION ANG:"+this.rotationAngle);
+
+    this.currTime=0;
+    this.currAngle=0;
+    this.x;
+    this.y;
+    this.z;
+
 }
 
 circularAnimation.prototype = Object.create(Animation.prototype);
-linearAnimation.prototype.constructor = circularAnimation;
+circularAnimation.prototype.constructor = circularAnimation;
 
-circularAnimation.prototype.animate = function(currtime) {
-    this.scene.pushMatrix();
-    this.scene.translate(radius, 0, 0);
-    if (this.deltaTime >= this.span) {
-        this.previousTime = 0;
-        this.currentAnimation = false;
-    }
+circularAnimation.prototype.getAnimationCopy = function(){
+  return new circularAnimation(this.scene,this.id,this.span,this.type,this.center,this.radius,this.initialAngle/this.radAng,this.rotationAngle/this.radAng);
+};
 
-    if (this.previousTime == 0) {
-        this.rotation = this.initialAngle;
-        this.previousTime = currtime;
-    } else {
-        this.deltaTime = this.previousTime - currtime;
-        this.rotation += this.rotationAngle * (this.deltaTime / this.span);
-        this.previousTime = currtime;
-    }
-    this.scene.rotate(this.rotation, 0, y, 0);
-    this.scene.translate(center.x, 0, center.z);
-    this.scene.popMatrix();
-}
+circularAnimation.prototype.updateAnimation = function(time) {
+
+  console.log("AQUI");
+
+  this.currTime += time/1000;
+
+  console.log("TIME: "+this.currTime);
+
+  if (this.currTime >= this.span) {
+
+    this.inUse=false;
+
+      return;
+  } else {
+
+    var percentage=this.currTime/this.span;
+
+    this.currAngle=this.rotationAngle*percentage;
+
+  }
+
+};
+
+circularAnimation.prototype.displayAnimation = function(){
+
+  var x =this.radius * Math.sin(this.initialAngle + this.currAngle);
+  var z=this.radius * Math.cos(this.initialAngle + this.currAngle);
+
+  console.log("VARIAVEIS: "+x+", "+z);
+
+  this.scene.translate(x+this.center.x,this.center.y,z+this.center.z);
+  this.scene.rotate(this.initialAngle + this.currAngle, 0, 1, 0);
+  this.scene.rotate(Math.PI/2,0,1,0);
+
+};
+
+circularAnimation.prototype.resetAnimation = function(){
+
+  this.currTime=0;
+  this.currAngle=0;
+
+};

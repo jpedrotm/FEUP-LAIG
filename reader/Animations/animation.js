@@ -1,8 +1,8 @@
-function Animation(scene, id, duration, type) {
+function Animation(scene, id, span, type) {
 
     this.scene = scene;
     this.id = id;
-    this.duration = duration;
-    this.currentAnimation = false;
+    this.span = span;
+    this.inUse = false;
     this.type = type;
 }
