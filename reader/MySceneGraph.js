@@ -8,7 +8,7 @@ function MySceneGraph(filename, scene) {
     this.reader = new CGFXMLreader();
 
     //Estruturas de dados necessárias para o parser-----------------------------------------------------------
-    this.isValid=false;
+    this.isValid = false;
 
     this.root;
     this.axis_length;
@@ -37,7 +37,7 @@ function MySceneGraph(filename, scene) {
     this.objects = {};
 
     //Animations
-    this.animations={};
+    this.animations = {};
 
     //components
     this.composedObjects = {};
@@ -101,7 +101,7 @@ MySceneGraph.prototype.parser = function(rootElement) {
     this.parserToComponents(rootElement);
     this.loadTextures(this.root, this.composedObjects[this.root].getTexture());
 
-    this.isValid=true;
+    this.isValid = true;
 
 };
 /*
@@ -701,7 +701,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
                 var controlPointArray = [];
                 for (let i = 0; i < controlPoints.length; i++) {
 
-                    for (var j = 0; j < controlPoint.length; j++) {
+                    for (var j = 0; j < controlPoints.length; j++) {
                         var x = controlPoints[i].attributes.getNamedItem("x").value * 1.0;
                         var y = controlPoints[i].attributes.getNamedItem("y").value * 1.0;
                         var z = controlPoints[i].attributes.getNamedItem("z").value * 1.0;
@@ -754,17 +754,17 @@ MySceneGraph.prototype.parserToAnimations = function(rootElement) {
             console.log("PARSER ANIMATION: ");
 
             for (var j = 0; j < controlPoint.length; j++) {
-                var xx = controlPoint[j].attributes.getNamedItem("xx").value*1.0;
-                var yy = controlPoint[j].attributes.getNamedItem("yy").value*1.0;
-                var zz = controlPoint[j].attributes.getNamedItem("zz").value*1.0;
+                var xx = controlPoint[j].attributes.getNamedItem("xx").value * 1.0;
+                var yy = controlPoint[j].attributes.getNamedItem("yy").value * 1.0;
+                var zz = controlPoint[j].attributes.getNamedItem("zz").value * 1.0;
 
                 controlPointArray.push(new Point(xx, yy, zz, null));
 
-                console.log('POINTS: '+xx+","+yy+","+zz);
+                console.log('POINTS: ' + xx + "," + yy + "," + zz);
 
             }
 
-            console.log("LENGTH PARSER: "+controlPointArray.length);
+            console.log("LENGTH PARSER: " + controlPointArray.length);
 
 
             this.animations[id] = new linearAnimation(this.scene, id, time, type, controlPointArray);
@@ -775,12 +775,12 @@ MySceneGraph.prototype.parserToAnimations = function(rootElement) {
 
             console.log("CIRCULAR");
 
-            var centerx = animation[i].attributes.getNamedItem("centerx").value*1.0;
-            var centery = animation[i].attributes.getNamedItem("centery").value*1.0;
-            var centerz = animation[i].attributes.getNamedItem("centerz").value*1.0;
-            var radius = animation[i].attributes.getNamedItem("radius").value*1.0;
-            var startAng = animation[i].attributes.getNamedItem("startang").value*1.0;
-            var rotAng = animation[i].attributes.getNamedItem("rotang").value*1.0;
+            var centerx = animation[i].attributes.getNamedItem("centerx").value * 1.0;
+            var centery = animation[i].attributes.getNamedItem("centery").value * 1.0;
+            var centerz = animation[i].attributes.getNamedItem("centerz").value * 1.0;
+            var radius = animation[i].attributes.getNamedItem("radius").value * 1.0;
+            var startAng = animation[i].attributes.getNamedItem("startang").value * 1.0;
+            var rotAng = animation[i].attributes.getNamedItem("rotang").value * 1.0;
 
             this.animations[id] = new circularAnimation(this.scene, id, time, type, new Point(centerx, centery, centerz, null), radius, startAng, rotAng);
 
@@ -953,16 +953,16 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                     }
                     break;
                 case 'animation':
-                let animations= attribute;
-                for (let animation of animations.children) {
+                    let animations = attribute;
+                    for (let animation of animations.children) {
 
-                  var animationId=animation.attributes.getNamedItem("id").value;
+                        var animationId = animation.attributes.getNamedItem("id").value;
 
-                  this.componentAnimations.push(this.animations[animationId].getAnimationCopy());
+                        this.componentAnimations.push(this.animations[animationId].getAnimationCopy());
 
-                  }
+                    }
 
-                  break;
+                    break;
             }
 
 
@@ -973,7 +973,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                 if (this.textureFlag) {
                     if (this.childrenFlag) {
                         console.log("read all components");
-                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren,this.componentAnimations);
+                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren, this.componentAnimations);
                     } else {
                         console.log("No children objects defined");
                     }
@@ -1032,13 +1032,13 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
     }
 }
 
-MySceneGraph.prototype.updateAnimation = function(root,dTime){
+MySceneGraph.prototype.updateAnimation = function(root, dTime) {
 
-  for (let composedObject of this.composedObjects[root].getChildrenComponent()) {
-      this.composedObjects[composedObject].animate(dTime);
-      this.updateAnimation(composedObject,dTime);
+    for (let composedObject of this.composedObjects[root].getChildrenComponent()) {
+        this.composedObjects[composedObject].animate(dTime);
+        this.updateAnimation(composedObject, dTime);
 
-  }
+    }
 };
 
 /*
