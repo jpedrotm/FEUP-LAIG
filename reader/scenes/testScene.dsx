@@ -181,6 +181,9 @@
         <primitive id="plane">
           <plane dimX="3" dimY="2" partsX="10" partsY="7"/>
         </primitive>
+        <primitive id="drone">
+          <vehicle />
+        </primitive>
 
     </primitives>
 
@@ -211,12 +214,11 @@
           <children>
               <componentref id="plane"/>
               <componentref id="track"/>
-
+              <componentref id="drone"/>
           </children>
 
       </component>
-
-      <component id="track">
+      <component id="drone">
 
           <transformation>
             <scale x="1" y="1" z="1" />
@@ -231,6 +233,25 @@
           <children>
                 <componentref id="trackground"/>
                 <componentref id="warningSignals"/>
+          </children>
+
+      </component>
+      <component id="track">
+
+          <transformation>
+            <scale x="5" y="5" z="5" />
+            <translate x="0" y="5" z="0"/>
+            <rotate axis="x" angle="-90"/>
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="metal"/>
+
+          <children>
+                <primitiveref id="drone"/>
           </children>
 
       </component>
