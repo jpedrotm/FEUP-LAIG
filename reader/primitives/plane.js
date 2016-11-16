@@ -6,24 +6,22 @@ function Plane(scene, dimX, dimY, partsX, partsY) {
     yMin = -dimY / 2;
     xMax = dimX / 2;
     yMax = dimY / 2;
+    this.controlvertexes = [ // U = 0
+        [ // V = 0..1;
+            [xMin, yMin, 0, 1],
+            [xMin, yMax, 0, 1]
+        ],
+        // U = 1
+        [ // V = 0..1
+            [xMax, yMin, 0, 1],
+            [xMax, yMax, 0, 1]
+        ]
+    ];
 
-    this.controlvertexes.push(
-        [ // U = 0
-            [ // V = 0..1;
-                [xMin, yMin, 0, 1],
-                [xMin, yMax, 0, 1]
-            ],
-            // U = 1
-            [ // V = 0..1
-                [xMax, yMin, 0, 1],
-                [xMax, yMax, 0, 1]
-            ]
-        ]);
+    this.nurbsSurface = new CGFnurbsSurface(1, 1, knots1, knots2, this.controlvertexes);
     getSurfacePoint = function(u, v) {
-        return nurbsSurface.getPoint(u, v);
+        return this.nurbsSurface.getPoint(u, v);
     };
-    this.nurbSurface = new CGFnurbSurface(1, 1, knots1, knots2, controlvertexes);
-
     CGFnurbsObject.call(this, scene, getSurfacePoint, partsX, partsY);
 }
 
@@ -47,3 +45,7 @@ Plane.prototype.display = function() {
     CGFnurbsObject.prototype.display.call(this);
     this.scene.popMatrix();
 }
+
+Plane.prototype.updateTexCoords = function(length_s, length_t) {
+
+};

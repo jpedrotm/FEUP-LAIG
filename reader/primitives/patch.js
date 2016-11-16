@@ -8,12 +8,6 @@ function Patch(scene, degree1, degree2, partsX, partsY, controlPoints) {
 
     this.vertexes = [];
     this.getVertexes(degree1, degree2, controlPoints);
-    console.log(degree1);
-    console.log(degree2);
-    console.log(this.knots1);
-    console.log(this.knots2);
-    console.log(controlPoints);
-    console.log(this.vertexes);
     this.nurbsSurface = new CGFnurbsSurface(degree1, degree2, this.knots1, this.knots2, this.vertexes);
 
     getSurfacePoint = function(u, v) {

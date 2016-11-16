@@ -714,6 +714,18 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
                 this.objects[id] = new Patch(this.scene, orderU, orderV, partsU, partsV, controlPointArray);
             }
+
+            var plane = primitive[i].getElementsByTagName("plane");
+
+            if (plane.length == 1) {
+
+                var dimX = plane[0].attributes.getNamedItem("dimX").value * 1.0;
+                var dimY = plane[0].attributes.getNamedItem("dimY").value * 1.0;
+                var partsX = plane[0].attributes.getNamedItem("partsX").value * 1.0;
+                var partsY = plane[0].attributes.getNamedItem("partsY").value * 1.0;
+
+                this.objects[id] = new Plane(this.scene, dimX, dimY, partsX, partsY);
+            }
         }
     }
 
