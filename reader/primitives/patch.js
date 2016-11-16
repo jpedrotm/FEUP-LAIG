@@ -47,9 +47,9 @@ Patch.prototype.getKnotsVector = function(degree) {
 };
 
 Patch.prototype.display = function() {
-    //this.scene.pushMatrix();
+    this.scene.pushMatrix();
     CGFnurbsObject.prototype.display.call(this);
-    //this.scene.popMatrix();
+    this.scene.popMatrix();
 };
 
 Patch.prototype.updateTexCoords = function(length_s, length_t) {

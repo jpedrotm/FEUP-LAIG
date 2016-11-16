@@ -701,13 +701,12 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
                 var controlPointArray = [];
                 for (let i = 0; i < controlPoints.length; i++) {
 
-                    for (var j = 0; j < controlPoints.length; j++) {
-                        var x = controlPoints[i].attributes.getNamedItem("x").value * 1.0;
-                        var y = controlPoints[i].attributes.getNamedItem("y").value * 1.0;
-                        var z = controlPoints[i].attributes.getNamedItem("z").value * 1.0;
-                        controlPointArray.push([x, y, z, 1]);
+                    var x = controlPoints[i].attributes.getNamedItem("x").value * 1.0;
+                    var y = controlPoints[i].attributes.getNamedItem("y").value * 1.0;
+                    var z = controlPoints[i].attributes.getNamedItem("z").value * 1.0;
+                    controlPointArray.push([x, y, z, 1]);
 
-                    }
+
                 }
 
                 this.objects[id] = new Patch(this.scene, orderU, orderV, partsU, partsV, controlPointArray);
