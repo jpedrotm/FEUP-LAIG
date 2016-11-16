@@ -687,6 +687,43 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
                 this.objects[id] = new Torus(this.scene, inner, outer, slices, loops);
             }
+
+            var patch = primitive[i].getElementsByTagName("patch");
+
+            if (patch.length == 1) {
+
+                var orderU = patch[0].attributes.getNamedItem("orderU").value * 1.0;
+                var orderV = patch[0].attributes.getNamedItem("orderV").value * 1.0;
+                var partsU = patch[0].attributes.getNamedItem("partsU").value * 1.0;
+                var partsV = patch[0].attributes.getNamedItem("partsV").value * 1.0;
+
+                var controlPoints = patch[0].getElementsByTagName("controlpoint");
+                var controlPointArray = [];
+                for (let i = 0; i < controlPoints.length; i++) {
+
+                    for (var j = 0; j < controlPoint.length; j++) {
+                        var x = controlPoints[i].attributes.getNamedItem("x").value * 1.0;
+                        var y = controlPoints[i].attributes.getNamedItem("y").value * 1.0;
+                        var z = controlPoints[i].attributes.getNamedItem("z").value * 1.0;
+                        controlPointArray.push([x, y, z, 1]);
+
+                    }
+                }
+
+                this.objects[id] = new Patch(this.scene, orderU, orderV, partsU, partsV, controlPointArray);
+            }
+
+            var plane = primitive[i].getElementsByTagName("plane");
+
+            if (plane.length == 1) {
+
+                var dimX = plane[0].attributes.getNamedItem("dimX").value * 1.0;
+                var dimY = plane[0].attributes.getNamedItem("dimY").value * 1.0;
+                var partsX = plane[0].attributes.getNamedItem("partsX").value * 1.0;
+                var partsY = plane[0].attributes.getNamedItem("partsY").value * 1.0;
+
+                this.objects[id] = new Plane(this.scene, dimX, dimY, partsX, partsY);
+            }
         }
     }
 
