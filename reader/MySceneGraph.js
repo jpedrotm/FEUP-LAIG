@@ -723,6 +723,12 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
                 this.objects[id] = new Plane(this.scene, dimX, dimY, partsX, partsY);
             }
+
+            var vehicle = primitive[i].getElementsByTagName("vehicle");
+
+            if (vehicle.length == 1) {
+                this.objects[id] = new Vehicle(this.scene);
+            }
         }
     }
 
