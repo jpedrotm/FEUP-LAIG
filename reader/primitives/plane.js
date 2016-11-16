@@ -7,7 +7,7 @@ function Plane(scene, dimX, dimY, partsX, partsY) {
     xMax = dimX / 2;
     yMax = dimY / 2;
 
-    var controlvertexes.push(
+    this.controlvertexes.push(
         [ // U = 0
             [ // V = 0..1;
                 [xMin, yMin, 0, 1],
@@ -24,8 +24,11 @@ function Plane(scene, dimX, dimY, partsX, partsY) {
     };
     this.nurbSurface = new CGFnurbSurface(1, 1, knots1, knots2, controlvertexes);
 
-    CGFnurbsObject.call(this, getSurfacePoint, partsX, partsY);
+    CGFnurbsObject.call(this, scene, getSurfacePoint, partsX, partsY);
 }
+
+Plane.prototype = Object.create(CGFnurbsObject.prototype);
+Plane.prototype.constructor = Plane;
 
 Plane.prototype.getKnotsVector = function(degree) {
 
@@ -37,4 +40,10 @@ Plane.prototype.getKnotsVector = function(degree) {
         v.push(1);
     }
     return v;
+}
+
+Plane.prototype.display = function() {
+    this.scene.pushMatrix();
+    CGFnurbsObject.prototype.display.call(this);
+    this.scene.popMatrix();
 }

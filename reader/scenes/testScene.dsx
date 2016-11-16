@@ -157,7 +157,22 @@
         <primitive id="warningTriangle">
             <triangle x1="0" y1="0" z1="0" x2="2" y2="0" z2="0" x3="1" y3="2" z3="0" />
         </primitive>
-
+        <primitive id="patch">
+          <patch orderU="2" orderV="3" partsU="20" partsV="20" >
+            <controlpoint x="-2" y="-2" z="1" />
+            <controlpoint x="-2" y="-1" z="-2" />
+            <controlpoint x="-2" y="1" z="5" />
+            <controlpoint x="-2" y="2" z="-1" />
+            <controlpoint x="0" y="-2" z="0" />
+            <controlpoint x="0" y="-1" z="-1.0" />
+            <controlpoint x="0" y="1" z="1.5" />
+            <controlpoint x="0" y="2" z="1" />
+            <controlpoint x="2" y="-2" z="-1" />
+            <controlpoint x="2" y="-1" z="2" />
+            <controlpoint x="2" y="1" z="-5" />
+            <controlpoint x="2" y="2" z="1" />
+          </patch>
+        </primitive>
 
     </primitives>
 
@@ -284,7 +299,7 @@
           <texture id="tap"/>
 
           <children>
-              <primitiveref id="warningTriangle"/>
+              <primitiveref id="patch"/>
           </children>
 
       </component>
