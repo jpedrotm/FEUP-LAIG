@@ -25,11 +25,13 @@ XMLscene.prototype.init = function(application) {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
     this.enableTextures(true);
-    this.infoLights = [];
-    this.ani = new circularAnimation(this, "animation2", 10, "circular", new Point(0, 0, 0), 10, 0, Math.PI);
-    this.lastTime = (new Date()).getTime();
+    this.infoLights=[];
+    this.lastTime=(new Date()).getTime();
     this.axis = new CGFaxis(this);
     this.setUpdatePeriod(30);
+
+    //this.chess = new Chessboard(this,10,10,"scenes/img/yellow.png",2,4,1,1,1);
+
 };
 
 XMLscene.prototype.initLights = function() {
@@ -239,6 +241,14 @@ XMLscene.prototype.display = function() {
         this.updateLights();
         this.graph.display();
     };
+
+    /*this.pushMatrix();
+
+    this.translate(1,1,0.5);
+
+    this.chess.display();
+
+    this.popMatrix();*/
 
 };
 

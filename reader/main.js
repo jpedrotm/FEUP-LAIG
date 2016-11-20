@@ -65,6 +65,7 @@ serialInclude(['../lib/CGF.js',
     'Animations/animation.js',
     'Animations/linearAnimation.js',
     'Animations/circularAnimation.js',
+    'primitives/chessboard.js',
 
     main = function() {
         // Standard application, scene and interface setup

@@ -47,9 +47,9 @@
             <!-- atencao, "target" e' diferente de "direction" -->
             <target x="1" y="1" z="1"/>
             <location x="-10" y="10" z="10"/>
-            <ambient r="1.0" g="1.0" b="1.0" a="0.3"/>
-            <diffuse r="1.0" g="1.0" b="1.0" a="1.0"/>
-            <specular r="1.0" g="1.0" b="1.0" a="0.4"/>
+            <ambient r="1.0" g="1.0" b="1.0" a="0.3" />
+            <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+            <specular r="1.0" g="1.0" b="1.0" a="0.4" />
         </spot>
     </lights>
 
@@ -60,6 +60,7 @@
         <texture id="tap" file="./scenes/img/tap.png" length_s="1.0" length_t="1.0"/>
         <texture id="track" file="./scenes/img/track.png" length_s="1.0" length_t="1.0"/>
         <texture id="tire" file="./scenes/img/tire.jpg" length_s="1.0" length_t="1.0"/>
+        <texture id="wood" file="./scenes/img/wood.jpg" length_s="1.0" length_t="1.0"/>
 
     </textures>
 
@@ -185,6 +186,14 @@
           <vehicle />
         </primitive>
 
+        <primitive id="chessboard1">
+        <chessboard du="14" dv="14" textureref="wood" su="4" sv="4">
+                 <c1 r="1.0" g="1.0" b="0.0" a="0.8" />
+                 <c2 r="0.0" g="0.6" b="0.0" a="0.8" />
+                 <cs r="0.8" g="0.0" b="0.0" a="0.8" />
+        </chessboard>
+        </primitive>
+
     </primitives>
 
     <animations>
@@ -223,10 +232,11 @@
               <componentref id="plane"/>
               <componentref id="track"/>
               <componentref id="drone"/>
+              <componentref id="chessFlag" />
           </children>
 
       </component>
-      <component id="drone">
+      <component id="track">
 
           <transformation>
             <scale x="1" y="1" z="1" />
@@ -244,7 +254,7 @@
           </children>
 
       </component>
-      <component id="track">
+      <component id="drone">
 
           <transformation>
             <scale x="5" y="5" z="5" />
@@ -263,6 +273,28 @@
           </children>
 
       </component>
+
+      <component id="chessFlag">
+
+      <transformation>
+        <scale x="4" y="4" z="4" />
+        <translate x="0" y="3" z="0" />
+      </transformation>
+
+      <materials>
+          <material id="wood"/>
+      </materials>
+
+      <texture id="none"/>
+
+      <children>
+            <primitiveref id="chessboard1"/>
+      </children>
+
+  </component>
+
+
+
       <component id="warningSignals">
 
           <transformation>
