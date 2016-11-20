@@ -188,8 +188,16 @@
 
         <primitive id="chessboard1">
         <chessboard du="14" dv="14" textureref="wood" su="4" sv="4">
-                 <c1 r="1.0" g="1.0" b="0.0" a="0.8" />
-                 <c2 r="0.0" g="0.6" b="0.0" a="0.8" />
+                 <c1 r="0.8" g="0.8" b="0.8" a="0.8" />
+                 <c2 r="0.0" g="0.0" b="0.8" a="0.8" />
+                 <cs r="0.8" g="0.0" b="0.0" a="0.8" />
+        </chessboard>
+        </primitive>
+
+        <primitive id="chessboard2">
+        <chessboard du="8" dv="8" textureref="tire" su="2" sv="4">
+                 <c1 r="0.8" g="0.8" b="0.0" a="0.8" />
+                 <c2 r="0.0" g="0.0" b="0.4" a="0.8" />
                  <cs r="0.8" g="0.0" b="0.0" a="0.8" />
         </chessboard>
         </primitive>
@@ -232,7 +240,6 @@
               <componentref id="plane"/>
               <componentref id="track"/>
               <componentref id="drone"/>
-              <componentref id="chessFlag" />
           </children>
 
       </component>
@@ -249,7 +256,8 @@
           <texture id="metal"/>
 
           <children>
-                <componentref id="trackground"/>
+                <componentref id="chessFlag" />
+                <componentref id="chessTrack"/>
                 <componentref id="warningSignals"/>
           </children>
 
@@ -274,11 +282,12 @@
 
       </component>
 
-      <component id="chessFlag">
+      <component id="chessTrack">
 
       <transformation>
-        <scale x="4" y="4" z="4" />
-        <translate x="0" y="3" z="0" />
+        <rotate axis="x" angle="-90" />
+        <translate x="0.0" y="-125.0" z="0" />
+        <scale x="80" y="250" z="20" />
       </transformation>
 
       <materials>
@@ -288,10 +297,29 @@
       <texture id="none"/>
 
       <children>
-            <primitiveref id="chessboard1"/>
+            <primitiveref id="chessboard2"/>
       </children>
 
   </component>
+
+  <component id="chessFlag">
+
+  <transformation>
+    <translate x="0.0" y="8.0" z="0" />
+    <scale x="4" y="4" z="4" />
+  </transformation>
+
+  <materials>
+      <material id="wood"/>
+  </materials>
+
+  <texture id="none"/>
+
+  <children>
+        <primitiveref id="chessboard1"/>
+  </children>
+
+</component>
 
 
 

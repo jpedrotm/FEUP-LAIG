@@ -24,14 +24,23 @@ void main() {
 	{
 		mixColor=colorS;
 	}
-	else if((mod(dU*vTextureCoord.x, 2.0) < 1.0) ^^ (mod(dV*vTextureCoord.y, 2.0) < 1.0))
-	{
-		mixColor=color1;
-	}
-	else
-	{
-		mixColor=color2;
-	}
+  else
+  {
+
+    float x=mod(dU*vTextureCoord.x, 2.0);
+    float y=mod(dV*vTextureCoord.y, 2.0);
+
+    if(x<1.0 ^^ y<1.0)
+    {
+      mixColor=color1;
+    }
+    else
+    {
+      mixColor=color2;
+    }
+
+  }
+
 
   finalColor.rgba *= mixColor;
 

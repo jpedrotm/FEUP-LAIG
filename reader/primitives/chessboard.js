@@ -27,7 +27,7 @@ function Chessboard(scene,du,dv,textureref,su,sv,c1,c2,cs) {
    this.shader.setUniformsValues({sV: parseInt(this.sv)*1.0});
    this.shader.setUniformsValues({cellHeight: 0.04});
 
-   this.texture = new CGFtexture(this.scene,"scenes/img/wood.jpg");
+   this.texture = new CGFtexture(this.scene,textureref);
 
 };
 
