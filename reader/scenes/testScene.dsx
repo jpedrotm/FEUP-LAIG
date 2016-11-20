@@ -188,13 +188,21 @@
     </primitives>
 
     <animations>
-     <animation id="animation1" span="3.0" type="linear">
-         <controlpoint xx="0.0" yy="0.0" zz="0.0" />
-         <controlpoint xx="0.0" yy="0.0" zz="20.0" />
-         <controlpoint xx="0.0" yy="0.0" zz="40.0" />
-         <controlpoint xx="0.0" yy="40.0" zz="140.0" />
+     <animation id="animation1" span="6.0" type="linear">
+         <controlpoint xx="0.0" yy="5.0" zz="0.0" />
+         <controlpoint xx="0.0" yy="5.0" zz="150.0" />
+         <controlpoint xx="0.0" yy="6.0" zz="200.0" />
+         <controlpoint xx="0.0" yy="80.0" zz="400.0" />
      </animation>
-     <animation id="animation2" span="10.0" type="circular" centerx="0" centery="20" centerz="10" radius="30" startang="0.0" rotang="360" />
+     <animation id="animation2" span="3.0" type="circular" centerx="100" centery="100" centerz="450" radius="100" startang="-90.0" rotang="180" />
+     <animation id="animation3" span="6.0" type="linear">
+         <controlpoint xx="200.0" yy="80.0" zz="400.0" />
+         <controlpoint xx="200.0" yy="6.0" zz="200.0" />
+         <controlpoint xx="200.0" yy="5.0" zz="150.0" />
+         <controlpoint xx="200.0" yy="5.0" zz="0.0" />
+     </animation>
+     <animation id="animation4" span="3.0" type="circular" centerx="100" centery="5.0" centerz="0" radius="100" startang="90" rotang="180" />
+
     </animations>
 
     <components>
@@ -361,7 +369,10 @@
             </transformation>
 
             <animation>
+            <animationref id="animation1" />
             <animationref id="animation2" />
+            <animationref id="animation3" />
+            <animationref id="animation4" />
             </animation>
 
             <materials>
