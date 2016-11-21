@@ -27,16 +27,16 @@ void main() {
   else
   {
 
-    float x=mod(dU*vTextureCoord.x, 2.0);
-    float y=mod(dV*vTextureCoord.y, 2.0);
+    float x=mod(floor(dU*vTextureCoord.x), 2.0);
+    float y=mod(floor(dV*vTextureCoord.y), 2.0);
 
-    if(x<1.0 ^^ y<1.0)
+    if((x==0.0 && y==0.0) || (x==1.0 && y==1.0))
     {
-      mixColor=color1;
+      mixColor=color2;
     }
     else
     {
-      mixColor=color2;
+      mixColor=color1;
     }
 
   }

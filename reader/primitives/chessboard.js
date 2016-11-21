@@ -6,9 +6,6 @@ function Chessboard(scene,du,dv,textureref,su,sv,c1,c2,cs) {
     CGFobject.call(this, scene);
     this.scene=scene;
 
-    this.shader = new CGFshader(scene.gl, "shaders/texture1.vert", "shaders/texture1.frag");
-    this.plane = new Plane(this.scene, 1, 1, 100, 100);
-
     this.du=du;
     this.dv=dv;
     this.su=su;
@@ -16,6 +13,10 @@ function Chessboard(scene,du,dv,textureref,su,sv,c1,c2,cs) {
     this.c1=c1;
     this.c2=c2;
     this.cs=cs;
+
+    this.plane = new Plane(this.scene, 1, 1, 100, 100);
+
+    this.shader = new CGFshader(scene.gl, "shaders/texture1.vert", "shaders/texture1.frag");
 
   this.shader.setUniformsValues({uSampler : 0});
    this.shader.setUniformsValues({color1 : [this.c1.r,this.c1.g,this.c1.b,this.c1.a]});
