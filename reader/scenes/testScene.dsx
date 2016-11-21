@@ -136,6 +136,9 @@
         <primitive id="backLeftWinglet">
             <cylinder base="2" top="1" height="4" slices="50" stacks="50" />
         </primitive>
+        <primitive id="backDroneWing1">
+            <cylinder base="1" top="1" height="4" slices="50" stacks="50" />
+        </primitive>
         <primitive id="track">
           <rectangle x1="-40" y1="0" x2="40" y2="1000" />
         </primitive>
@@ -219,6 +222,7 @@
          <controlpoint xx="200.0" yy="5.0" zz="0.0" />
      </animation>
      <animation id="animation4" span="3.0" type="circular" centerx="100" centery="5.0" centerz="0" radius="100" startang="90" rotang="180" />
+     <animation id="animation5" span="1.0" type="circular" centerx="2" centery="0" centerz="0" radius="1" startang="0" rotang="360" />
 
     </animations>
 
@@ -278,6 +282,88 @@
 
           <children>
                 <primitiveref id="drone"/>
+                <componentref id="droneBack" />
+          </children>
+
+      </component>
+
+      <component id="droneBack">
+
+          <transformation>
+            <translate x="2.6" y="0" z="0"/>
+          </transformation>
+
+          <animation>
+          <animationref id="animation5" />
+          </animation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="metal"/>
+
+          <children>
+                <componentref id="droneBackWing1" />
+                <componentref id="droneBackWing2" />
+                <componentref id="droneBackWing3" />
+          </children>
+
+      </component>
+
+      <component id="droneBackWing1">
+
+          <transformation>
+            <rotate axis="x" angle="120"/>
+            <scale x="0.01" y="0.05" z="0.2" />
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="metal"/>
+
+          <children>
+                <primitiveref id="backDroneWing1"/>
+          </children>
+
+      </component>
+
+      <component id="droneBackWing2">
+
+          <transformation>
+            <rotate axis="x" angle="240"/>
+            <scale x="0.01" y="0.05" z="0.2" />
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="metal"/>
+
+          <children>
+                <primitiveref id="backDroneWing1"/>
+          </children>
+
+      </component>
+
+      <component id="droneBackWing3">
+
+          <transformation>
+            <rotate axis="x" angle="0"/>
+            <scale x="0.01" y="0.05" z="0.2" />
+          </transformation>
+
+          <materials>
+              <material id="metal"/>
+          </materials>
+
+          <texture id="metal"/>
+
+          <children>
+                <primitiveref id="backDroneWing1"/>
           </children>
 
       </component>
