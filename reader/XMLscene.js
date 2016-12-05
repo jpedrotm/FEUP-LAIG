@@ -25,11 +25,11 @@ XMLscene.prototype.init = function(application) {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
     this.enableTextures(true);
-    this.infoLights=[];
-    this.lastTime=(new Date()).getTime();
+    this.infoLights = [];
+    this.lastTime = (new Date()).getTime();
     this.axis = new CGFaxis(this);
     this.setUpdatePeriod(30);
-
+    this.piramid = new Piramid(this, 'queen');
     //this.chess = new Chessboard(this,10,10,"scenes/img/yellow.png",2,4,1,1,1);
 
 };
@@ -242,6 +242,7 @@ XMLscene.prototype.display = function() {
         this.graph.display();
     };
 
+    this.piramid.display();
     /*this.pushMatrix();
 
     this.translate(1,1,0.5);
