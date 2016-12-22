@@ -18,19 +18,52 @@ XMLscene.prototype.init = function(application) {
 
     this.initLights();
 
-    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    this.gl.clearColor(0.0, 0.0, 0.0, 1.0)
+
+    this.woodMaterial=new CGFappearance(this);
+    this.woodMaterial.setAmbient(0.4,0.2,0,0.8);
+    this.woodMaterial.setDiffuse(0.4,0.2,0,0.8);
+    this.woodMaterial.setSpecular(0.4,0.2,0,0.8);
+    this.woodMaterial.setShininess(10);
+
+    this.whiteWoodMaterial= new CGFappearance(this);
+    this.whiteWoodMaterial.setAmbient(0.71,0.61,0.29,0.8);
+    this.whiteWoodMaterial.setDiffuse(0.71,0.61,0.29,0.8);
+    this.whiteWoodMaterial.setSpecular(0.71,0.61,0.29,0.8);
+    this.whiteWoodMaterial.setShininess(10);
+
+    this.queenMaterial = new CGFappearance(this);
+    this.queenMaterial.setAmbient(0.8,0,0,1);
+    this.queenMaterial.setDiffuse(0.8,0,0,1);
+    this.queenMaterial.setSpecular(0.8,0,0,1);
+    this.queenMaterial.setShininess(20);
+
+    this.droneMaterial = new CGFappearance(this);
+    this.droneMaterial.setAmbient(0,0.8,0,1);
+    this.droneMaterial.setDiffuse(0,0.8,0,1);
+    this.droneMaterial.setSpecular(0,0.8,0,1);
+    this.droneMaterial.setShininess(20);
+
+    this.pawnMaterial = new CGFappearance(this);
+    this.pawnMaterial.setAmbient(0,0,0.8,1);
+    this.pawnMaterial.setDiffuse(0,0,0.8,1);
+    this.pawnMaterial.setSpecular(0,0,0.8,1);
+    this.pawnMaterial.setShininess(20);
 
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
     this.enableTextures(true);
-    this.infoLights = [];
-    this.lastTime = (new Date()).getTime();
+    this.infoLights=[];
+    this.lastTime=(new Date()).getTime();
     this.axis = new CGFaxis(this);
     this.setUpdatePeriod(30);
-    this.piramid = new Piramid(this, 'queen');
-    //this.chess = new Chessboard(this,10,10,"scenes/img/yellow.png",2,4,1,1,1);
+
+    this.setPickEnabled(true);
+
+    this.board = new Board(this,8,4);
+
 
 };
 
@@ -212,6 +245,10 @@ XMLscene.prototype.switchView = function() {
 };
 
 XMLscene.prototype.display = function() {
+
+  this.board.verifyMovementBoard();
+  this.clearPickRegistration();
+
     // ---- BEGIN Background, camera and axis setup
 
     // Clear image and depth buffer everytime we update the scene
@@ -239,17 +276,13 @@ XMLscene.prototype.display = function() {
     if (this.graph.loadedOk) {
         this.lights[0].update();
         this.updateLights();
-        this.graph.display();
+        //this.graph.display();
     };
 
-    this.piramid.display();
-    /*this.pushMatrix();
-
-    this.translate(1,1,0.5);
-
-    this.chess.display();
-
-    this.popMatrix();*/
+    this.pushMatrix();
+    //this.board.registerForPickBoard();
+    this.board.display();
+    this.popMatrix();
 
 };
 

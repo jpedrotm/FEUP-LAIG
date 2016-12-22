@@ -32,11 +32,8 @@ Rectangle.prototype.initBuffers = function() {
 
     this.indices = [
         0, 1, 2,
-        3, 2, 1,
-        1, 2, 3,
-        2, 1, 0,
+        3, 2, 1
     ];
-
 
     this.primitiveType = this.scene.gl.TRIANGLES;
 
@@ -54,8 +51,8 @@ Rectangle.prototype.initBuffers = function() {
         this.minS, this.maxT
     ];
 
-    this.initialTexCoords = [];
-    this.initialTexCoords = this.texCoords;
+    this.initialTexCoords=[];
+    this.initialTexCoords=this.texCoords;
 
 
 
@@ -65,12 +62,12 @@ Rectangle.prototype.initBuffers = function() {
 
 Rectangle.prototype.updateTexCoords = function(length_s, length_t) {
 
-    if (length_s != 1 || length_t != 1) {
-        for (let i = 0; i < this.initialTexCoords.length; i += 2) {
-            this.texCoords[i] = this.initialTexCoords[i] / length_s;
-            this.texCoords[i + 1] = this.initialTexCoords[i + 1] / length_t;
-        }
+  if(length_s != 1 || length_t != 1){
+    for (let i = 0; i < this.initialTexCoords.length; i += 2) {
+        this.texCoords[i] = this.initialTexCoords[i] / length_s;
+        this.texCoords[i + 1] = this.initialTexCoords[i + 1] / length_t;
     }
+  }
 
-    this.updateTexCoordsGLBuffers();
+  this.updateTexCoordsGLBuffers();
 }

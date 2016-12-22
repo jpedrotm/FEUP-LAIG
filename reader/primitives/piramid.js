@@ -5,15 +5,19 @@
 function Piramid(scene, type) {
     CGFobject.call(this, scene);
     this.scene = scene;
+
     if (type == 'queen') {
-        this.height = 3;
-        this.side = 1;
-    } else if (type == 'drone') {
-        this.height = 2;
-        this.side = 0.5;
-    } else if (type == 'pawn') {
         this.height = 1;
+        this.side = 0.5;
+        this.material=this.scene.queenMaterial;
+    } else if (type == 'drone') {
+        this.height = 0.75;
         this.side = 0.25;
+        this.material=this.scene.droneMaterial;
+    } else if (type == 'pawn') {
+        this.height = 0.5;
+        this.side = 0.1;
+        this.material=this.scene.pawnMaterial;
     }
     this.side1 = new Triangle(scene, -this.side, this.side, 0, -this.side, -this.side, 0, 0, 0, this.height);
     this.side5 = new Rectangle(scene, -this.side, -this.side, this.side, this.side);
@@ -24,6 +28,16 @@ Piramid.prototype = Object.create(CGFobject.prototype);
 Piramid.prototype.constructor = Piramid;
 
 Piramid.prototype.display = function() {
+
+  this.scene.pushMatrix();
+
+  this.scene.rotate(-Math.PI/2,1,0,0);
+
+  if(this.material)
+  {
+    this.material.apply();  
+  }
+
     this.side1.display();
     this.scene.pushMatrix();
     this.scene.rotate(Math.PI / 2, 0, 0, 1);
@@ -38,6 +52,8 @@ Piramid.prototype.display = function() {
     this.side1.display();
     this.scene.popMatrix();
     this.side5.display();
+
+    this.scene.popMatrix();
 };
 
 Piramid.prototype.updateTexCoords = function(length_s, length_t) {
