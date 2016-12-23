@@ -63,6 +63,7 @@ XMLscene.prototype.init = function(application) {
     this.setPickEnabled(true);
 
     this.board = new Board(this,8,4);
+    this.board.makeRequest();
 
 
 };

@@ -69,7 +69,8 @@ serialInclude(['../lib/CGF.js',
     'primitives/cube.js',
     'primitives/board.js',
     'primitives/cell.js',
-    'primitives/Piramid.js',
+    'primitives/piramid.js',
+    'Comunication/comunication.js',
 
     main = function() {
         // Standard application, scene and interface setup

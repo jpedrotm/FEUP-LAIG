@@ -17,7 +17,7 @@ function Board(scene,height,width) {
 Board.prototype = Object.create(CGFobject.prototype);
 Board.prototype.constructor = Board;
 
-Board.prototype.initBoard=function(){
+Board.prototype.initBoard=function(board){
 
   var tmpId=1;
 
@@ -33,6 +33,26 @@ Board.prototype.initBoard=function(){
       this.board[i].push(new Cell(this.scene,i,j,piece,tmpId));
     }
   }
+
+};
+
+Board.prototype.setBoard=function(board){
+
+  var tmpId=1;
+  var tmpBoard=[];
+  for(var i=0;i<this.height;i++)
+  {
+    tmpBoard.push([]);
+
+    for(var j=0;j<this.width;j++)
+    {
+      tmpId++;
+      var piece = board[i][j];
+      console.log("Piece("+j+","+i+"): "+piece);
+      tmpBoard[i].push(new Cell(this.scene,i,j,piece,tmpId));
+    }
+  }
+  this.board=tmpBoard;
 
 };
 
