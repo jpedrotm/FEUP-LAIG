@@ -113,9 +113,9 @@ parse_input(board, Board):-
 	matrix_to_json(TempBoard, Board).
 
 
-parse_input(handshake, handshake).
-parse_input(test(C,N), Res) :- test(C,Res,N).
-parse_input(quit, goodbye).
+parse_input(cpu1_vs_cpu, Board):-
+	make_play_cpu(Board,NewBoard,Columns,Rows,PlayerTopPoints,NewTopPoints,player1,2).
 
-test(_,[],N) :- N =< 0.
-test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
+
+parse_input(cpu_vs_cpu2, Board):-
+	make_play_cpu(Board,NewBoard,Columns,Rows,PlayerTopPoints,NewTopPoints,player2,2).

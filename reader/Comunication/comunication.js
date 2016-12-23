@@ -16,7 +16,6 @@ Board.prototype.getPrologRequest = function(requestString, onSuccess, onError, p
       var obj = JSON.parse(response);
       console.log(obj);
       board.setBoard(obj);
-
     }
 
   };
@@ -29,7 +28,12 @@ Board.prototype.getPrologRequest = function(requestString, onSuccess, onError, p
 Board.prototype.makeRequest = function()
 {
   // Get Parameter Values
-  var requestString = "board";
+  var requestString = "cpu1_vs_cpu";
+  // Make Request
+  this.getPrologRequest(requestString);
+
+  // Get Parameter Values
+  var requestString = "cpu_vs_cpu2";
   // Make Request
   this.getPrologRequest(requestString);
 }
