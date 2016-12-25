@@ -128,3 +128,15 @@ parse_input(playerPlay(StringBoard,Player,PlayerPoints,NewPoints), NewBoard):-
 	make_play(NewBoard,NewBoard1,Columns,Rows,PlayerPoints,NewPoints,Player),
 	write(TempBoard),
 	matrix_to_json(TempBoard, NewBoard).
+
+%Update player PlayerBottomPoints
+parse_input(playerBottomPoints(StringBoard), BottomPoints):-
+	list_to_matrix(StringBoard, 4, Board),
+	calc_divisions_points(Board,Rows,BottomPoints,TopPoints).
+
+%Update player PlayerTopPoints
+parse_input(playerTopPoints(StringBoard), TopPoints):-
+	list_to_matrix(StringBoard, 4, Board),
+	calc_divisions_points(Board,Rows,BottomPoints,TopPoints).
+
+%Check end game is made on javascript side, by checking if updated points equals zero
