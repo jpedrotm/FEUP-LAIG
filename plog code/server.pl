@@ -110,12 +110,21 @@ print_header_line(_).
 % Require your Prolog Files here
 parse_input(board, Board):-
 	initialize_board(TempBoard,4,8),
+	write(TempBoard),
 	matrix_to_json(TempBoard, Board).
 
 
-parse_input(cpu1_vs_cpu, Board):-
-	make_play_cpu(Board,NewBoard,Columns,Rows,PlayerTopPoints,NewTopPoints,player1,2).
+%CPU move
+parse_input(botPlay(StringBoard,Bot,BotLevel,PlayerPoints,NewPoints), NewBoard):-
+	list_to_matrix(StringBoard, 4, Board),
+	make_play_cpu(Board,TempBoard,4,8,PlayerPoints,NewPoints,Bot,BotLevel),
+	write(TempBoard),
+	matrix_to_json(TempBoard, NewBoard).
 
 
-parse_input(cpu_vs_cpu2, Board):-
-	make_play_cpu(Board,NewBoard,Columns,Rows,PlayerTopPoints,NewTopPoints,player2,2).
+%Player move
+parse_input(playerPlay(StringBoard,Player,PlayerPoints,NewPoints), NewBoard):-
+	list_to_matrix(StringBoard, 4, Board),
+	make_play(NewBoard,NewBoard1,Columns,Rows,PlayerPoints,NewPoints,Player),
+	write(TempBoard),
+	matrix_to_json(TempBoard, NewBoard).

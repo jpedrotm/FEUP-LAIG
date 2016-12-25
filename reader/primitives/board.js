@@ -56,6 +56,22 @@ Board.prototype.setBoard=function(board){
 
 };
 
+Board.prototype.getBoard=function(){
+
+  var tmpBoard=[];
+  for(var i=0;i<this.height;i++)
+  {
+    tmpBoard.push([]);
+
+    for(var j=0;j<this.width;j++)
+    {
+      tmpBoard[i].push(this.board[i][j].piece.type);
+    }
+  }
+  return tmpBoard;
+
+};
+
 Board.prototype.display=function(){
 
   var dist=1.1;

@@ -25,17 +25,22 @@ Board.prototype.getPrologRequest = function(requestString, onSuccess, onError, p
   request.send();
 }
 
-Board.prototype.makeRequest = function()
+Board.prototype.makeRequest = function(request)
 {
+  var board = this.getBoard();
+  console.log(board);
   // Get Parameter Values
-  var requestString = "cpu1_vs_cpu";
+  var requestString = 'botPlay([' + board + '],' + 'player1,0,0)';
   // Make Request
   this.getPrologRequest(requestString);
 
+  board = this.getBoard();
+  console.log(board);
   // Get Parameter Values
-  var requestString = "cpu_vs_cpu2";
+  requestString = 'botPlay([' + board + '],' + 'player2,0,0)';
   // Make Request
   this.getPrologRequest(requestString);
+
 }
 
 //Handle the Reply
