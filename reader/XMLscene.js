@@ -68,9 +68,10 @@ XMLscene.prototype.init = function(application) {
 
     this.setPickEnabled(true);
 
+    this.switchTurn=false;
+    this.playerTurn='player1';
+
     this.board = new Board(this,8,4);
-    //this.moveAnimation=new moveAnimation(this,new Point2D(0,0),new Point2D(0,2),0,0);
-    this.torus=new Torus(this,1,2,20,20);
 
 
 };
@@ -219,6 +220,7 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.axis = new CGFaxis(this, this.graph.axis_length, 0.2);
     this.graphViews();
     this.graphLights();
+    this.camera.setPosition(vec3.fromValues(0,35,-40));
 };
 /**
  * Function that loads the initial camera to XMLscene.
@@ -291,16 +293,32 @@ XMLscene.prototype.display = function() {
     this.board.display();
     this.popMatrix();
 
-    /*this.pushMatrix();
-    this.moveAnimation.displayAnimation();
-    this.torus.display();
-    this.popMatrix();*/
-
 };
 
 XMLscene.prototype.update = function(currTime) {
 
   this.board.update(currTime-this.lastTime);
+
+  if(this.switchTurn)
+  {
+    this.cameraAnimation=new cameraAnimation(this,1,this.playerTurn);
+    this.switchTurn=false;
+
+    if(this.playerTurn==='player1')
+    {
+      this.playerTurn='player2';
+    }
+    else if(this.playerTurn==='player2')
+    {
+      this.playerTurn='player1';
+    }
+
+  }
+
+  if(this.cameraAnimation!=null)
+  {
+    this.cameraAnimation.updateAnimation(currTime-this.lastTime);
+  }
 
   //this.moveAnimation.updateAnimation(currTime-this.lastTime);
 

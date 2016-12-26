@@ -63,6 +63,8 @@ Board.prototype.display=function(){
 
   this.scene.pushMatrix();
 
+  this.scene.translate(-1.65,0,-4);
+
   for(var i=0;i<this.height;i++)
   {
 

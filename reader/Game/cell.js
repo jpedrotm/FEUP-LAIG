@@ -56,6 +56,7 @@ Cell.prototype.update=function(time){
     {
       this.animate=false;
       this.animation=null;
+      this.scene.switchTurn=true;
     }
     else
     {
