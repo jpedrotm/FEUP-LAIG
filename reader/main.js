@@ -71,6 +71,8 @@ serialInclude(['../lib/CGF.js',
     'primitives/cell.js',
     'primitives/piramid.js',
     'Comunication/comunication.js',
+    'Objs/Obj.js',
+    'Objs/ObjObject.js',
 
     main = function() {
         // Standard application, scene and interface setup
