@@ -6,6 +6,8 @@ function Cell(scene, x, y, type,id) {
     this.y=y;
     this.cell=new Cube(this.scene,1,0.2,1);
     this.material = null;
+    this.piece=new Piramid(scene,type);
+    this.id=id;
     this.type=type;
     if (type == 'queen') {
         this.piece = new Obj(this.scene, 'scenes/queen.obj');
@@ -20,7 +22,7 @@ function Cell(scene, x, y, type,id) {
       this.piece=new Piramid(scene,type);
     }
     this.getColorCell(x,y);
-    this.id=id;
+
 
 };
 
@@ -40,8 +42,15 @@ Cell.prototype.getColorCell=function(x,y){
 };
 
 Cell.prototype.display=function(){
-  var angle = Math.PI/2;
+
+  this.scene.pushMatrix();
+  this.material.apply();
+  this.scene.registerForPick(this.id,this.cell);
+  this.cell.display();
+  this.scene.popMatrix();
+
   if(this.type == 'queen' || this.type == 'drone' || this.type == 'pawn'){
+    var angle = Math.PI/2;
     this.scene.pushMatrix();
     this.scene.translate(-0.3,0.1,0.3);
     this.scene.scale(0.03,0.03,0.03);
@@ -51,11 +60,5 @@ Cell.prototype.display=function(){
     this.scene.popMatrix();
   }
 
-
-  this.scene.pushMatrix();
-  this.material.apply();
-  this.scene.registerForPick(this.id,this.cell);
-  this.cell.display();
-  this.scene.popMatrix();
 
 };
