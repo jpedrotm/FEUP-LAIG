@@ -16,8 +16,13 @@ function Board(scene,height,width) {
 
   this.move='firstCell'; //para saber que célula está a selecionar (primeira ou segunda)
   this.playing = 'player1'; //Para saber que jogador faz a jogada
-
+  this.firstBot = false;
+  this.secondBot = false;
+  this.firstPlayerPoints=0;
+  this.secondPlayerPoints=0;
   this.readyToMakeAMove=0;
+
+  this.gameHistory = new GameHistory(this.scene);
 
   this.initBoard();
 
@@ -190,12 +195,20 @@ Board.prototype.getCoordsToMove=function(id){
   if(this.move==='notAMove')
     return;
 
-  if(this.move==='firstCell')
+  if(this.move==='firstCell' && this.board[this.currY][this.currX].type!='empty')
   {
     this.firstCell.x=this.currX;
     this.firstCell.y=this.currY;
-
     this.move='secondCell';
+
+    var tempBoard=this.getBoard();
+    console.log("TEMP BOARD:");
+    console.log(tempBoard);
+    var requestString = 'validMoves([' + tempBoard + '],' + this.board[this.currY][this.currX].type + ',' + this.currX + ',' + this.currY + ',' + this.playing + ')';
+    var moves = this.makeRequest(requestString);
+    var validMoves = JSON.parse(moves);
+    console.log("Valid moves: ");
+    console.log(validMoves);
 
     return 1;
   }
@@ -257,6 +270,7 @@ Board.prototype.movePiece=function(){
     //Põe aqui o movimento e significa que está pronto
     //depois é dar reset aos valores para o próximo movimento, posso tratar disso depois quando fizeres a ligação
 
+
   }
 
 };
@@ -290,7 +304,7 @@ Board.prototype.getBoard=function(){
 
     for(var j=0;j<this.width;j++)
     {
-      tmpBoard[i].push(this.board[i][j].piece.type);
+      tmpBoard[i].push(this.board[i][j].type);
     }
   }
   return tmpBoard;

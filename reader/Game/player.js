@@ -9,7 +9,7 @@ function Player(id){
                          // e sabemos assim se o movimento é possível ou não.
 
   this.move='firstCell'; // Saber que movimento vamos registar, a seleção da célula inicial ou final
-
+  this.score=0;
 }
 
 Player.prototype.getPoint=function(id){

@@ -70,11 +70,6 @@ XMLscene.prototype.init = function(application) {
 
     this.board = new Board(this,8,4);
 
-    var tempBoard = this.board.getBoard();
-    var requestString = 'botPlay([' + tempBoard + '],' + 'player1,2,0,0)';
-    this.board.makeRequest(requestString);
-
-
 };
 
 XMLscene.prototype.initLights = function() {

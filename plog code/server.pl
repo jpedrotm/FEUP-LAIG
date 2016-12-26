@@ -111,7 +111,7 @@ print_header_line(_).
 parse_input(board, Board):-
 	initialize_board(TempBoard,4,8),
 	write(TempBoard),
-	matrix_to_json(TempBoard, Board).
+	json(TempBoard, Board).
 
 
 %CPU move
@@ -128,6 +128,27 @@ parse_input(playerPlay(StringBoard,Player,PlayerPoints,NewPoints), NewBoard):-
 	make_play(NewBoard,NewBoard1,Columns,Rows,PlayerPoints,NewPoints,Player),
 	write(TempBoard),
 	matrix_to_json(TempBoard, NewBoard).
+
+%get valid Moves Pawn
+parse_input(validMoves(StringBoard,pawn,X,Y,Player),ValidMoves):-
+	list_to_matrix(StringBoard, 4, Board),
+	valid_movements(Board, X, Y, pawn, Player, [], TempValidMoves),
+	write(TempValidMoves),
+	json(TempValidMoves, ValidMoves).
+
+%get valid Moves Drone
+parse_input(validMoves(StringBoard,drone,X,Y,Player),ValidMoves):-
+	list_to_matrix(StringBoard, 4, Board),
+	valid_movements(Board, X, Y, drone, Player, [], TempValidMoves),
+	write(TempValidMoves),
+	json(TempValidMoves, ValidMoves).
+
+%get valid Moves Queen
+parse_input(validMoves(StringBoard,queen,X,Y,Player),ValidMoves):-
+	list_to_matrix(StringBoard, 4, Board),
+	valid_movements(Board, X, Y, queen, Player, [], TempValidMoves),
+	write(TempValidMoves),
+	json(TempValidMoves, ValidMoves).
 
 %Update player PlayerBottomPoints
 parse_input(playerBottomPoints(StringBoard), BottomPoints):-
