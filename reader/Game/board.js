@@ -8,14 +8,20 @@ function Board(scene,height,width) {
   this.width=width;
   this.board=[];
 
+  this.firstCell=new Point2D(-1,-1);
+  this.secondCell=new Point2D(-1,-1);
+
+  this.currX=-1; //Último x e y escolhidos
+  this.currY=-1;
+
+  this.move='firstCell'; //para saber que célula está a selecionar (primeira ou segunda)
+  this.playing = 'player1'; //Para saber que jogador faz a jogada
+
+  this.readyToMakeAMove=0;
+
   this.initBoard();
 
-  this.initBuffers();
-
 };
-
-Board.prototype = Object.create(CGFobject.prototype);
-Board.prototype.constructor = Board;
 
 Board.prototype.initBoard=function(){
 
@@ -27,10 +33,10 @@ Board.prototype.initBoard=function(){
 
     for(var j=0;j<this.width;j++)
     {
-      tmpId++;
       var piece= this.verifyPiece(j,i);
       console.log("Piece("+j+","+i+"): "+piece);
       this.board[i].push(new Cell(this.scene,i,j,piece,tmpId));
+      tmpId++;
     }
   }
 
@@ -119,11 +125,106 @@ Board.prototype.verifyMovementBoard=function(){
 				if (obj)
 				{
 					var customId = this.scene.pickResults[i][1];
+
+          this.currX=customId%4;
+          if(this.currX===0)
+          {
+            this.currX=3;
+            this.currY=Math.floor(customId/4)-1;
+          }
+          else{
+            this.currX--;
+            this.currY=Math.floor(customId/4);
+          }
+
+          console.log('X,Y: '+this.currX+','+this.currY);
+
+          this.verifyIfSameCell();
+          this.getCoordsToMove(customId);
+
+          console.log(this.move);
+
 					console.log("Picked object: " + obj + ", with pick id " + customId);
 				}
 			}
 			this.scene.pickResults.splice(0,this.scene.pickResults.length);
 		}
 	}
+
+};
+
+Board.prototype.getCoordsToMove=function(id){
+
+  if(this.move==='notAMove')
+    return;
+
+  if(this.move==='firstCell')
+  {
+    this.firstCell.x=this.currX;
+    this.firstCell.y=this.currY;
+
+    this.move='secondCell';
+
+    return 1;
+  }
+  else if(this.move==='secondCell')
+  {
+    this.secondCell.x=this.currX;
+    this.secondCell.y=this.currY;
+
+    this.readyToMakeAMove=1;
+
+    console.log('Movimento a realizar: \n'+'Fx,Fy: '+this.firstCell.x+','+this.firstCell.y+'\nSx,Sy: '+this.secondCell.x+','+this.secondCell.y);
+
+    this.move='firstCell';
+
+    return 2;
+  }
+
+  return 0;
+
+};
+
+Board.prototype.verifyIfSameCell=function(){
+
+  if(this.firstCell.x===this.currX && this.firstCell.y===this.currY)
+  {
+
+    if(this.firstCell.x%2==this.firstCell.y%2)
+    {
+      this.board[this.currY][this.currX].material=this.scene.woodMaterial;
+    }
+    else {
+      this.board[this.currY][this.currX].material=this.scene.whiteWoodMaterial;
+    }
+
+    this.move='notAMove';
+
+    this.firstCell.x=-1;
+    this.firstCell.y=-1;
+
+  }
+  else {
+    this.board[this.currY][this.currX].material=this.scene.pickedMaterial;
+
+    if(this.move==='notAMove')
+    {
+      this.move='firstCell';
+    }
+
+  }
+
+};
+
+Board.prototype.movePiece=function(){
+
+  //Possívelmente chamar no update para quando for possível fazer o movimento, realiza-lo
+
+  if(this.readyToMakeAMove===1)
+  {
+    //Põe aqui o movimento e significa que está pronto
+    //depois é dar reset aos valores para o próximo movimento, posso tratar disso depois quando fizeres a ligação
+
+  }
 
 };

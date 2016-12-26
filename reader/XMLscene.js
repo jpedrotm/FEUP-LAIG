@@ -50,6 +50,12 @@ XMLscene.prototype.init = function(application) {
     this.pawnMaterial.setSpecular(0,0,0.8,1);
     this.pawnMaterial.setShininess(20);
 
+    this.pickedMaterial = new CGFappearance(this);
+    this.pickedMaterial.setAmbient(0,0,0.0,1);
+    this.pickedMaterial.setDiffuse(0,0,0.0,1);
+    this.pickedMaterial.setSpecular(0,0,0.0,1);
+    this.pickedMaterial.setShininess(20);
+
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
@@ -280,7 +286,6 @@ XMLscene.prototype.display = function() {
     };
 
     this.pushMatrix();
-    //this.board.registerForPickBoard();
     this.board.display();
     this.popMatrix();
 

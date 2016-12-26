@@ -31,13 +31,13 @@ Cell.prototype.getColorCell=function(x,y){
 Cell.prototype.display=function(){
 
   this.scene.pushMatrix();
-  this.piece.display();
-  this.scene.popMatrix();
-
-  this.scene.pushMatrix();
   this.material.apply();
   this.scene.registerForPick(this.id,this.cell);
   this.cell.display();
+  this.scene.popMatrix();
+
+  this.scene.pushMatrix();
+  this.piece.display();
   this.scene.popMatrix();
 
 };
