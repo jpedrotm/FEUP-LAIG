@@ -63,7 +63,10 @@ XMLscene.prototype.init = function(application) {
     this.setPickEnabled(true);
 
     this.board = new Board(this,8,4);
-    this.board.makeRequest();
+
+    var tempBoard = this.board.getBoard();
+    var requestString = 'botPlay([' + tempBoard + '],' + 'player1,2,0,0)';
+    this.board.makeRequest(requestString);
 
 
 };

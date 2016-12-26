@@ -12,10 +12,15 @@ Board.prototype.getPrologRequest = function(requestString, onSuccess, onError, p
 
     var response = data.target.response;
 
-    if (response != 'Bad Request') {
+    if(response == 'EndGame'){
+
+    }else if (response != 'Bad Request') {
       var obj = JSON.parse(response);
       console.log(obj);
       board.setBoard(obj);
+      var tempBoard=board.getBoard();
+      var requestString = 'botPlay([' + tempBoard + '],' + 'player2,2,0,0)';
+      board.makeRequest(requestString);
     }
 
   };
@@ -27,19 +32,7 @@ Board.prototype.getPrologRequest = function(requestString, onSuccess, onError, p
 
 Board.prototype.makeRequest = function(request)
 {
-  var board = this.getBoard();
-  console.log(board);
-  // Get Parameter Values
-  var requestString = 'botPlay([' + board + '],' + 'player1,0,0)';
-  // Make Request
-  this.getPrologRequest(requestString);
-
-  board = this.getBoard();
-  console.log(board);
-  // Get Parameter Values
-  requestString = 'botPlay([' + board + '],' + 'player2,0,0)';
-  // Make Request
-  this.getPrologRequest(requestString);
+  this.getPrologRequest(request);
 
 }
 
