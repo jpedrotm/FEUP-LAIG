@@ -73,6 +73,9 @@ serialInclude(['../lib/CGF.js',
     'Comunication/comunication.js',
     'Objs/Obj.js',
     'Objs/ObjObject.js',
+    'Game/cell.js',
+    'Game/player.js',
+    'Game/board.js',
 
     main = function() {
         // Standard application, scene and interface setup

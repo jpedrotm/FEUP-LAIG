@@ -2,6 +2,19 @@
 * Point.
 * @constructor
 */
+class Point2D{
+  constructor(x,y){
+    this.x=x;
+    this.y=y;
+  }
+
+  resetPoints(){
+    this.x=-1;
+    this.y=-1;
+  }
+
+}
+
 class Point{
   constructor(x,y,z,w){
     this.x=x;
