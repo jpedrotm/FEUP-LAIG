@@ -233,13 +233,13 @@ Board.prototype.setBoard=function(board){
 
   var tmpId=1;
   var tmpBoard=[];
-  {
   for(var i=0;i<this.height;i++)
+  {
     tmpBoard.push([]);
 
     for(var j=0;j<this.width;j++)
-      tmpId++;
     {
+      tmpId++;
       var piece = board[i][j];
       console.log("Piece("+j+","+i+"): "+piece);
       tmpBoard[i].push(new Cell(this.scene,i,j,piece,tmpId));
@@ -249,18 +249,18 @@ Board.prototype.setBoard=function(board){
 
 };
 
-};
-
-  return tmpBoard;
-    }
-      tmpBoard[i].push(this.board[i][j].piece.type);
-    {
-
-
 Board.prototype.getBoard=function(){
-  for(var i=0;i<this.height;i++)
+
   var tmpBoard=[];
+  for(var i=0;i<this.height;i++)
   {
     tmpBoard.push([]);
+
     for(var j=0;j<this.width;j++)
+    {
+      tmpBoard[i].push(this.board[i][j].piece.type);
+    }
   }
+  return tmpBoard;
+
+};
