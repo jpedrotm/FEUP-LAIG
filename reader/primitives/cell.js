@@ -6,7 +6,6 @@ function Cell(scene, x, y, type,id) {
     this.y=y;
     this.cell=new Cube(this.scene,1,0.2,1);
     this.material = null;
-    this.piece=new Piramid(scene,type);
     this.type=type;
     if (type == 'queen') {
         this.piece = new Obj(this.scene, 'scenes/queen.obj');
@@ -17,11 +16,11 @@ function Cell(scene, x, y, type,id) {
     } else if (type == 'pawn') {
         this.piece = new Obj(this.scene, 'scenes/pawn.obj');
         this.pieceMaterial = this.scene.pawnMaterial;
+    }else{
+      this.piece=new Piramid(scene,type);
     }
-
-    this.id=id;
-
     this.getColorCell(x,y);
+    this.id=id;
 
 };
 
