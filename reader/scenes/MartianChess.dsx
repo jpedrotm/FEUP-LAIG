@@ -46,7 +46,7 @@
     </lights>
 
     <textures>
-      <texture id="tap" file="scenes/img/tire.png" length_s="1.0" length_t="1.0"/>
+      <texture id="tap" file="scenes/img/tire.jpg" length_s="1.0" length_t="1.0"/>
     </textures>
 
     <materials>

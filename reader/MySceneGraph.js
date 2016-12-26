@@ -767,7 +767,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
           var tmpTexture=this.textures[textureref][1];
 
           console.log("CHESSBOARRRRRDDDDD: "+tmpTexture);
-
+        
           this.objects[id]= new Chessboard(this.scene,du,dv,tmpTexture,su,sv,c1RGBA,c2RGBA,csRGBA);
 
         }

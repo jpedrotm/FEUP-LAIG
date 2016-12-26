@@ -5,7 +5,7 @@
 function Piramid(scene, type) {
     CGFobject.call(this, scene);
     this.scene = scene;
-
+    this.type=type;
     if (type == 'queen') {
         this.height = 1;
         this.side = 0.5;
@@ -35,7 +35,7 @@ Piramid.prototype.display = function() {
 
   if(this.material)
   {
-    this.material.apply();  
+    this.material.apply();
   }
 
     this.side1.display();
