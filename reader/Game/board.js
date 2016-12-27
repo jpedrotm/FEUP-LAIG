@@ -113,13 +113,25 @@ Board.prototype.display=function(){
 };
 
 
-Board.prototype.movePiece = function(validMoves,player){
+Board.prototype.movePiece = function(validMoves,player,bot,xi,yi,xf,yf){
 
   var validPlay=0;
-  for(var i =0; i<validMoves.length; i++){
-    if(validMoves[i][2]==this.secondCell.x && validMoves[i][3]==this.secondCell.y){
-      validPlay=1;
+  if(bot=='player'){
+    for(var i =0; i<validMoves.length; i++){
+      if(validMoves[i][2]==this.secondCell.x && validMoves[i][3]==this.secondCell.y){
+        validPlay=1;
+      }
     }
+  }
+
+
+  if(bot == 'bot'){
+    this.firstCell.x=xi;
+    this.firstCell.y=yi;
+    this.secondCell.x=xf;
+    this.secondCell.y=yf;
+    validPlay=1;
+      console.log("asdasdasdasda");
   }
 
   if(validPlay==1){
@@ -136,6 +148,7 @@ Board.prototype.movePiece = function(validMoves,player){
     }else{
       this.playerTwoPoints+=points;
     }
+
     this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
     this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
     this.cleanSelections();
@@ -145,6 +158,7 @@ Board.prototype.movePiece = function(validMoves,player){
 
     this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
     this.board[this.firstCell.y][this.firstCell.x].animate=true;
+    console.log("asdasdasdasda");
     return 1;
   }
   return 0;

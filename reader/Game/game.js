@@ -5,7 +5,7 @@ function Game(scene){
 
   this.playing = 'player1'; //Para saber que jogador faz a jogada
   this.firstBot = false;
-  this.secondBot = false;
+  this.secondBot = true;
   this.firstPlayerPoints=0;
   this.secondPlayerPoints=0;
   this.readyToMakeAMove=0;
@@ -21,10 +21,11 @@ Game.prototype.initGame = function(bot1, bot2){
   this.secodBot=bot2;
 };
 
-Game.prototype.movePiece=function(){
+Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
 
   if(this.readyToMakeAMove){
-    var validMove = this.gameBoard.movePiece(this.currentValidMoves,this.playing);
+    var validMove = this.gameBoard.movePiece(this.currentValidMoves,this.playing,bot,xi,yi,xf,yf);
+    console.log(validMove);
     if(validMove){
       this.firstPlayerPoints=this.gameBoard.playerOnePoints;
       this.secondPlayerPoints=this.gameBoard.playerTwoPoints;
@@ -56,9 +57,9 @@ Game.prototype.update = function(currTime){
 
   this.gameBoard.update(currTime-this.lastTime);
 
-  if(this.firstBot === false && this.secondBot === false){
+  if(this.firstBot == false && this.secondBot == false){
     this.playPlayer();
-  }if(this.firstBot === false && this.secondBot === true){
+  }else if(this.firstBot === false && this.secondBot === true){
     if(this.playing == 'player1'){
       this.playPlayer();
     }else{
@@ -84,7 +85,7 @@ Game.prototype.playPlayer = function() {
 
   }else if(selectedCell == 2){
     this.readyToMakeAMove=1;
-    this.movePiece();
+    this.movePiece('player',0,0,0,0);
     //retira comentario para animar a camera
     //this.switchTurn=true;
   }
@@ -93,11 +94,16 @@ Game.prototype.playPlayer = function() {
 Game.prototype.playBot = function(){
   var tempBoard = this.gameBoard.getBoard();
   var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + 2 + ')';
-  getPrologRequest(request, this.updateValidMoves.bind(this));
+  getPrologRequest(request, this.botMove.bind(this));
 
 
+};
 
-}
+Game.prototype.botMove = function(move){
+  var botMove = JSON.parse(move.target.response);
+  this.readyToMakeAMove=1;
+  this.movePiece('bot',botMove[0],botMove[1],botMove[2],botMove[3]);
+};
 
 Game.prototype.updateValidMoves = function(moves){
   this.currentValidMoves = JSON.parse(moves.target.response);

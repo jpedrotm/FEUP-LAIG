@@ -114,15 +114,19 @@ parse_input(board, Board):-
 	json(TempBoard, Board).
 
 %CPU move
-parse_input(botPlay(Board,Bot,1), Move):-
+parse_input(botPlay(StringBoard,Bot,1), Move):-
+	list_to_matrix(StringBoard, 4, Board),
 	valid_moves(Board, Bot, Moves),
 	list_size(Moves, NoMoves),
 	random(0, NoMoves, MoveIndex),
-	nth0(MoveIndex, Moves, Move).
+	nth0(MoveIndex, Moves, Move),
+	write(Move).
 
-parse_input(botPlay(Board,Bot,2), Move):-
+parse_input(botPlay(StringBoard,Bot,2), Move):-
+	list_to_matrix(StringBoard, 4, Board),
 	valid_moves(Board, Bot, Moves),
-	get_best_move(Board, Bot, Moves, Move).
+	get_best_move(Board, Bot, Moves, Move),
+	write(Move).
 
 %CPU move
 /*parse_input(botPlay(StringBoard,Bot,BotLevel,PlayerPoints,NewPoints), NewBoard):-
