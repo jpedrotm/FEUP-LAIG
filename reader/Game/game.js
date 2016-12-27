@@ -23,9 +23,17 @@ Game.prototype.initGame = function(){
 Game.prototype.movePiece=function(){
 
   if(this.readyToMakeAMove){
-    console.log("MOVE PIECE:");
-    console.log(this.currentValidMoves);
-    this.gameBoard.movePiece(this.currentValidMoves);
+    var validMove = this.gameBoard.movePiece(this.currentValidMoves);
+    if(validMove){
+      if(this.playing==='player2')
+      {
+        this.playing='player1';
+      }
+      else if(this.playing==='player1')
+      {
+        this.playing='player2';
+      }
+    }
     this.readyToMakeAMove=0;
   }
 
@@ -40,20 +48,10 @@ Game.prototype.update = function(currTime){
 
   this.gameBoard.update(currTime-this.lastTime);
 
-  var selectedCell = this.gameBoard.verifyMovementBoard();
+  var selectedCell = this.gameBoard.verifyMovementBoard(this.playing);
 
   if(selectedCell == 1){
-
-    if(this.playing==='player2')
-    {
-      this.playing='player1';
-    }
-    else if(this.playing==='player1')
-    {
-      this.playing='player2';
-    }
-
-    console.log("first");
+    console.log(this.playing);
     this.readyToMakeAMove=0;
 
     var tempBoard = this.gameBoard.getBoard();
@@ -63,7 +61,9 @@ Game.prototype.update = function(currTime){
   }else if(selectedCell == 2){
     this.readyToMakeAMove=1;
     this.movePiece();
-    this.switchTurn=true;
+
+    //retira comentario para animar a camera
+    //this.switchTurn=true;
   }
 
 

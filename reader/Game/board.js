@@ -131,8 +131,9 @@ Board.prototype.movePiece = function(validMoves){
 
     this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
     this.board[this.firstCell.y][this.firstCell.x].animate=true;
+    return 1;
   }
-
+  return 0;
 
 };
 
@@ -189,7 +190,7 @@ Board.prototype.registerForPickBoard = function(){
 
 };
 
-Board.prototype.verifyMovementBoard=function(){
+Board.prototype.verifyMovementBoard=function(player){
 
   if (this.scene.pickMode == false) {
     var selection = 0;
@@ -215,11 +216,22 @@ Board.prototype.verifyMovementBoard=function(){
           console.log('X,Y: '+this.currX+','+this.currY);
 
           this.verifyIfSameCell();
-          selection = this.getCoordsToMove(customId);
+          if(player==='player1' && this.currY<4){
+            selection = this.getCoordsToMove(customId);
 
-          console.log(this.move);
+            console.log(this.move);
 
-					console.log("Picked object: " + obj + ", with pick id " + customId);
+  					console.log("Picked object: " + obj + ", with pick id " + customId);
+          }else if(player==='player2' && this.currY>=4){
+            selection = this.getCoordsToMove(customId);
+
+            console.log(this.move);
+
+  					console.log("Picked object: " + obj + ", with pick id " + customId);
+          }else {
+            selection=0;
+          }
+
 				}
 			}
 			this.scene.pickResults.splice(0,this.scene.pickResults.length);
