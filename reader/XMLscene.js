@@ -73,15 +73,8 @@ XMLscene.prototype.init = function(application) {
     this.axis = new CGFaxis(this);
     this.setUpdatePeriod(30);
 
-
     this.game = new Game(this);
     this.setPickEnabled(true);
-
-
-
-
-    this.switchTurn=false;
-    this.playerTurn='player1';
 };
 
 XMLscene.prototype.initLights = function() {
@@ -306,18 +299,18 @@ XMLscene.prototype.update = function(currTime) {
 
   this.game.update(currTime-this.lastTime);
 
-  if(this.switchTurn)
+  if(this.game.switchTurn)
   {
-    this.cameraAnimation=new cameraAnimation(this,1,this.playerTurn);
-    this.switchTurn=false;
+    this.cameraAnimation=new cameraAnimation(this,1,this.game.playing);
+    this.game.switchTurn=false;
 
-    if(this.playerTurn==='player1')
+    if(this.game.playing==='player2')
     {
-      this.playerTurn='player2';
+      this.game.playing='player1';
     }
-    else if(this.playerTurn==='player2')
+    else if(this.game.playing==='player1')
     {
-      this.playerTurn='player1';
+      this.game.playing='player2';
     }
 
   }

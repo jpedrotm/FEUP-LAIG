@@ -3,7 +3,7 @@ function Game(scene){
   this.gameBoard = new Board(scene,8,4);
   this.gameHistory = new GameHistory(scene);
 
-  this.playing = 'player1'; //Para saber que jogador faz a jogada
+  this.playing = 'player2'; //Para saber que jogador faz a jogada
   this.firstBot = false;
   this.secondBot = false;
   this.firstPlayerPoints=0;
@@ -12,6 +12,7 @@ function Game(scene){
   this.currentValidMoves=[];
   this.firstCell=new Point2D(-1,-1);
   this.secondCell=new Point2D(-1,-1);
+  this.switchTurn = false;
 
 }
 
@@ -25,6 +26,7 @@ Game.prototype.movePiece=function(){
     console.log("MOVE PIECE:");
     console.log(this.currentValidMoves);
     this.gameBoard.movePiece(this.currentValidMoves);
+    this.readyToMakeAMove=0;
   }
 
 };
@@ -41,6 +43,16 @@ Game.prototype.update = function(currTime){
   var selectedCell = this.gameBoard.verifyMovementBoard();
 
   if(selectedCell == 1){
+
+    if(this.playing==='player2')
+    {
+      this.playing='player1';
+    }
+    else if(this.playing==='player1')
+    {
+      this.playing='player2';
+    }
+
     console.log("first");
     this.readyToMakeAMove=0;
 
@@ -51,6 +63,7 @@ Game.prototype.update = function(currTime){
   }else if(selectedCell == 2){
     this.readyToMakeAMove=1;
     this.movePiece();
+    this.switchTurn=true;
   }
 
 

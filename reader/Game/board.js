@@ -116,10 +116,6 @@ Board.prototype.movePiece = function(validMoves){
 
   var validPlay=0;
   for(var i =0; i<validMoves.length; i++){
-    console.log(this.secondCell.x);
-    console.log(this.secondCell.y);
-    console.log(validMoves[i][2]);
-    console.log(validMoves[i][3]);
     if(validMoves[i][2]==this.secondCell.x && validMoves[i][3]==this.secondCell.y){
       validPlay=1;
     }
@@ -129,16 +125,15 @@ Board.prototype.movePiece = function(validMoves){
     this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
     this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
     this.cleanSelections();
+
+    var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
+    var finalPointAnimation=new Point2D(this.secondCell.x*1.1,this.secondCell.y*1.1);
+
+    this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
+    this.board[this.firstCell.y][this.firstCell.x].animate=true;
   }
 
-  var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
-  var finalPointAnimation=new Point2D(this.secondCell.x*1.1,this.secondCell.y*1.1);
 
-  console.log("INITIAL POINT: "+initialPointAnimation.x+","+initialPointAnimation.y);
-  console.log("FINAL POINT: "+finalPointAnimation.x+","+finalPointAnimation.y);
-
-  this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
-  this.board[this.firstCell.y][this.firstCell.x].animate=true;
 };
 
 Board.prototype.cleanSelections = function(){
