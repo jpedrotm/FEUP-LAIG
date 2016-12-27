@@ -51,9 +51,9 @@ moveAnimation.prototype.updateAnimation = function(time) {
 
           this.y=this.height*percentageHalf;
 
-          console.log("HEIGHT:"+this.height);
-          console.log("PERCENTAGE: "+percentage);
-          console.log("HALF PERCENTAGE: "+percentageHalf);
+          //console.log("HEIGHT:"+this.height);
+          //console.log("PERCENTAGE: "+percentage);
+          //console.log("HALF PERCENTAGE: "+percentageHalf);
 
           if(percentageHalf>=1){
             this.up=false;

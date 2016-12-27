@@ -7,26 +7,28 @@ function Board(scene,height,width) {
   this.height=height;
   this.width=width;
   this.board=[];
-
+  this.move='firstCell'; //para saber que célula está a selecionar (primeira ou segunda)
   this.firstCell=new Point2D(-1,-1);
   this.secondCell=new Point2D(-1,-1);
 
   this.currX=-1; //Último x e y escolhidos
   this.currY=-1;
 
-  this.move='firstCell'; //para saber que célula está a selecionar (primeira ou segunda)
-  this.playing = 'player1'; //Para saber que jogador faz a jogada
-  this.firstBot = false;
-  this.secondBot = false;
-  this.firstPlayerPoints=0;
-  this.secondPlayerPoints=0;
-  this.readyToMakeAMove=0;
-
-  this.gameHistory = new GameHistory(this.scene);
-
   this.initBoard();
 
 };
+
+Board.prototype.update=function(time){
+
+  for(var i=0;i<this.height;i++)
+  {
+    for(var j=0;j<this.board[i].length;j++)
+    {
+      this.board[i][j].update(time);
+    }
+  }
+
+}
 
 Board.prototype.initBoard=function(){
 
@@ -109,6 +111,33 @@ Board.prototype.display=function(){
 
 };
 
+
+Board.prototype.movePiece = function(validMoves){
+  console.log('FAZER JOGADA');
+  console.log(validMoves);
+  var validPlay=0;
+  for(var i =0; i<validMoves.length; i++){
+    if(validMoves[i][3]==this.secondCell.x && validMoves[i][4]==this.secondCell.y){
+      validPlay=1;
+      console.log("Valid play");
+    }
+  }
+
+  if(validPlay==1){
+    this.board[this.secondCell.x][this.secondCell.y].updatePiece(this.board[this.firstCell.x][this.firstCell.y].type);
+    this.board[this.secondCell.x][this.secondCell.y].updatePiece('empty');
+  }
+
+  var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
+  var finalPointAnimation=new Point2D(this.secondCell.x*1.1,this.secondCell.y*1.1);
+
+  console.log("INITIAL POINT: "+initialPointAnimation.x+","+initialPointAnimation.y);
+  console.log("FINAL POINT: "+finalPointAnimation.x+","+finalPointAnimation.y);
+
+  this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
+  this.board[this.firstCell.y][this.firstCell.x].animate=true;
+};
+
 Board.prototype.verifyPiece=function(x,y){
 
   if((x==0 && y==0) || (x==1 && y==0) || (x==0 && y==1) || (x==this.width-1 && y==this.height-1) || (x==this.width-1 && y==this.height-2) || (x==this.width-2 && y==this.height-1))
@@ -155,6 +184,7 @@ Board.prototype.registerForPickBoard = function(){
 Board.prototype.verifyMovementBoard=function(){
 
   if (this.scene.pickMode == false) {
+    var selection = 0;
 		if (this.scene.pickResults != null && this.scene.pickResults.length > 0) {
       console.log("size: "+this.scene.pickResults.length);
 			for (var i=0; i< this.scene.pickResults.length; i++) {
@@ -177,7 +207,7 @@ Board.prototype.verifyMovementBoard=function(){
           console.log('X,Y: '+this.currX+','+this.currY);
 
           this.verifyIfSameCell();
-          this.getCoordsToMove(customId);
+          selection = this.getCoordsToMove(customId);
 
           console.log(this.move);
 
@@ -185,8 +215,11 @@ Board.prototype.verifyMovementBoard=function(){
 				}
 			}
 			this.scene.pickResults.splice(0,this.scene.pickResults.length);
+      return selection;
 		}
 	}
+
+  return 0;
 
 };
 
@@ -199,25 +232,15 @@ Board.prototype.getCoordsToMove=function(id){
   {
     this.firstCell.x=this.currX;
     this.firstCell.y=this.currY;
+
+
     this.move='secondCell';
-
-    var tempBoard=this.getBoard();
-    console.log("TEMP BOARD:");
-    console.log(tempBoard);
-    var requestString = 'validMoves([' + tempBoard + '],' + this.board[this.currY][this.currX].type + ',' + this.currX + ',' + this.currY + ',' + this.playing + ')';
-    var moves = this.makeRequest(requestString);
-    var validMoves = JSON.parse(moves);
-    console.log("Valid moves: ");
-    console.log(validMoves);
-
     return 1;
   }
   else if(this.move==='secondCell')
   {
     this.secondCell.x=this.currX;
     this.secondCell.y=this.currY;
-
-    this.readyToMakeAMove=1;
 
     console.log('Movimento a realizar: \n'+'Fx,Fy: '+this.firstCell.x+','+this.firstCell.y+'\nSx,Sy: '+this.secondCell.x+','+this.secondCell.y);
 
@@ -227,6 +250,18 @@ Board.prototype.getCoordsToMove=function(id){
   }
 
   return 0;
+
+};
+
+Board.prototype.getFirstCell = function(){
+
+  return this.firstCell;
+
+};
+
+Board.prototype.getSecondCell = function(){
+
+  return this.secondCell;
 
 };
 
@@ -261,28 +296,7 @@ Board.prototype.verifyIfSameCell=function(){
 
 };
 
-Board.prototype.movePiece=function(){
 
-  //Possívelmente chamar no update para quando for possível fazer o movimento, realiza-lo
-
-  if(this.readyToMakeAMove===1)
-  {
-    console.log('FAZER JOGADA');
-
-    var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
-    var finalPointAnimation=new Point2D(this.secondCell.x*1.1,this.secondCell.y*1.1);
-
-    console.log("INITIAL POINT: "+initialPointAnimation.x+","+initialPointAnimation.y);
-    console.log("FINAL POINT: "+finalPointAnimation.x+","+finalPointAnimation.y);
-
-    this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
-    this.board[this.firstCell.y][this.firstCell.x].animate=true;
-
-    this.readyToMakeAMove=0;
-
-  }
-
-};
 
 Board.prototype.setBoard=function(board){
 
@@ -319,3 +333,7 @@ Board.prototype.getBoard=function(){
   return tmpBoard;
 
 };
+
+Board.prototype.updateValidMoves = function(moves){
+  this.currentValidMoves=moves;
+}

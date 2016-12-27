@@ -67,15 +67,30 @@ Cell.prototype.update=function(time){
 
   if(this.animate)
   {
-    {
-    if(this.animation.ended)
+    if(this.animation.ended){
       this.animate=false;
       this.animation=null;
       this.scene.switchTurn=true;
-    }
-    else
-    {
+    }else{
       this.animation.updateAnimation(time);
     }
   }
+};
+
+Cell.prototype.updatePiece=function(type){
+
+  this.type=type;
+  if (type == 'queen') {
+      this.piece = new Obj(this.scene, 'scenes/queen.obj');
+      this.pieceMaterial = this.scene.queenMaterial;
+  } else if (type == 'drone') {
+      this.piece = new Obj(this.scene, 'scenes/drone.obj');
+      this.pieceMaterial = this.scene.droneMaterial;
+  } else if (type == 'pawn') {
+      this.piece = new Obj(this.scene, 'scenes/pawn.obj');
+      this.pieceMaterial = this.scene.pawnMaterial;
+  }else{
+    this.piece=new Piramid(scene,type);
+  }
+
 };

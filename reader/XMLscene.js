@@ -66,9 +66,12 @@ XMLscene.prototype.init = function(application) {
     this.axis = new CGFaxis(this);
     this.setUpdatePeriod(30);
 
+
+    this.game = new Game(this);
     this.setPickEnabled(true);
 
-    this.board = new Board(this,8,4);
+
+
 
     this.switchTurn=false;
     this.playerTurn='player1';
@@ -254,7 +257,6 @@ XMLscene.prototype.switchView = function() {
 
 XMLscene.prototype.display = function() {
 
-  this.board.verifyMovementBoard();
   this.clearPickRegistration();
 
     // ---- BEGIN Background, camera and axis setup
@@ -288,14 +290,14 @@ XMLscene.prototype.display = function() {
     };
 
     this.pushMatrix();
-    this.board.display();
+    this.game.display();
     this.popMatrix();
 
 };
 
 XMLscene.prototype.update = function(currTime) {
 
-  this.board.update(currTime-this.lastTime);
+  this.game.update(currTime-this.lastTime);
 
   if(this.switchTurn)
   {

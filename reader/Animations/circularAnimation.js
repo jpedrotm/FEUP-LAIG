@@ -7,8 +7,6 @@ function circularAnimation(scene, id, span, type, center, radius, initialAngle, 
 
     this.initialAngle = initialAngle * this.radAng;
     this.rotationAngle = rotationAngle * this.radAng;
-    console.log("START ANG: " + this.initialAngle);
-    console.log("ROTATION ANG:" + this.rotationAngle);
 
     this.currTime = 0;
     this.currAngle = 0;
