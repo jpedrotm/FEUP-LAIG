@@ -70,6 +70,8 @@ XMLscene.prototype.init = function(application) {
 
     this.board = new Board(this,8,4);
 
+    this.switchTurn=false;
+    this.playerTurn='player1';
 };
 
 XMLscene.prototype.initLights = function() {
@@ -216,6 +218,7 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.axis = new CGFaxis(this, this.graph.axis_length, 0.2);
     this.graphViews();
     this.graphLights();
+    this.camera.setPosition(vec3.fromValues(0,35,-40));
 };
 /**
  * Function that loads the initial camera to XMLscene.
@@ -292,9 +295,34 @@ XMLscene.prototype.display = function() {
 
 XMLscene.prototype.update = function(currTime) {
 
-    if (this.graph.isValid) {
-        this.graph.updateAnimation(this.graph.root, currTime - this.lastTime);
+  this.board.update(currTime-this.lastTime);
+
+  if(this.switchTurn)
+  {
+    this.cameraAnimation=new cameraAnimation(this,1,this.playerTurn);
+    this.switchTurn=false;
+
+    if(this.playerTurn==='player1')
+    {
+      this.playerTurn='player2';
     }
+    else if(this.playerTurn==='player2')
+    {
+      this.playerTurn='player1';
+    }
+
+  }
+
+  if(this.cameraAnimation!=null)
+  {
+    this.cameraAnimation.updateAnimation(currTime-this.lastTime);
+  }
+
+  //this.moveAnimation.updateAnimation(currTime-this.lastTime);
+
+    /*if (this.graph.isValid) {
+        this.graph.updateAnimation(this.graph.root, currTime - this.lastTime);
+    }*/
 
     this.lastTime = currTime;
 }

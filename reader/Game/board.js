@@ -310,3 +310,16 @@ Board.prototype.getBoard=function(){
   return tmpBoard;
 
 };
+
+    console.log('FAZER JOGADA');
+
+    var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
+    var finalPointAnimation=new Point2D(this.secondCell.x*1.1,this.secondCell.y*1.1);
+
+    console.log("INITIAL POINT: "+initialPointAnimation.x+","+initialPointAnimation.y);
+    console.log("FINAL POINT: "+finalPointAnimation.x+","+finalPointAnimation.y);
+
+    this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
+    this.board[this.firstCell.y][this.firstCell.x].animate=true;
+
+    this.readyToMakeAMove=0;

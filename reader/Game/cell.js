@@ -62,3 +62,20 @@ Cell.prototype.display=function(){
 
 
 };
+
+Cell.prototype.update=function(time){
+
+  if(this.animate)
+  {
+    {
+    if(this.animation.ended)
+      this.animate=false;
+      this.animation=null;
+      this.scene.switchTurn=true;
+    }
+    else
+    {
+      this.animation.updateAnimation(time);
+    }
+  }
+};
