@@ -333,7 +333,3 @@ Board.prototype.getBoard=function(){
   return tmpBoard;
 
 };
-
-Board.prototype.updateValidMoves = function(moves){
-  this.currentValidMoves=moves;
-}

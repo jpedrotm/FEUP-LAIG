@@ -20,9 +20,13 @@ Game.prototype.initGame = function(){
 };
 
 Game.prototype.movePiece=function(){
+
+  if(this.readyToMakeAMove){
     console.log("MOVE PIECE:");
     console.log(this.currentValidMoves);
     this.gameBoard.movePiece(this.currentValidMoves);
+  }
+
 
 
 
@@ -40,13 +44,16 @@ Game.prototype.update = function(currTime){
   var selectedCell = this.gameBoard.verifyMovementBoard();
 
   if(selectedCell == 1){
+    console.log("first");
     this.readyToMakeAMove=0;
 
     var tempBoard = this.gameBoard.getBoard();
     var request = 'validMoves([' + tempBoard + '],' + this.gameBoard.board[this.gameBoard.currY][this.gameBoard.currX].type + ',' + this.gameBoard.currX + ',' + this.gameBoard.currY + ',' + this.playing + ')';
-    getPrologRequest(request, this.updateValidMoves);
+    getPrologRequest(request, this.updateValidMoves.bind(this));
+
 
   }else if(selectedCell == 2){
+    this.readyToMakeAMove=1;
     this.movePiece();
   }
 
@@ -55,6 +62,5 @@ Game.prototype.update = function(currTime){
 
 Game.prototype.updateValidMoves = function(moves){
   this.currentValidMoves = JSON.parse(moves.target.response);
-  console.log("UPDATE:");
-  console.log(this.currentValidMoves);
+
 };
