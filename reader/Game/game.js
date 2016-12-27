@@ -27,9 +27,6 @@ Game.prototype.movePiece=function(){
     this.gameBoard.movePiece(this.currentValidMoves);
   }
 
-
-
-
 };
 
 
@@ -51,7 +48,6 @@ Game.prototype.update = function(currTime){
     var request = 'validMoves([' + tempBoard + '],' + this.gameBoard.board[this.gameBoard.currY][this.gameBoard.currX].type + ',' + this.gameBoard.currX + ',' + this.gameBoard.currY + ',' + this.playing + ')';
     getPrologRequest(request, this.updateValidMoves.bind(this));
 
-
   }else if(selectedCell == 2){
     this.readyToMakeAMove=1;
     this.movePiece();
@@ -62,5 +58,8 @@ Game.prototype.update = function(currTime){
 
 Game.prototype.updateValidMoves = function(moves){
   this.currentValidMoves = JSON.parse(moves.target.response);
+  for(var i=0; i<this.currentValidMoves.length;i++){
+    this.gameBoard.board[this.currentValidMoves[i][3]][this.currentValidMoves[i][2]].setSelected();
+  }
 
 };

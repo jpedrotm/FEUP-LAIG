@@ -22,7 +22,8 @@ function Cell(scene, x, y, type,id) {
       this.piece=new Piramid(scene,type);
     }
     this.getColorCell(x,y);
-
+    this.selectedMaterial = this.scene.selectedMaterial;
+    this.selected=0;
 
 };
 
@@ -44,7 +45,10 @@ Cell.prototype.getColorCell=function(x,y){
 Cell.prototype.display=function(){
 
   this.scene.pushMatrix();
-  this.material.apply();
+  if(this.selected)
+    this.selectedMaterial.apply();
+    else
+      this.material.apply();
   this.scene.registerForPick(this.id,this.cell);
   this.cell.display();
   this.scene.popMatrix();
@@ -93,4 +97,8 @@ Cell.prototype.updatePiece=function(type){
     this.piece=new Piramid(scene,type);
   }
 
+};
+
+Cell.prototype.setSelected=function(){
+  this.selected=1;
 };

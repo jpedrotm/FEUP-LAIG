@@ -56,6 +56,13 @@ XMLscene.prototype.init = function(application) {
     this.pickedMaterial.setSpecular(0,0,0.0,1);
     this.pickedMaterial.setShininess(20);
 
+
+    this.selectedMaterial = new CGFappearance(this);
+    this.selectedMaterial.setAmbient(0.1,0.1,0.1,1);
+    this.selectedMaterial.setDiffuse(0.1,0.1,0.1,1);
+    this.selectedMaterial.setSpecular(0.1,0.1,0.1,1);
+    this.selectedMaterial.setShininess(20);
+
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);

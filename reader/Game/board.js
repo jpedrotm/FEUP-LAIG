@@ -117,7 +117,11 @@ Board.prototype.movePiece = function(validMoves){
   console.log(validMoves);
   var validPlay=0;
   for(var i =0; i<validMoves.length; i++){
-    if(validMoves[i][3]==this.secondCell.x && validMoves[i][4]==this.secondCell.y){
+    console.log(this.secondCell.x);
+    console.log(this.secondCell.y);
+    console.log(validMoves[i][2]);
+    console.log(validMoves[i][3]);
+    if(validMoves[i][2]==this.secondCell.x && validMoves[i][3]==this.secondCell.y){
       validPlay=1;
       console.log("Valid play");
     }
@@ -126,6 +130,7 @@ Board.prototype.movePiece = function(validMoves){
   if(validPlay==1){
     this.board[this.secondCell.x][this.secondCell.y].updatePiece(this.board[this.firstCell.x][this.firstCell.y].type);
     this.board[this.secondCell.x][this.secondCell.y].updatePiece('empty');
+    console.log("validPlay");
   }
 
   var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
