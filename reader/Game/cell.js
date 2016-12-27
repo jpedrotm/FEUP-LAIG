@@ -19,7 +19,7 @@ function Cell(scene, x, y, type,id) {
         this.piece = new Obj(this.scene, 'scenes/pawn.obj');
         this.pieceMaterial = this.scene.pawnMaterial;
     }else{
-      this.piece=new Piramid(scene,type);
+      this.piece=new Piramid(this.scene,this.type);
     }
     this.getColorCell(x,y);
     this.selectedMaterial = this.scene.selectedMaterial;
@@ -94,11 +94,16 @@ Cell.prototype.updatePiece=function(type){
       this.piece = new Obj(this.scene, 'scenes/pawn.obj');
       this.pieceMaterial = this.scene.pawnMaterial;
   }else{
-    this.piece=new Piramid(scene,type);
+    this.piece=new Piramid(this.scene,this.type);
   }
 
 };
 
 Cell.prototype.setSelected=function(){
   this.selected=1;
+};
+
+Cell.prototype.unsetSelected=function(){
+  this.selected=0;
+  this.getColorCell(this.x, this.y);
 };

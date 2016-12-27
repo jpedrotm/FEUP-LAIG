@@ -113,8 +113,7 @@ Board.prototype.display=function(){
 
 
 Board.prototype.movePiece = function(validMoves){
-  console.log('FAZER JOGADA');
-  console.log(validMoves);
+
   var validPlay=0;
   for(var i =0; i<validMoves.length; i++){
     console.log(this.secondCell.x);
@@ -123,14 +122,13 @@ Board.prototype.movePiece = function(validMoves){
     console.log(validMoves[i][3]);
     if(validMoves[i][2]==this.secondCell.x && validMoves[i][3]==this.secondCell.y){
       validPlay=1;
-      console.log("Valid play");
     }
   }
 
   if(validPlay==1){
-    this.board[this.secondCell.x][this.secondCell.y].updatePiece(this.board[this.firstCell.x][this.firstCell.y].type);
-    this.board[this.secondCell.x][this.secondCell.y].updatePiece('empty');
-    console.log("validPlay");
+    this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
+    this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
+    this.cleanSelections();
   }
 
   var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
@@ -141,6 +139,16 @@ Board.prototype.movePiece = function(validMoves){
 
   this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
   this.board[this.firstCell.y][this.firstCell.x].animate=true;
+};
+
+Board.prototype.cleanSelections = function(){
+
+  for(var i = 0; i<this.board.length; i++){
+    for(var j = 0; j<this.board[0].length; j++){
+      this.board[i][j].unsetSelected();
+    }
+  }
+
 };
 
 Board.prototype.verifyPiece=function(x,y){
