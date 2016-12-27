@@ -16,8 +16,9 @@ function Game(scene){
 
 }
 
-Game.prototype.initGame = function(){
-
+Game.prototype.initGame = function(bot1, bot2){
+  this.firstBot=bot1;
+  this.secodBot=bot2;
 };
 
 Game.prototype.movePiece=function(){
@@ -55,8 +56,24 @@ Game.prototype.update = function(currTime){
 
   this.gameBoard.update(currTime-this.lastTime);
 
-  var selectedCell = this.gameBoard.verifyMovementBoard(this.playing);
+  if(this.firstBot === false && this.secondBot === false){
+    this.playPlayer();
+  }if(this.firstBot === false && this.secondBot === true){
+    if(this.playing == 'player1'){
+      this.playPlayer();
+    }else{
+      this.playBot();
+    }
+  }else{
+    this.playBot();
+  }
 
+
+
+};
+
+Game.prototype.playPlayer = function() {
+  var selectedCell = this.gameBoard.verifyMovementBoard(this.playing);
   if(selectedCell == 1){
     console.log(this.playing);
     this.readyToMakeAMove=0;
@@ -68,13 +85,19 @@ Game.prototype.update = function(currTime){
   }else if(selectedCell == 2){
     this.readyToMakeAMove=1;
     this.movePiece();
-
     //retira comentario para animar a camera
     //this.switchTurn=true;
   }
-
-
 };
+
+Game.prototype.playBot = function(){
+  var tempBoard = this.gameBoard.getBoard();
+  var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + 2 + ')';
+  getPrologRequest(request, this.updateValidMoves.bind(this));
+
+
+
+}
 
 Game.prototype.updateValidMoves = function(moves){
   this.currentValidMoves = JSON.parse(moves.target.response);

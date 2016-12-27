@@ -113,13 +113,23 @@ parse_input(board, Board):-
 	write(TempBoard),
 	json(TempBoard, Board).
 
+%CPU move
+parse_input(botPlay(Board,Bot,1), Move):-
+	valid_moves(Board, Bot, Moves),
+	list_size(Moves, NoMoves),
+	random(0, NoMoves, MoveIndex),
+	nth0(MoveIndex, Moves, Move).
+
+parse_input(botPlay(Board,Bot,2), Move):-
+	valid_moves(Board, Bot, Moves),
+	get_best_move(Board, Bot, Moves, Move).
 
 %CPU move
-parse_input(botPlay(StringBoard,Bot,BotLevel,PlayerPoints,NewPoints), NewBoard):-
+/*parse_input(botPlay(StringBoard,Bot,BotLevel,PlayerPoints,NewPoints), NewBoard):-
 	list_to_matrix(StringBoard, 4, Board),
 	make_play_cpu(Board,TempBoard,4,8,PlayerPoints,NewPoints,Bot,BotLevel),
 	write(TempBoard),
-	matrix_to_json(TempBoard, NewBoard).
+	matrix_to_json(TempBoard, NewBoard).*/
 
 
 %Player move
