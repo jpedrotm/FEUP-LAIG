@@ -10,6 +10,8 @@ function Game(scene){
   this.secondPlayerPoints=0;
   this.readyToMakeAMove=0;
   this.currentValidMoves=[];
+  this.bot1played=0;
+  this.bot2player=0;
   this.firstCell=new Point2D(-1,-1);
   this.secondCell=new Point2D(-1,-1);
   this.switchTurn = false;
@@ -36,10 +38,12 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
       console.log(this.secondPlayerPoints);
       if(this.playing==='player2')
       {
+        console.log("player changed");
         this.playing='player1';
       }
       else if(this.playing==='player1')
       {
+        console.log("player changed");
         this.playing='player2';
       }
     }
@@ -63,7 +67,8 @@ Game.prototype.update = function(currTime){
     if(this.playing == 'player1'){
       this.playPlayer();
     }else{
-      this.playBot();
+      if(!this.bot1played)
+        this.playBot();
     }
   }else{
     this.playBot();
@@ -74,10 +79,11 @@ Game.prototype.update = function(currTime){
 };
 
 Game.prototype.playPlayer = function() {
+  this.readyToMakeAMove=0;
   var selectedCell = this.gameBoard.verifyMovementBoard(this.playing);
   if(selectedCell == 1){
     console.log(this.playing);
-    this.readyToMakeAMove=0;
+
 
     var tempBoard = this.gameBoard.getBoard();
     var request = 'validMoves([' + tempBoard + '],' + this.gameBoard.board[this.gameBoard.currY][this.gameBoard.currX].type + ',' + this.gameBoard.currX + ',' + this.gameBoard.currY + ',' + this.playing + ')';
@@ -86,12 +92,15 @@ Game.prototype.playPlayer = function() {
   }else if(selectedCell == 2){
     this.readyToMakeAMove=1;
     this.movePiece('player',0,0,0,0);
+    this.bot1played=0;
     //retira comentario para animar a camera
     //this.switchTurn=true;
   }
 };
 
 Game.prototype.playBot = function(){
+  this.bot1played=1;
+  this.readyToMakeAMove=0;
   var tempBoard = this.gameBoard.getBoard();
   var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + 2 + ')';
   getPrologRequest(request, this.botMove.bind(this));
