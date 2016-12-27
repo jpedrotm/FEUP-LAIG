@@ -10,7 +10,8 @@ function Board(scene,height,width) {
   this.move='firstCell'; //para saber que célula está a selecionar (primeira ou segunda)
   this.firstCell=new Point2D(-1,-1);
   this.secondCell=new Point2D(-1,-1);
-
+  this.playerOnePoints=0;
+  this.playerTwoPoints=0;
   this.currX=-1; //Último x e y escolhidos
   this.currY=-1;
 
@@ -112,7 +113,7 @@ Board.prototype.display=function(){
 };
 
 
-Board.prototype.movePiece = function(validMoves){
+Board.prototype.movePiece = function(validMoves,player){
 
   var validPlay=0;
   for(var i =0; i<validMoves.length; i++){
@@ -122,6 +123,19 @@ Board.prototype.movePiece = function(validMoves){
   }
 
   if(validPlay==1){
+    var points=0;
+    if(this.board[this.secondCell.y][this.secondCell.x].type === 'queen'){
+      points=3;
+    }else if(this.board[this.secondCell.y][this.secondCell.x].type === 'drone'){
+      points=2;
+    }else if(this.board[this.secondCell.y][this.secondCell.x].type === 'pawn'){
+      points=1;
+    }
+    if(player==='player1'){
+      this.playerOnePoints+=points;
+    }else{
+      this.playerTwoPoints+=points;
+    }
     this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
     this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
     this.cleanSelections();
@@ -192,9 +206,9 @@ Board.prototype.registerForPickBoard = function(){
 
 Board.prototype.verifyMovementBoard=function(player){
 
-  if (this.scene.pickMode == false) {
+  if (this.scene.pickMode === false) {
     var selection = 0;
-		if (this.scene.pickResults != null && this.scene.pickResults.length > 0) {
+		if (this.scene.pickResults !== null && this.scene.pickResults.length > 0) {
       console.log("size: "+this.scene.pickResults.length);
 			for (var i=0; i< this.scene.pickResults.length; i++) {
 				var obj = this.scene.pickResults[i][0];
@@ -216,21 +230,11 @@ Board.prototype.verifyMovementBoard=function(player){
           console.log('X,Y: '+this.currX+','+this.currY);
 
           this.verifyIfSameCell();
-          if(player==='player1' && this.currY<4){
-            selection = this.getCoordsToMove(customId);
+          selection = this.getCoordsToMove(customId,player);
 
-            console.log(this.move);
+          console.log(this.move);
 
-  					console.log("Picked object: " + obj + ", with pick id " + customId);
-          }else if(player==='player2' && this.currY>=4){
-            selection = this.getCoordsToMove(customId);
-
-            console.log(this.move);
-
-  					console.log("Picked object: " + obj + ", with pick id " + customId);
-          }else {
-            selection=0;
-          }
+          console.log("Picked object: " + obj + ", with pick id " + customId);
 
 				}
 			}
@@ -243,13 +247,18 @@ Board.prototype.verifyMovementBoard=function(player){
 
 };
 
-Board.prototype.getCoordsToMove=function(id){
+Board.prototype.getCoordsToMove=function(id, player){
 
   if(this.move==='notAMove')
     return;
 
   if(this.move==='firstCell' && this.board[this.currY][this.currX].type!='empty')
   {
+    if(player === 'player1' && this.currY >= 4){
+      return 0;
+    }else if(player === 'player2' && this.currY < 4){
+      return 0;
+    }
     this.firstCell.x=this.currX;
     this.firstCell.y=this.currY;
 

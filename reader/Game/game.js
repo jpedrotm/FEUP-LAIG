@@ -3,7 +3,7 @@ function Game(scene){
   this.gameBoard = new Board(scene,8,4);
   this.gameHistory = new GameHistory(scene);
 
-  this.playing = 'player2'; //Para saber que jogador faz a jogada
+  this.playing = 'player1'; //Para saber que jogador faz a jogada
   this.firstBot = false;
   this.secondBot = false;
   this.firstPlayerPoints=0;
@@ -23,8 +23,15 @@ Game.prototype.initGame = function(){
 Game.prototype.movePiece=function(){
 
   if(this.readyToMakeAMove){
-    var validMove = this.gameBoard.movePiece(this.currentValidMoves);
+    var validMove = this.gameBoard.movePiece(this.currentValidMoves,this.playing);
     if(validMove){
+      this.firstPlayerPoints=this.gameBoard.playerOnePoints;
+      this.secondPlayerPoints=this.gameBoard.playerTwoPoints;
+
+      console.log("player one points:");
+      console.log(this.firstPlayerPoints);
+      console.log("player two points:");
+      console.log(this.secondPlayerPoints);
       if(this.playing==='player2')
       {
         this.playing='player1';
