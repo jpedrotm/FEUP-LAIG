@@ -34,6 +34,7 @@ MyInterface.prototype.init = function(application) {
 	this.defaultControls[5] = this.gui.add(this,'quitGame').name('Quit');
 
 	this.gui.add(this.scene.gameDifficulty,'difficulty',Object.keys(this.scene.gameDifficultyList));
+	this.gui.add(this.scene, 'botDeltaTime', 20, 200);
 
 	console.log("game difficulty: "+this.scene.gameDifficulty.difficulty);
 
@@ -100,7 +101,7 @@ MyInterface.prototype.cpuVscpu=function(){
 };
 
 MyInterface.prototype.replay=function(){
-	
+
 };
 
 MyInterface.prototype.quitGame=function(){

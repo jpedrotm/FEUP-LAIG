@@ -85,6 +85,7 @@ XMLscene.prototype.init = function(application) {
     this.gameDifficultyList["Easy"]=1;
     this.gameDifficultyList["Hard"]=2;
 
+    this.botDeltaTime=100;
     //ambiente de jogo
     this.environment=new Environment(this);
 
@@ -335,8 +336,8 @@ XMLscene.prototype.updateCameras=function(time){
 
 
 XMLscene.prototype.update = function(currTime) {
-
   if(this.gameMode){
+    this.game.setBotSpeed(this.botDeltaTime);
     this.game.update(currTime-this.lastTime);
     this.updateCameras(currTime-this.lastTime);
   }

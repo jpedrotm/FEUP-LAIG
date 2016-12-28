@@ -108,6 +108,7 @@ Game.prototype.update = function(currTime){
         this.playBot();
     }
   }else{
+    console.log(this.botDeltaTime);
     if(this.firstBot === true && this.botCurrentDeltaTime > this.botDeltaTime){
       if(this.playing==='player2')
       {
@@ -208,3 +209,7 @@ Game.prototype.undo=function(){
   }
 
 };
+
+Game.prototype.setBotSpeed = function(speed){
+  this.botDeltaTime=speed;
+}
