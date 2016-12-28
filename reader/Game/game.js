@@ -157,7 +157,7 @@ Game.prototype.playBot = function(){
   }
   this.readyToMakeAMove=0;
   var tempBoard = this.gameBoard.getBoard();
-  var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + 2 + ')';
+  var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + this.difficulty + ')';
   getPrologRequest(request, this.botMove.bind(this));
 
 
