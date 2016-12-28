@@ -20,24 +20,21 @@ MyInterface.prototype.init = function(application) {
 
 	this.gui = new dat.GUI();
 
-	this.lights = this.gui.addFolder("Lights");
+	this.lights = this.gui.addFolder('Lights');
   this.lights.open();
 
 	this.defaultControls = [];
-	this.replayControls = [];
 
-	this.defaultControls[0] = this.gui.add(this,'PlayerVsPlayer').name('Player vs Player');
-	this.defaultControls[1] = this.gui.add(this,'PlayerVsCPU').name('Player vs CPU');
-	this.defaultControls[2] = this.gui.add(this,'cpuVscpu').name('CPU vs CPU');
-	this.defaultControls[3] = this.gui.add(this.scene,'undo').name('Undo');
-	this.defaultControls[4] = this.gui.add(this,'replay').name('Replay');
-	this.defaultControls[5] = this.gui.add(this,'quitGame').name('Quit');
+	this.menuSituation=this.gui.addFolder('Menu Situation');
+	this.menuSituation.add(this,'PlayerVsPlayer').name('Player vs Player');
+	this.menuSituation.add(this,'PlayerVsCPU').name('Player vs CPU');
+	this.menuSituation.add(this,'cpuVscpu').name('CPU vs CPU');
+	this.menuSituation.add(this.scene.gameDifficulty,'difficulty',Object.keys(this.scene.gameDifficultyList));
 
-	this.gui.add(this.scene.gameDifficulty,'difficulty',Object.keys(this.scene.gameDifficultyList));
-
-	console.log("game difficulty: "+this.scene.gameDifficulty.difficulty);
-
-	console.log("game difficulty list: "+ Object.keys(this.scene.gameDifficultyList));
+	this.gameSituation=this.gui.addFolder('Play Situation');
+	this.gameSituation.add(this.scene,'undo').name('Undo');
+	this.gameSituation.add(this,'replay').name('Replay');
+	this.gameSituation.add(this,'quitGame').name('Quit');
 
   return true;
 };
