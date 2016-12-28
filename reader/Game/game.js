@@ -35,6 +35,7 @@ function Game(scene,mode){
   this.switchTurn = false;
   this.botCurrentDeltaTime=0;
   this.botDeltaTime=100;
+  this.endGame=0;
 
 }
 
@@ -96,40 +97,40 @@ Game.prototype.display = function(){
 
 Game.prototype.update = function(currTime){
 
-  this.gameBoard.update(currTime);
+  this.verifyEndGame();
+  if(this.endGame===0){
+    this.gameBoard.update(currTime);
 
-  if(this.firstBot == false && this.secondBot == false){
-    this.playPlayer();
-  }else if(this.firstBot === false && this.secondBot === true){
-    if(this.playing == 'player1'){
+    if(this.firstBot == false && this.secondBot == false){
       this.playPlayer();
+    }else if(this.firstBot === false && this.secondBot === true){
+      if(this.playing == 'player1'){
+        this.playPlayer();
+      }else{
+        if(!this.bot1played)
+          this.playBot();
+      }
     }else{
-      if(!this.bot1played)
+      console.log(this.botDeltaTime);
+      if(this.firstBot === true && this.botCurrentDeltaTime > this.botDeltaTime){
+        if(this.playing==='player2')
+        {
+          console.log("player changed");
+          this.playing='player1';
+        }
+        else if(this.playing==='player1')
+        {
+          console.log("player changed");
+          this.playing='player2';
+        }
+        this.botCurrentDeltaTime=0;
         this.playBot();
-    }
-  }else{
-    console.log(this.botDeltaTime);
-    if(this.firstBot === true && this.botCurrentDeltaTime > this.botDeltaTime){
-      if(this.playing==='player2')
-      {
-        console.log("player changed");
-        this.playing='player1';
       }
-      else if(this.playing==='player1')
-      {
-        console.log("player changed");
-        this.playing='player2';
-      }
-      this.botCurrentDeltaTime=0;
-      this.playBot();
-    }
-    console.log(this.botCurrentDeltaTime);
-    this.botCurrentDeltaTime++;
+      console.log(this.botCurrentDeltaTime);
+      this.botCurrentDeltaTime++;
 
+    }
   }
-
-
-
 };
 
 Game.prototype.playPlayer = function() {
@@ -212,4 +213,32 @@ Game.prototype.undo=function(){
 
 Game.prototype.setBotSpeed = function(speed){
   this.botDeltaTime=speed;
-}
+};
+
+
+Game.prototype.verifyEndGame = function(){
+  var playerOneWon=1;
+  var playerTwoWon=1;
+  var i=0;
+  var j=0;
+  for(i = 0; i < this.gameBoard.board.length/2; i++){
+    for(j = 0; j < this.gameBoard.board[0].length; j++){
+      if(this.gameBoard.board[i][j].type!='empty')
+        playerOneWon=0;
+    }
+  }
+  for(i = 4; i < this.gameBoard.board.length; i++){
+    for(j = 0; j < this.gameBoard.board[0].length; j++){
+      if(this.gameBoard.board[i][j].type!='empty')
+        playerTwoWon=0;
+    }
+  }
+  if(playerTwoWon){
+    this.endGame = 2;
+  }else if(playerOneWon){
+    this.endGame = 1;
+  }else{
+    this.endGame = 0;
+  }
+
+};

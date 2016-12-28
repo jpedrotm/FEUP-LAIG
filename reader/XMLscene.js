@@ -56,6 +56,12 @@ XMLscene.prototype.init = function(application) {
     this.pickedMaterial.setSpecular(0,0,0.0,1);
     this.pickedMaterial.setShininess(20);
 
+    this.ringueMaterial = new CGFappearance(this);
+    this.ringueMaterial.setAmbient(0.3,0.3,0.3,1);
+    this.ringueMaterial.setDiffuse(0.3,0.3,0.3,1);
+    this.ringueMaterial.setSpecular(0.3,0.3,0.3,1);
+    this.ringueMaterial.setShininess(20);
+
 
     this.selectedMaterial = new CGFappearance(this);
     this.selectedMaterial.setAmbient(0.1,0.1,0.1,1);
@@ -85,12 +91,13 @@ XMLscene.prototype.init = function(application) {
     this.gameDifficultyList["Easy"]=1;
     this.gameDifficultyList["Hard"]=2;
 
-    this.botDeltaTime=100;
     //ambiente de jogo
     this.environment=new Environment(this);
 
     this.game = null;
     this.setPickEnabled(true);
+
+    this.boxRingue = new Obj(this, 'scenes/boxRingue.obj');
 };
 
 XMLscene.prototype.initLights = function() {
@@ -307,7 +314,15 @@ XMLscene.prototype.display = function() {
         this.lights[0].update();
         this.updateLights();
         //this.graph.display();
-    };
+    }
+
+    this.pushMatrix();
+    this.translate(1.25,-.75,1.5);
+    this.scale(.75,.3,1);
+    this.rotate(-Math.PI/2,1,0,0);
+    this.ringueMaterial.apply();
+    this.boxRingue.display();
+    this.popMatrix();
 
     if(this.gameMode)
     {
@@ -337,7 +352,6 @@ XMLscene.prototype.updateCameras=function(time){
 
 XMLscene.prototype.update = function(currTime) {
   if(this.gameMode){
-    this.game.setBotSpeed(this.botDeltaTime);
     this.game.update(currTime-this.lastTime);
     this.updateCameras(currTime-this.lastTime);
   }
