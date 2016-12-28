@@ -9,6 +9,9 @@ function Cell(scene, x, y, type,id) {
     this.piece=new Piramid(scene,type);
     this.id=id;
     this.type=type;
+    this.animate=false;
+    this.animation=null;
+
     if (type == 'queen') {
         this.piece = new Obj(this.scene, 'scenes/queen.obj');
         this.pieceMaterial = this.scene.queenMaterial;
@@ -53,15 +56,21 @@ Cell.prototype.display=function(){
   this.cell.display();
   this.scene.popMatrix();
 
-  if(this.type == 'queen' || this.type == 'drone' || this.type == 'pawn'){
     var angle = Math.PI/2;
+    if(this.type == 'queen' || this.type == 'drone' || this.type == 'pawn'){
     this.scene.pushMatrix();
+    if(this.animate)
+    {
+    this.animation.displayAnimation();
+    console.log("A DAR DISPLAY");
+    }
     this.scene.translate(-0.3,0.1,0.3);
     this.scene.scale(0.03,0.03,0.03);
     this.scene.rotate(-angle,1,0,0);
     this.pieceMaterial.apply();
     this.piece.display();
     this.scene.popMatrix();
+
   }
 
 
@@ -71,7 +80,10 @@ Cell.prototype.update=function(time){
 
   if(this.animate)
   {
+    console.log("ANIMATED");
     if(this.animation.ended){
+      console.log("FIM ANIMATION");
+      this.scene.game.switchTurn=true;
       this.animate=false;
       this.animation=null;
       this.scene.switchTurn=true;

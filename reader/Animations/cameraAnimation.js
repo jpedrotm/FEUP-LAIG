@@ -1,23 +1,22 @@
-function cameraAnimation(scene,finalPosition,Player){
+function cameraAnimation(scene,Player){
 
   this.scene=scene;
-  this.finalPosition=finalPosition;
   this.span=3;
   this.x=0;
-  this.y=40;
+  this.y=30;
   this.z=0;
 
-  this.radius=40;
+  this.radius=30;
   this.degToRad=Math.PI/180;
   this.rotationAngle=180*this.degToRad;
 
   this.currTime=0;
   this.ended=false;
 
-  if(Player==='player1'){
+  if(Player==='player2'){
     this.initialAngle=Math.PI;
   }
-  else if(Player==='player2'){
+  else if(Player==='player1'){
     this.initialAngle=0;
   }
 

@@ -15,6 +15,8 @@ function Board(scene,height,width) {
   this.currX=-1; //Último x e y escolhidos
   this.currY=-1;
 
+  this.animateCell=false;
+
   this.initBoard();
 
 };
@@ -28,6 +30,8 @@ Board.prototype.update=function(time){
       this.board[i][j].update(time);
     }
   }
+
+  this.verifyReadyToUpdateBoard();
 
 }
 
@@ -89,9 +93,10 @@ Board.prototype.display=function(){
 
   this.scene.pushMatrix();
 
+  this.scene.translate(-1.65,0,-4);
+
   for(var i=0;i<this.height;i++)
   {
-    this.scene.translate(0,0,dist);
 
     if(i===4)
     {
@@ -106,9 +111,23 @@ Board.prototype.display=function(){
 
       this.scene.popMatrix();
     }
+
+    this.scene.translate(0,0,dist);
+
   }
 
   this.scene.popMatrix();
+
+  /*console.log("COMEÇA");
+
+  for(var i=0;i<8;i++)
+  {
+    for(var j=0;j<4;j++)
+    {
+      console.log(this.board[i][j].type);
+    }
+    console.log(",");
+  }*/
 
 };
 
@@ -149,19 +168,36 @@ Board.prototype.movePiece = function(validMoves,player,bot,xi,yi,xf,yf){
       this.playerTwoPoints+=points;
     }
 
-    this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
-    this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
-    this.cleanSelections();
-
     var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
     var finalPointAnimation=new Point2D(this.secondCell.x*1.1,this.secondCell.y*1.1);
 
     this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
     this.board[this.firstCell.y][this.firstCell.x].animate=true;
+
+    this.animateCell=true;
+
     console.log("asdasdasdasda");
     return 1;
   }
   return 0;
+
+};
+
+Board.prototype.verifyReadyToUpdateBoard=function(){
+
+  if(this.animateCell)
+  {
+
+    if(this.board[this.firstCell.y][this.firstCell.x].animate==false)
+    {
+      this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
+      this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
+      this.cleanSelections();
+
+      this.animateCell=false;
+    }
+
+  }
 
 };
 

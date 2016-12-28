@@ -5,6 +5,11 @@ function moveAnimation(scene,initialPoint,finalPoint,xi,yi) {
   this.initialPoint=initialPoint;
   this.finalPoint=finalPoint;
 
+  if(this.finalPoint.y>=4 && this.initialPoint.y<4)
+  {
+    this.finalPoint.y+=0.4;
+  }
+
   this.center = new Point2D((this.initialPoint.x+this.finalPoint.x)/2,(this.initialPoint.y+this.finalPoint.y)/2);
   this.height = Math.sqrt(Math.pow(this.initialPoint.x-this.finalPoint.x,2) + Math.pow(this.initialPoint.y-this.finalPoint.y,2));
   this.vector=[this.finalPoint.x-this.initialPoint.x,this.finalPoint.y-this.initialPoint.y];
@@ -13,7 +18,7 @@ function moveAnimation(scene,initialPoint,finalPoint,xi,yi) {
 
   this.ended=false;
 
-  this.span=this.height*2;
+  this.span=this.height;
   this.halfSpan=this.span/2;
 
   this.currTime = 0;
@@ -24,11 +29,13 @@ function moveAnimation(scene,initialPoint,finalPoint,xi,yi) {
   this.y;
   this.z;
 
-}
+};
 
 moveAnimation.prototype.updateAnimation = function(time) {
 
     this.currTime += time / 1000;
+
+    console.log("TEMPO ANIMAÇÃO: "+this.currTime);
 
 
 
