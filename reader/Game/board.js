@@ -16,6 +16,7 @@ function Board(scene,height,width) {
   this.currY=-1;
 
   this.animateCell=false;
+  this.makingAMove=false;
 
   this.initBoard();
 
@@ -32,6 +33,7 @@ Board.prototype.update=function(time){
   }
 
   this.verifyReadyToUpdateBoard();
+  this.updateMakingAMove();
 
 }
 
@@ -82,6 +84,28 @@ Board.prototype.getBoard=function(){
       tmpBoard[i].push(this.board[i][j].piece.type);
     }
   }
+  return tmpBoard;
+
+};
+
+Board.prototype.getCopyBoard=function(){
+
+  var tmpId=1;
+  var tmpBoard=[];
+
+  for(var i=0;i<this.height;i++)
+  {
+    tmpBoard.push([]);
+
+    for(var j=0;j<this.width;j++)
+    {
+      console.log("Piece("+j+","+i+"): "+this.board[i][j].type);
+      tmpBoard[i].push(new Cell(this.scene,i,j,this.board[i][j].type,tmpId));
+      tmpId++;
+    }
+
+  }
+
   return tmpBoard;
 
 };
@@ -349,6 +373,7 @@ Board.prototype.verifyIfSameCell=function(){
   if(this.firstCell.x===this.currX && this.firstCell.y===this.currY)
   {
 
+    //Sendo a celula selecionada a mesma da anterior, então tira-se a cor de selecionada da peça
     if(this.firstCell.x%2==this.firstCell.y%2)
     {
       this.board[this.currY][this.currX].material=this.scene.woodMaterial;
@@ -410,5 +435,17 @@ Board.prototype.getBoard=function(){
     }
   }
   return tmpBoard;
+
+};
+
+Board.prototype.updateMakingAMove=function(){
+
+  if(this.move==='notAMove')
+  {
+    this.makingAMove=false;
+  }
+  else{
+    this.makingAMove=true;
+  }
 
 };

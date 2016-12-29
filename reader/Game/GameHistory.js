@@ -10,6 +10,13 @@ function GameHistory(scene) {
 
 };
 
+GameHistory.prototype.getLastPointsPlayers=function(){
+  if(this.numberTurns>0)
+  {
+    return this.pointsPlayers[this.numberTurns-1];
+  }
+}
+
 GameHistory.prototype.getLastBoard=function(){
 
   if(this.numberTurns>0)

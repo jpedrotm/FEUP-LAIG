@@ -56,24 +56,6 @@ XMLscene.prototype.init = function(application) {
     this.pickedMaterial.setSpecular(0,0,0.0,1);
     this.pickedMaterial.setShininess(20);
 
-    this.ringueMaterialGround = new CGFappearance(this);
-    this.ringueMaterialGround.setAmbient(41/255, 128/255, 185/255,1.0);
-    this.ringueMaterialGround.setDiffuse(41/255, 128/255, 185/255,1.0);
-    this.ringueMaterialGround.setSpecular(41/255, 128/255, 185/255,1.0);
-    this.ringueMaterialGround.setShininess(100);
-
-    this.ringueMaterialNets = new CGFappearance(this);
-    this.ringueMaterialNets.setAmbient(236/255, 240/255, 241/255,1.0);
-    this.ringueMaterialNets.setDiffuse(236/255, 240/255, 241/255,1.0);
-    this.ringueMaterialNets.setSpecular(236/255, 240/255, 241/255,1.0);
-    this.ringueMaterialNets.setShininess(100);
-
-    this.ringueMaterialPosts = new CGFappearance(this);
-    this.ringueMaterialPosts.setAmbient(192/255, 57/255, 43/255,1.0);
-    this.ringueMaterialPosts.setDiffuse(192/255, 57/255, 43/255,1.0);
-    this.ringueMaterialPosts.setSpecular(192/255, 57/255, 43/255,1.0);
-    this.ringueMaterialPosts.setShininess(100);
-
 
     this.selectedMaterial = new CGFappearance(this);
     this.selectedMaterial.setAmbient(0.1,0.1,0.1,1);
@@ -108,10 +90,6 @@ XMLscene.prototype.init = function(application) {
 
     this.game = null;
     this.setPickEnabled(true);
-
-    this.boxRingueGround = new Obj(this, 'scenes/boxRingue-ground.obj');
-    this.boxRingueNets = new Obj(this, 'scenes/boxRingue-net.obj');
-    this.boxRinguePosts = new Obj(this, 'scenes/boxRingue-posts.obj');
 };
 
 XMLscene.prototype.initLights = function() {
@@ -328,19 +306,7 @@ XMLscene.prototype.display = function() {
         this.lights[0].update();
         this.updateLights();
         //this.graph.display();
-    }
-
-    this.pushMatrix();
-    this.translate(1.25,-.75,1.5);
-    this.scale(.75,.3,1);
-    this.rotate(-Math.PI/2,1,0,0);
-    this.ringueMaterialGround.apply();
-    this.boxRingueGround.display();
-    this.ringueMaterialNets.apply();
-    this.boxRingueNets.display();
-    this.ringueMaterialPosts.apply();
-    this.boxRinguePosts.display();
-    this.popMatrix();
+    };
 
     if(this.gameMode)
     {
@@ -348,6 +314,8 @@ XMLscene.prototype.display = function() {
       this.game.display();
       this.popMatrix();
     }
+
+    this.environment.display();
 
 };
 
@@ -369,6 +337,7 @@ XMLscene.prototype.updateCameras=function(time){
 
 
 XMLscene.prototype.update = function(currTime) {
+
   if(this.gameMode){
     this.game.update(currTime-this.lastTime);
     this.updateCameras(currTime-this.lastTime);
@@ -384,5 +353,5 @@ XMLscene.prototype.update = function(currTime) {
 };
 
 var gameDifficulty=function(){
-	this.difficulty = 'Easy';
+	this.difficulty = "Easy";
 };
