@@ -35,7 +35,7 @@ Board.prototype.update=function(time){
   this.verifyReadyToUpdateBoard();
   this.updateMakingAMove();
 
-}
+};
 
 Board.prototype.initBoard=function(){
 
@@ -262,22 +262,6 @@ Board.prototype.verifyPiece=function(x,y){
 
 };
 
-Board.prototype.registerForPickBoard = function(){
-
-  var tmpId=1;
-
-  for(var i=0;i<this.height;i++)
-  {
-
-    for(var j=0;j<this.width;j++)
-    {
-      tmpId++;
-      this.scene.registerForPick(tmpId,this.board[i][j].cell);
-    }
-  }
-
-};
-
 Board.prototype.verifyMovementBoard=function(player){
 
   if (this.scene.pickMode === false) {
@@ -289,6 +273,8 @@ Board.prototype.verifyMovementBoard=function(player){
 				if (obj)
 				{
 					var customId = this.scene.pickResults[i][1];
+
+          console.log("ID: "+customId);
 
           this.currX=customId%4;
           if(this.currX===0)

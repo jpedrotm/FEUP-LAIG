@@ -99,9 +99,9 @@ Game.prototype.update = function(currTime){
 
   this.gameBoard.update(currTime);
 
-  console.log("Player one points: "+this.firstPlayerPoints);
+  /*console.log("Player one points: "+this.firstPlayerPoints);
   console.log("Player two points: "+this.secondPlayerPoints);
-  console.log("PLAYING: "+this.playing);
+  console.log("PLAYING: "+this.playing);*/
 
   if(this.firstBot == false && this.secondBot == false){
     this.playPlayer();
