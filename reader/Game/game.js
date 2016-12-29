@@ -1,11 +1,29 @@
-function Game(scene){
+function Game(scene,mode){
+
+  this.scene=scene;
 
   this.gameBoard = new Board(scene,8,4);
   this.gameHistory = new GameHistory(scene);
 
   this.playing = 'player1'; //Para saber que jogador faz a jogada
-  this.firstBot = true;
-  this.secondBot = true;
+  this.difficulty=this.scene.gameDifficultyList[this.scene.gameDifficulty.difficulty];
+
+  switch (mode) {
+    case 1:
+    this.firstBot = false;
+    this.secondBot = false;
+      break;
+    case 2:
+    this.firstBot = true;
+    this.secondBot = false;
+      break;
+    case 3:
+    this.firstBot=true;
+    this.secondBot=true;
+      break;
+    default:
+    return;
+  }
   this.firstPlayerPoints=0;
   this.secondPlayerPoints=0;
   this.readyToMakeAMove=0;
@@ -18,7 +36,7 @@ function Game(scene){
   this.botCurrentDeltaTime=0;
   this.botDeltaTime=100;
 
-}
+};
 
 Game.prototype.initGame = function(bot1, bot2){
   this.firstBot=bot1;
@@ -31,6 +49,9 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
     var validMove = this.gameBoard.movePiece(this.currentValidMoves,this.playing,bot,xi,yi,xf,yf);
     console.log(validMove);
     if(validMove){
+
+      this.insertTurnGameHistory();
+
       this.firstPlayerPoints=this.gameBoard.playerOnePoints;
       this.secondPlayerPoints=this.gameBoard.playerTwoPoints;
 
@@ -59,12 +80,28 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
 
 
 Game.prototype.display = function(){
+
+  /*console.log("COMEÇA");
+
+  for(var i=0;i<8;i++)
+  {
+    for(var j=0;j<4;j++)
+    {
+      console.log(this.gameBoard.board[i][j].type);
+    }
+    console.log(",");
+  }*/
+
   this.gameBoard.display();
 };
 
 Game.prototype.update = function(currTime){
 
-  this.gameBoard.update(currTime-this.lastTime);
+  this.gameBoard.update(currTime);
+
+  /*console.log("Player one points: "+this.firstPlayerPoints);
+  console.log("Player two points: "+this.secondPlayerPoints);
+  console.log("PLAYING: "+this.playing);*/
 
   if(this.firstBot == false && this.secondBot == false){
     this.playPlayer();
@@ -114,8 +151,6 @@ Game.prototype.playPlayer = function() {
     this.readyToMakeAMove=1;
     this.movePiece('player',0,0,0,0);
     this.bot1played=0;
-    //retira comentario para animar a camera
-    //this.switchTurn=true;
   }
 };
 
@@ -142,6 +177,62 @@ Game.prototype.updateValidMoves = function(moves){
   this.currentValidMoves = JSON.parse(moves.target.response);
   for(var i=0; i<this.currentValidMoves.length;i++){
     this.gameBoard.board[this.currentValidMoves[i][3]][this.currentValidMoves[i][2]].setSelected();
+  }
+
+};
+
+Game.prototype.insertTurnGameHistory=function(){
+
+  this.gameHistory.numberTurns++;
+  this.gameHistory.playerTurns.push(this.playing);
+  this.gameHistory.pointsPlayers.push(new playersPoints(this.firstPlayerPoints,this.secondPlayerPoints));
+  this.gameHistory.movesMade.push(new Moves(this.gameBoard.firstCell,this.gameBoard.secondCell));
+  this.gameHistory.boards.push(this.gameBoard.getCopyBoard());
+
+  console.log("Players points: "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p1+" , "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p2);
+  console.log("Turns made: "+this.gameHistory.numberTurns);
+  console.log("Player turn: "+this.gameHistory.playerTurns[this.gameHistory.numberTurns-1]);
+  console.log("Move made in turn: "+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].initial.x+
+              ","+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].initial.y+
+              ";"+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.x+","+
+              this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.y);
+
+};
+
+Game.prototype.undo=function(){
+
+  if(this.gameHistory.numberTurns>0 && !this.gameBoard.makingAMove)
+  {
+    //falta atualizar pontuações
+
+    this.gameBoard.board=this.gameHistory.getLastBoard();
+
+    console.log("COMEÇA");
+
+    for(var i=0;i<8;i++)
+    {
+      for(var j=0;j<4;j++)
+      {
+        console.log(this.gameBoard.board[i][j].type);
+      }
+      console.log(",");
+    }
+
+    var pointsPlayers=this.gameHistory.getLastPointsPlayers();
+
+    this.firstPlayerPoints=pointsPlayers.p1;
+    this.secondPlayerPoints=pointsPlayers.p2;
+    this.playing=this.gameHistory.getLastPlayerTurn();
+
+    console.log("UNDO---------------------------------------------------------");
+    console.log("p1: "+pointsPlayers.p1);
+    console.log("p2: "+pointsPlayers.p2);
+    console.log("NUMBER OF TURNS: "+this.gameHistory.numberTurns);
+    console.log("WILL PLAY: "+this.playing);
+
+    this.gameHistory.deleteLastTurn();
+
+    this.switchTurn=true;
   }
 
 };

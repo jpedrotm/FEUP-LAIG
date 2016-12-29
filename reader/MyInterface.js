@@ -20,8 +20,21 @@ MyInterface.prototype.init = function(application) {
 
 	this.gui = new dat.GUI();
 
-	this.lights = this.gui.addFolder("Lights");
+	this.lights = this.gui.addFolder('Lights');
   this.lights.open();
+
+	this.defaultControls = [];
+
+	this.menuSituation=this.gui.addFolder('Menu Situation');
+	this.menuSituation.add(this,'PlayerVsPlayer').name('Player vs Player');
+	this.menuSituation.add(this,'PlayerVsCPU').name('Player vs CPU');
+	this.menuSituation.add(this,'cpuVscpu').name('CPU vs CPU');
+	this.menuSituation.add(this.scene.gameDifficulty,'difficulty',Object.keys(this.scene.gameDifficultyList));
+
+	this.gameSituation=this.gui.addFolder('Play Situation');
+	this.gameSituation.add(this.scene,'undo').name('Undo');
+	this.gameSituation.add(this,'replay').name('Replay');
+	this.gameSituation.add(this,'quitGame').name('Quit');
 
   return true;
 };
@@ -60,4 +73,35 @@ MyInterface.prototype.addLight = function(i, id) {
 
 	this.lights.add(this.scene.infoLights, i, this.scene.infoLights[i]).name(id);
 
+};
+
+MyInterface.prototype.PlayerVsPlayer=function(){
+	if(!this.scene.gameMode){
+	this.scene.game=new Game(this.scene,1);
+	this.scene.gameMode=true;
+}
+};
+
+MyInterface.prototype.PlayerVsCPU=function(){
+	if(!this.scene.gameMode){
+	this.scene.game=new Game(this.scene,2);
+	this.scene.gameMode=true;
+	}
+};
+
+MyInterface.prototype.cpuVscpu=function(){
+	if(!this.scene.gameMode){
+	this.scene.game=new Game(this.scene,3);
+	this.scene.gameMode=true;
+	}
+};
+
+MyInterface.prototype.replay=function(){
+
+};
+
+MyInterface.prototype.quitGame=function(){
+	if(this.scene.gameMode){
+
+	}
 };

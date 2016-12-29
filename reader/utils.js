@@ -13,7 +13,23 @@ class Point2D{
     this.y=-1;
   }
 
-}
+};
+
+class playersPoints{
+
+  constructor(pointsP1,pointsP2){
+    this.p1=pointsP1;
+    this.p2=pointsP2;
+  }
+
+};
+
+class Moves{
+  constructor(initial,final){
+    this.initial=initial;
+    this.final=final;
+  }
+};
 
 class Point{
   constructor(x,y,z,w){

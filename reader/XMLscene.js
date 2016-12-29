@@ -70,10 +70,29 @@ XMLscene.prototype.init = function(application) {
     this.enableTextures(true);
     this.infoLights=[];
     this.lastTime=(new Date()).getTime();
-    this.axis = new CGFaxis(this);
+    this.axis = new CGFaxis(this)
     this.setUpdatePeriod(30);
 
-    this.game = new Game(this);
+    //animações das camaras
+    this.gameCameraAnimation=null;
+    this.cameraTransitionsAnimation=null;
+    this.initialPosition=vec3.fromValues(35,10,0);
+    this.finalPosition=vec3.fromValues(0,40,-25);
+    this.initialTarget=vec3.fromValues()
+
+    //Variaveis para estado do jogo
+    this.gameMode=false;
+
+    this.gameDifficulty= new gameDifficulty();
+    this.gameDifficultyList=new Array();
+
+    this.gameDifficultyList["Easy"]=1;
+    this.gameDifficultyList["Hard"]=2;
+
+    //ambiente de jogo
+    this.environment=new Environment(this);
+
+    this.game = null;
     this.setPickEnabled(true);
 };
 
@@ -88,10 +107,6 @@ XMLscene.prototype.initLights = function() {
  * Function that loads the lights from the graph to XMLscene and the interface.
  */
 XMLscene.prototype.graphLights = function() {
-
-    console.log("GRAPH LIGHTS: " + this.graph.omniLights.length);
-
-    console.log("AQUIIIIII: " + this.lights.length);
 
     var lightsIndice = 0;
 
@@ -202,7 +217,7 @@ XMLscene.prototype.switchMaterials = function() {
 };
 
 XMLscene.prototype.initCameras = function() {
-    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(150, 150, 150), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(60*Math.PI/180, 0.1, 500, vec3.fromValues(150, 150, 150), vec3.fromValues(0, 0, 0));
 };
 
 XMLscene.prototype.setDefaultAppearance = function() {
@@ -221,7 +236,8 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.axis = new CGFaxis(this, this.graph.axis_length, 0.2);
     this.graphViews();
     this.graphLights();
-    this.camera.setPosition(vec3.fromValues(0,35,-40));
+    this.camera.setPosition(vec3.fromValues(35,10,0));
+    this.camera.setTarget(vec3.fromValues(0,0,0));
 };
 /**
  * Function that loads the initial camera to XMLscene.
@@ -252,6 +268,14 @@ XMLscene.prototype.switchView = function() {
 
     this.camera = this.graph.perspectives[tempIndice].camera;
     this.interface.setActiveCamera(this.camera);
+
+};
+
+XMLscene.prototype.undo=function(){
+
+  if(this.gameMode){
+    this.game.undo();
+  }
 
 };
 
@@ -289,35 +313,39 @@ XMLscene.prototype.display = function() {
         //this.graph.display();
     };
 
-    this.pushMatrix();
-    this.game.display();
-    this.popMatrix();
+    this.environment.display();
+
+    if(this.gameMode)
+    {
+      this.pushMatrix();
+      this.game.display();
+      this.popMatrix();
+    }
 
 };
 
-XMLscene.prototype.update = function(currTime) {
-
-  this.game.update(currTime-this.lastTime);
+XMLscene.prototype.updateCameras=function(time){
 
   if(this.game.switchTurn)
   {
-    this.cameraAnimation=new cameraAnimation(this,1,this.game.playing);
+    this.gameCameraAnimation=new cameraAnimation(this,this.game.playing);
     this.game.switchTurn=false;
-
-    if(this.game.playing==='player2')
-    {
-      this.game.playing='player1';
-    }
-    else if(this.game.playing==='player1')
-    {
-      this.game.playing='player2';
-    }
-
   }
 
-  if(this.cameraAnimation!=null)
+  if(this.gameCameraAnimation!=null)
   {
-    this.cameraAnimation.updateAnimation(currTime-this.lastTime);
+    console.log("Updating");
+    this.gameCameraAnimation.updateAnimation(time);
+  }
+
+};
+
+
+XMLscene.prototype.update = function(currTime) {
+
+  if(this.gameMode){
+    this.game.update(currTime-this.lastTime);
+    this.updateCameras(currTime-this.lastTime);
   }
 
   //this.moveAnimation.updateAnimation(currTime-this.lastTime);
@@ -327,4 +355,8 @@ XMLscene.prototype.update = function(currTime) {
     }*/
 
     this.lastTime = currTime;
-}
+};
+
+var gameDifficulty=function(){
+	this.difficulty = "Easy";
+};

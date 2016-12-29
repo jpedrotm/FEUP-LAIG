@@ -15,6 +15,9 @@ function Board(scene,height,width) {
   this.currX=-1; //Último x e y escolhidos
   this.currY=-1;
 
+  this.animateCell=false;
+  this.makingAMove=false;
+
   this.initBoard();
 
 };
@@ -29,7 +32,10 @@ Board.prototype.update=function(time){
     }
   }
 
-}
+  this.verifyReadyToUpdateBoard();
+  this.updateMakingAMove();
+
+};
 
 Board.prototype.initBoard=function(){
 
@@ -82,6 +88,28 @@ Board.prototype.getBoard=function(){
 
 };
 
+Board.prototype.getCopyBoard=function(){
+
+  var tmpId=1;
+  var tmpBoard=[];
+
+  for(var i=0;i<this.height;i++)
+  {
+    tmpBoard.push([]);
+
+    for(var j=0;j<this.width;j++)
+    {
+      console.log("Piece("+j+","+i+"): "+this.board[i][j].type);
+      tmpBoard[i].push(new Cell(this.scene,i,j,this.board[i][j].type,tmpId));
+      tmpId++;
+    }
+
+  }
+
+  return tmpBoard;
+
+};
+
 Board.prototype.display=function(){
 
   var dist=1.1;
@@ -89,9 +117,10 @@ Board.prototype.display=function(){
 
   this.scene.pushMatrix();
 
+  this.scene.translate(-1.65,0,-4);
+
   for(var i=0;i<this.height;i++)
   {
-    this.scene.translate(0,0,dist);
 
     if(i===4)
     {
@@ -106,9 +135,23 @@ Board.prototype.display=function(){
 
       this.scene.popMatrix();
     }
+
+    this.scene.translate(0,0,dist);
+
   }
 
   this.scene.popMatrix();
+
+  /*console.log("COMEÇA");
+
+  for(var i=0;i<8;i++)
+  {
+    for(var j=0;j<4;j++)
+    {
+      console.log(this.board[i][j].type);
+    }
+    console.log(",");
+  }*/
 
 };
 
@@ -149,19 +192,36 @@ Board.prototype.movePiece = function(validMoves,player,bot,xi,yi,xf,yf){
       this.playerTwoPoints+=points;
     }
 
-    this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
-    this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
-    this.cleanSelections();
-
     var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
     var finalPointAnimation=new Point2D(this.secondCell.x*1.1,this.secondCell.y*1.1);
 
     this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
     this.board[this.firstCell.y][this.firstCell.x].animate=true;
+
+    this.animateCell=true;
+
     console.log("asdasdasdasda");
     return 1;
   }
   return 0;
+
+};
+
+Board.prototype.verifyReadyToUpdateBoard=function(){
+
+  if(this.animateCell)
+  {
+
+    if(this.board[this.firstCell.y][this.firstCell.x].animate==false)
+    {
+      this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
+      this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
+      this.cleanSelections();
+
+      this.animateCell=false;
+    }
+
+  }
 
 };
 
@@ -202,22 +262,6 @@ Board.prototype.verifyPiece=function(x,y){
 
 };
 
-Board.prototype.registerForPickBoard = function(){
-
-  var tmpId=1;
-
-  for(var i=0;i<this.height;i++)
-  {
-
-    for(var j=0;j<this.width;j++)
-    {
-      tmpId++;
-      this.scene.registerForPick(tmpId,this.board[i][j].cell);
-    }
-  }
-
-};
-
 Board.prototype.verifyMovementBoard=function(player){
 
   if (this.scene.pickMode === false) {
@@ -229,6 +273,8 @@ Board.prototype.verifyMovementBoard=function(player){
 				if (obj)
 				{
 					var customId = this.scene.pickResults[i][1];
+
+          console.log("ID: "+customId);
 
           this.currX=customId%4;
           if(this.currX===0)
@@ -313,6 +359,7 @@ Board.prototype.verifyIfSameCell=function(){
   if(this.firstCell.x===this.currX && this.firstCell.y===this.currY)
   {
 
+    //Sendo a celula selecionada a mesma da anterior, então tira-se a cor de selecionada da peça
     if(this.firstCell.x%2==this.firstCell.y%2)
     {
       this.board[this.currY][this.currX].material=this.scene.woodMaterial;
@@ -374,5 +421,17 @@ Board.prototype.getBoard=function(){
     }
   }
   return tmpBoard;
+
+};
+
+Board.prototype.updateMakingAMove=function(){
+
+  if(this.move==='notAMove')
+  {
+    this.makingAMove=false;
+  }
+  else{
+    this.makingAMove=true;
+  }
 
 };
