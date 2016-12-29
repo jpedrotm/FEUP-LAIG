@@ -70,11 +70,15 @@ XMLscene.prototype.init = function(application) {
     this.enableTextures(true);
     this.infoLights=[];
     this.lastTime=(new Date()).getTime();
-    this.axis = new CGFaxis(this);
+    this.axis = new CGFaxis(this)
     this.setUpdatePeriod(30);
 
     //animações das camaras
     this.gameCameraAnimation=null;
+    this.cameraTransitionsAnimation=null;
+    this.initialPosition=vec3.fromValues(35,10,0);
+    this.finalPosition=vec3.fromValues(0,40,-25);
+    this.initialTarget=vec3.fromValues()
 
     //Variaveis para estado do jogo
     this.gameMode=false;
@@ -213,7 +217,7 @@ XMLscene.prototype.switchMaterials = function() {
 };
 
 XMLscene.prototype.initCameras = function() {
-    this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(150, 150, 150), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(60*Math.PI/180, 0.1, 500, vec3.fromValues(150, 150, 150), vec3.fromValues(0, 0, 0));
 };
 
 XMLscene.prototype.setDefaultAppearance = function() {
@@ -232,7 +236,8 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.axis = new CGFaxis(this, this.graph.axis_length, 0.2);
     this.graphViews();
     this.graphLights();
-    this.camera.setPosition(vec3.fromValues(0,30,-30));
+    this.camera.setPosition(vec3.fromValues(35,10,0));
+    this.camera.setTarget(vec3.fromValues(0,0,0));
 };
 /**
  * Function that loads the initial camera to XMLscene.
@@ -308,14 +313,14 @@ XMLscene.prototype.display = function() {
         //this.graph.display();
     };
 
+    this.environment.display();
+
     if(this.gameMode)
     {
       this.pushMatrix();
       this.game.display();
       this.popMatrix();
     }
-
-    this.environment.display();
 
 };
 

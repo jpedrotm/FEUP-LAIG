@@ -1,28 +1,32 @@
-function cameraAnimation(scene,Player){
+function cameraTrasitionsAnimation(scene,initialPosition,initialTarget,finalPosition,finalTarget){
 
   this.scene=scene;
   this.span=3;
   this.x=0;
-  this.y=25;
+  this.y=20;
   this.z=0;
+  this.initialPosition=initialPosition;
+  this.initialTarget=initialTarget;
+  this.finalPosition=finalPosition;
+  this.finalTarget=finalTarget;
 
   this.radius=40;
   this.degToRad=Math.PI/180;
-  this.rotationAngle=180*this.degToRad;
+  if(finalPerspective.x<initialPerspective.x)
+  {
+    this.rotationAngle=-Math.PI/2;
+  }
+  else if(finalPerspective.x>initialPerspective.x)
+  {
+    this.rotationAngle=Math.PI/2;
+  }
 
   this.currTime=0;
   this.ended=false;
 
-  if(Player==='player2'){
-    this.initialAngle=Math.PI;
-  }
-  else if(Player==='player1'){
-    this.initialAngle=0;
-  }
-
 };
 
-cameraAnimation.prototype.updateAnimation=function(time){
+cameraTransitionsAnimation.prototype.updateAnimation=function(time){
 
   this.currTime += time / 1000;
 
