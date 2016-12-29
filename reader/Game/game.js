@@ -35,7 +35,7 @@ function Game(scene,mode){
   this.switchTurn = false;
   this.botCurrentDeltaTime=0;
   this.botDeltaTime=100;
-
+  this.endGame=0;
 };
 
 Game.prototype.initGame = function(bot1, bot2){
@@ -235,4 +235,31 @@ Game.prototype.undo=function(){
     this.switchTurn=true;
   }
 
+};
+
+
+Game.prototype.verifyEndGame = function() {
+  var playerOneWon=1;
+  var playerTwoWon=1;
+  var i=0;
+  var j=0;
+  for(i = 0; i < this.gameBoard.board.length/2; i++){
+    for(j = 0; j < this.gameBoard.board[0].length; j++){
+      if(this.gameBoard.board[i][j].type!='empty')
+        playerOneWon=0;
+    }
+  }
+  for(i = 4; i < this.gameBoard.board.length; i++){
+    for(j = 0; j < this.gameBoard.board[0].length; j++){
+      if(this.gameBoard.board[i][j].type!='empty')
+        playerTwoWon=0;
+    }
+  }
+  if(playerTwoWon){
+    this.endGame = 2;
+  }else if(playerOneWon){
+    this.endGame = 1;
+  }else{
+    this.endGame = 0;
+  }
 };
