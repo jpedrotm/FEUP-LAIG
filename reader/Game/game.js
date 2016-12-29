@@ -97,42 +97,43 @@ Game.prototype.display = function(){
 
 Game.prototype.update = function(currTime){
 
+  this.verifyEndGame();
+
   this.gameBoard.update(currTime);
 
   /*console.log("Player one points: "+this.firstPlayerPoints);
   console.log("Player two points: "+this.secondPlayerPoints);
   console.log("PLAYING: "+this.playing);*/
-
-  if(this.firstBot == false && this.secondBot == false){
-    this.playPlayer();
-  }else if(this.firstBot === false && this.secondBot === true){
-    if(this.playing == 'player1'){
+  if(this.endGame === 0){
+    if(this.firstBot === false && this.secondBot === false){
       this.playPlayer();
+    }else if(this.firstBot === false && this.secondBot === true){
+      if(this.playing == 'player1'){
+        this.playPlayer();
+      }else{
+        if(!this.bot1played)
+          this.playBot();
+      }
     }else{
-      if(!this.bot1played)
+      if(this.firstBot === true && this.botCurrentDeltaTime > this.botDeltaTime){
+        if(this.playing==='player2')
+        {
+          console.log("player changed");
+          this.playing='player1';
+        }
+        else if(this.playing==='player1')
+        {
+          console.log("player changed");
+          this.playing='player2';
+        }
+        this.botCurrentDeltaTime=0;
         this.playBot();
-    }
-  }else{
-    if(this.firstBot === true && this.botCurrentDeltaTime > this.botDeltaTime){
-      if(this.playing==='player2')
-      {
-        console.log("player changed");
-        this.playing='player1';
       }
-      else if(this.playing==='player1')
-      {
-        console.log("player changed");
-        this.playing='player2';
-      }
-      this.botCurrentDeltaTime=0;
-      this.playBot();
-    }
-    console.log(this.botCurrentDeltaTime);
-    this.botCurrentDeltaTime++;
+      console.log(this.botCurrentDeltaTime);
+      this.botCurrentDeltaTime++;
 
+    }
   }
-
-
 
 };
 
