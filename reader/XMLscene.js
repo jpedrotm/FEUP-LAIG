@@ -81,8 +81,15 @@ XMLscene.prototype.init = function(application) {
     this.finalTarget;
     this.cameraTransitionsAnimation=null;
 
+    //indice replay for pause option
+    this.currReplayTurn=0;
+
     //Variaveis para estado do jogo
     this.gameMode=false;
+    this.replaying=false;
+    this.replayPaused=false;
+    this.updateReplaying=true;
+    this.makingTransition=false;
     this.replayHistory=null;
 
     this.gameDifficulty= new gameDifficulty();
@@ -99,8 +106,6 @@ XMLscene.prototype.init = function(application) {
 };
 
 XMLscene.prototype.makeTransition=function(){
-
-  console.log("ENTROU MAKE");
 
   if(this.gameMode)
   {
@@ -311,9 +316,33 @@ XMLscene.prototype.undo=function(){
 
 XMLscene.prototype.replay=function(){
 
+  if(!this.gameMode && this.replayHistory!=null)
+  {
+    this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,new Point(40,5,0,null),new Point(-15,5,0,null),new Point(35,20,0,null),new Point(0,0,0,null));
+    this.replaying=true;
+  }
+
 };
 
 XMLscene.prototype.stopReplay=function(){
+  if(this.replaying){
+    this.replaying=false;
+    this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,new Point(35,20,0,null),new Point(0,0,0,null),new Point(40,5,0,null),new Point(-15,5,0,null));
+  }
+};
+
+XMLscene.prototype.pauseReplay=function(){
+
+  if(this.replaying){
+    if(this.replayPaused===true)
+    {
+      this.replayPaused=false;
+    }
+    else if(this.replayPaused===false)
+    {
+      this.replayPaused=true;
+    }
+  }
 
 };
 
@@ -386,6 +415,110 @@ XMLscene.prototype.display = function() {
       this.popMatrix();
     }
 
+    if(this.replaying)
+    {
+      this.displayReplay();
+    }
+
+};
+
+XMLscene.prototype.displayReplay=function(){
+
+  var dist=1.1;
+  var divDist=0.4;
+
+  this.pushMatrix();
+
+  this.translate(-1.65,0,-4);
+
+  for(var i=0;i<this.replayHistory.height;i++)
+  {
+
+    if(i===4)
+    {
+      this.translate(0,0,divDist);
+    }
+
+    for(var j=0;j<this.replayHistory.width;j++)
+    {
+      this.pushMatrix();
+      this.translate(dist*j,0,0);
+      this.replayHistory.getBoard(this.currReplayTurn)[i][j].display();
+
+      this.popMatrix();
+    }
+
+    this.translate(0,0,dist);
+
+  }
+
+  this.popMatrix();
+
+
+};
+
+XMLscene.prototype.updateReplay=function(time){
+
+  if(this.replaying && !this.replayPaused)
+  {
+
+    var firstCell=this.replayHistory.getMoves(this.currReplayTurn).initial;
+    var secondCell=this.replayHistory.getMoves(this.currReplayTurn).final;
+
+    if(this.updateReplaying){
+      var initialPointAnimation=new Point2D(firstCell.x*1.1,firstCell.y*1.1);
+      var finalPointAnimation=new Point2D(secondCell.x*1.1,secondCell.y*1.1);
+
+      console.log("COORDS FIRST: "+firstCell.x+","+firstCell.y);
+      console.log("COORDS SECOND: "+secondCell.x+","+secondCell.y);
+      console.log("INDICE: "+this.currReplayTurn);
+
+      this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation=new moveAnimation(this,initialPointAnimation,finalPointAnimation,firstCell.x,firstCell.y,2);
+      this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animate=true;
+
+      //this.gameCameraAnimation=new cameraAnimation(this,this.replayHistory.getLastPlayerTurn());
+      this.updateReplaying=false;
+    }
+
+    for(var i=0;i<this.replayHistory.height;i++)
+    {
+      for(var j=0;j<this.replayHistory.width;j++)
+      {
+        this.replayHistory.getBoard(this.currReplayTurn)[i][j].update(time);
+      }
+    }
+
+    if(this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation.ended)
+    {
+      this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation=null;
+      this.currReplayTurn++;
+      this.updateReplaying=true;
+    }
+
+    if(this.currReplayTurn===this.replayHistory.numberTurns)
+    {
+      this.replaying=false;
+      console.log("ACABOU REPLAY");
+      this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,new Point(35,20,0,null),new Point(0,0,0,null),new Point(40,5,0,null),new Point(-15,5,0,null));
+      return;
+    }
+
+    /*if(this.animateCell)
+    {
+
+      if(this.board[this.firstCell.y][this.firstCell.x].animate==false)
+      {
+        this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
+        this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
+        this.cleanSelections();
+
+        this.animateCell=false;
+      }
+
+    }*/
+
+  }
+
 };
 
 XMLscene.prototype.updateCameras=function(time){
@@ -420,7 +553,10 @@ XMLscene.prototype.update = function(currTime) {
 
   this.updateCameras(currTime-this.lastTime);
 
-  //this.moveAnimation.updateAnimation(currTime-this.lastTime);
+  if(this.replaying)
+  {
+    this.updateReplay(currTime-this.lastTime);
+  }
 
     /*if (this.graph.isValid) {
         this.graph.updateAnimation(this.graph.root, currTime - this.lastTime);

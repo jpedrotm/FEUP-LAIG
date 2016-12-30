@@ -1,7 +1,7 @@
 function cameraTransitionsAnimation(scene,initialPosition,initialTarget,finalPosition,finalTarget){
 
   this.scene=scene;
-  this.span=6;
+  this.span=1;
   this.initialPosition=initialPosition;
   this.initialTarget=initialTarget;
   this.finalPosition=finalPosition;
@@ -29,8 +29,6 @@ function cameraTransitionsAnimation(scene,initialPosition,initialTarget,finalPos
 
 cameraTransitionsAnimation.prototype.updateAnimation=function(time){
 
-  console.log("UPDATING");
-
   this.currTime += time / 1000;
 
   if (this.currTime >= this.span) {
@@ -44,8 +42,6 @@ cameraTransitionsAnimation.prototype.updateAnimation=function(time){
 
       var percentage = this.currTime / this.span;
 
-      console.log("PERCENTAGE: "+percentage);
-
       this.currXPosition=this.initialPosition.x+percentage*this.vetorPosition.x;
       this.currYPosition=this.initialPosition.y+percentage*this.vetorPosition.y;
       this.currZPosition=this.initialPosition.z+percentage*this.vetorPosition.z;
@@ -54,8 +50,8 @@ cameraTransitionsAnimation.prototype.updateAnimation=function(time){
       this.currYTarget=this.initialTarget.y+percentage*this.vetorTarget.y;
       this.currZTarget=this.initialTarget.z+percentage*this.vetorTarget.z;
 
-      console.log("Position x,y,z: "+this.currXPosition+","+this.currYPosition+","+this.currZPosition);
-      console.log("Target x,y,z: "+this.currXTarget+","+this.currYTarget+","+this.currZTarget);
+      //console.log("Position x,y,z: "+this.currXPosition+","+this.currYPosition+","+this.currZPosition);
+      //console.log("Target x,y,z: "+this.currXTarget+","+this.currYTarget+","+this.currZTarget);
 
       this.scene.camera.setPosition(vec3.fromValues(this.currXPosition,this.currYPosition,this.currZPosition));
       this.scene.camera.setTarget(vec3.fromValues(this.currXTarget,this.currYTarget,this.currZTarget));

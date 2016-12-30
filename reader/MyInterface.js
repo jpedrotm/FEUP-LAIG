@@ -38,6 +38,7 @@ MyInterface.prototype.init = function(application) {
 
 	this.replaySituation=this.gui.addFolder('Replay Situation');
 	this.replaySituation.add(this.scene,'stopReplay').name('Stop Replay');
+	this.replaySituation.add(this.scene,'pauseReplay').name('Pause Replay');
 
   return true;
 };

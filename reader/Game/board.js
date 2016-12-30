@@ -132,7 +132,6 @@ Board.prototype.display=function(){
       this.scene.pushMatrix();
       this.scene.translate(dist*j,0,0);
       this.board[i][j].display();
-
       this.scene.popMatrix();
     }
 
@@ -141,17 +140,6 @@ Board.prototype.display=function(){
   }
 
   this.scene.popMatrix();
-
-  /*console.log("COMEÇA");
-
-  for(var i=0;i<8;i++)
-  {
-    for(var j=0;j<4;j++)
-    {
-      console.log(this.board[i][j].type);
-    }
-    console.log(",");
-  }*/
 
 };
 
@@ -195,7 +183,7 @@ Board.prototype.movePiece = function(validMoves,player,bot,xi,yi,xf,yf){
     var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
     var finalPointAnimation=new Point2D(this.secondCell.x*1.1,this.secondCell.y*1.1);
 
-    this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y);
+    this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y,null);
     this.board[this.firstCell.y][this.firstCell.x].animate=true;
 
     this.animateCell=true;

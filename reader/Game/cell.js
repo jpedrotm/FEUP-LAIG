@@ -62,7 +62,7 @@ Cell.prototype.display=function(){
     if(this.animate)
     {
     this.animation.displayAnimation();
-    console.log("A DAR DISPLAY");
+    //console.log("A DAR DISPLAY");
     }
     this.scene.translate(-0.3,0.1,0.3);
     this.scene.scale(0.03,0.03,0.03);
@@ -78,12 +78,16 @@ Cell.prototype.display=function(){
 
 Cell.prototype.update=function(time){
 
+  //console.log("UPDATE CELL");
+
   if(this.animate)
   {
-    console.log("ANIMATED");
+    //console.log("ANIMATED");
     if(this.animation.ended){
       console.log("FIM ANIMATION");
-      this.scene.game.switchTurn=true;
+      if(this.scene.gameMode){
+        this.scene.game.switchTurn=true;
+      }
       this.animate=false;
       this.animation=null;
       this.scene.switchTurn=true;
@@ -91,6 +95,7 @@ Cell.prototype.update=function(time){
       this.animation.updateAnimation(time);
     }
   }
+
 };
 
 Cell.prototype.updatePiece=function(type){

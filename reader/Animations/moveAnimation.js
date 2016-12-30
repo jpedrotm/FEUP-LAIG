@@ -1,9 +1,11 @@
-function moveAnimation(scene,initialPoint,finalPoint,xi,yi) {
+function moveAnimation(scene,initialPoint,finalPoint,xi,yi,span) {
 
   this.scene=scene;
 
   this.initialPoint=initialPoint;
   this.finalPoint=finalPoint;
+
+  console.log("XI,YI: "+xi+","+yi);
 
   if(this.finalPoint.y>=4 && this.initialPoint.y<4)
   {
@@ -18,7 +20,13 @@ function moveAnimation(scene,initialPoint,finalPoint,xi,yi) {
 
   this.ended=false;
 
-  this.span=this.height;
+  if(span===null){
+    this.span=this.height;
+  }
+  else{
+    this.span=span;
+  }
+
   this.halfSpan=this.span/2;
 
   this.currTime = 0;
@@ -35,11 +43,12 @@ moveAnimation.prototype.updateAnimation = function(time) {
 
     this.currTime += time / 1000;
 
-    console.log("TEMPO ANIMAÇÃO: "+this.currTime);
-
-
 
     if (this.currTime >= this.span) {
+
+      console.log("ACABOU ANIMAÇÃO");
+
+      this.animate=false;
 
       this.ended=true;
 
@@ -84,7 +93,7 @@ moveAnimation.prototype.displayAnimation = function() {
   var x=this.initialPoint.x+this.x;
   var z=this.initialPoint.y+this.z;
   var y=this.y;
-  console.log("POINTS: "+x+","+y+","+z);
+  //console.log("POINTS: "+x+","+y+","+z);
 
   this.scene.translate(x-this.distXi,y,z-this.distYi);
 
