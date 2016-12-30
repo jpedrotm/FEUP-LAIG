@@ -33,22 +33,11 @@ Counter.prototype.add = function(points) {
     if ((this.units + points) < 10 && points>0) {
         this.units += points;
 				this.animateUnits=true;
-    } else if (points == 1) {
-        this.dozens += 1;
-        this.units = 0;
-				this.animateUnits=true;
-				this.animateDozens=true;
-    } else if (points == 2) {
-        this.dozens += 1;
-        this.units = 1;
-				this.animateUnits=true;
-				this.animateDozens=true;
-    } else if (points == 3) {
-        this.dozens += 1;
-        this.units = 2;
-				this.animateUnits=true;
-				this.animateDozens=true;
-    }
+    } else if (points >0){
+				var rest = this.units + points - 10;
+				this.units+=rest;
+				this.dozens++;
+		}
 
     this.unitsObj = new Obj(this.scene, 'scenes/3dObjects/numbers/' + this.units + '.obj');
     this.dozensObj = new Obj(this.scene, 'scenes/3dObjects/numbers/' + this.dozens + '.obj');
