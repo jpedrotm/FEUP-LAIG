@@ -75,13 +75,15 @@ XMLscene.prototype.init = function(application) {
 
     //animações das camaras
     this.gameCameraAnimation=null;
+    this.initialPosition;
+    this.finalPosition;
+    this.initialTarget;
+    this.finalTarget;
     this.cameraTransitionsAnimation=null;
-    this.initialPosition=vec3.fromValues(35,10,0);
-    this.finalPosition=vec3.fromValues(0,40,-25);
-    this.initialTarget=vec3.fromValues()
 
     //Variaveis para estado do jogo
     this.gameMode=false;
+    this.replayHistory=null;
 
     this.gameDifficulty= new gameDifficulty();
     this.gameDifficultyList=new Array();
@@ -94,6 +96,36 @@ XMLscene.prototype.init = function(application) {
 
     this.game = null;
     this.setPickEnabled(true);
+};
+
+XMLscene.prototype.makeTransition=function(){
+
+  console.log("ENTROU MAKE");
+
+  if(this.gameMode)
+  {
+    if(this.game.playing==='player2')
+    {
+      this.initialPosition=new Point(0,30,35,null);
+    }
+    else if(this.game.playing==='player1')
+    {
+      this.initialPosition=new Point(0,30,-35,null);
+    }
+
+    this.initialTarget=new Point(0,0,0,null);
+    this.finalPosition=new Point(40,5,0,null);
+    this.finalTarget=new Point(-15,5,0,null);
+  }
+  else {
+    this.initialPosition=new Point(40,5,0,null);
+    this.finalPosition=new Point(0,30,-35,null);
+    this.initialTarget=new Point(-15,5,0,null);
+    this.finalTarget=new Point(0,0,0,null);
+  }
+
+  this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,this.initialPosition,this.initialTarget,this.finalPosition,this.finalTarget);
+
 };
 
 XMLscene.prototype.initLights = function() {
@@ -150,10 +182,8 @@ XMLscene.prototype.graphLights = function() {
         this.lights[lightsIndice].setDiffuse(spotLight.diffuse.r, spotLight.diffuse.g, spotLight.diffuse.b, spotLight.diffuse.a);
         this.lights[lightsIndice].setSpecular(spotLight.specular.r, spotLight.specular.g, spotLight.specular.b, spotLight.specular.a);
 
-        console.log("ENABLED: " + spotLight.enable);
 
         if (spotLight.enable) {
-            console.log("ENTROU SPOT");
             this.lights[lightsIndice].enable();
         } else if (spotLight.enable) {
             this.lights[lightsIndice].disable();
@@ -236,8 +266,8 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.axis = new CGFaxis(this, this.graph.axis_length, 0.2);
     this.graphViews();
     this.graphLights();
-    this.camera.setPosition(vec3.fromValues(35,10,0));
-    this.camera.setTarget(vec3.fromValues(0,0,0));
+    this.camera.setPosition(vec3.fromValues(40,5,0));
+    this.camera.setTarget(vec3.fromValues(-15,5,0));
 };
 /**
  * Function that loads the initial camera to XMLscene.
@@ -275,6 +305,40 @@ XMLscene.prototype.undo=function(){
 
   if(this.gameMode){
     this.game.undo();
+  }
+
+};
+
+XMLscene.prototype.replay=function(){
+
+};
+
+XMLscene.prototype.stopReplay=function(){
+
+};
+
+XMLscene.prototype.quitGame=function(){
+
+  //Colocar aqui a tabuleta a dizer o vencedor em vez dos prints por a tabuleta a dizer o vencedor e a mostrar os pontos
+
+  if(this.gameMode){
+    if(this.game.playing==='player1')
+    {
+      console.log('Player 2 Win !');
+    }
+    else if(this.game.playing==='player2')
+    {
+      console.log('Player 1 Win !');
+    }
+
+    this.makeTransition();
+
+    this.gameMode=false;
+
+    this.replayHistory=this.game.gameHistory;
+
+    this.game=null;
+
   }
 
 };
@@ -326,27 +390,35 @@ XMLscene.prototype.display = function() {
 
 XMLscene.prototype.updateCameras=function(time){
 
-  if(this.game.switchTurn)
-  {
-    this.gameCameraAnimation=new cameraAnimation(this,this.game.playing);
-    this.game.switchTurn=false;
+  if(this.gameMode){
+    if(this.game.switchTurn)
+    {
+      this.gameCameraAnimation=new cameraAnimation(this,this.game.playing);
+      this.game.switchTurn=false;
+    }
+
+    if(this.gameCameraAnimation!=null)
+    {
+      console.log("Updating");
+      this.gameCameraAnimation.updateAnimation(time);
+    }
   }
 
-  if(this.gameCameraAnimation!=null)
+  if(this.cameraTransitionsAnimation!=null)
   {
-    console.log("Updating");
-    this.gameCameraAnimation.updateAnimation(time);
+    console.log("Transition");
+    this.cameraTransitionsAnimation.updateAnimation(time);
   }
 
 };
-
 
 XMLscene.prototype.update = function(currTime) {
 
   if(this.gameMode){
     this.game.update(currTime-this.lastTime);
-    this.updateCameras(currTime-this.lastTime);
   }
+
+  this.updateCameras(currTime-this.lastTime);
 
   //this.moveAnimation.updateAnimation(currTime-this.lastTime);
 

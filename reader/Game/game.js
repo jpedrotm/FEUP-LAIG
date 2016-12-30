@@ -2,6 +2,8 @@ function Game(scene,mode){
 
   this.scene=scene;
 
+  this.scene.makeTransition();
+
   this.gameBoard = new Board(scene,8,4);
   this.gameHistory = new GameHistory(scene);
   this.counter = new Counter(scene);
