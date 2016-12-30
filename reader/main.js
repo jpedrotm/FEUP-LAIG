@@ -79,6 +79,7 @@ serialInclude(['../lib/CGF.js',
     'Game/GameHistory.js',
     'Game/game.js',
     'Environment.js',
+    'Counters/Counter.js',
 
     main = function() {
         // Standard application, scene and interface setup

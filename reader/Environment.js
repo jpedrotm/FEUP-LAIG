@@ -69,9 +69,9 @@ Environment.prototype.initEnvironment=function(){
 	this.plane=new Plane(this.scene,1,1,20,20);
 	this.ground=new Plane(this.scene,1,1,20,20);
 	this.groundRingue=new Plane(this.scene,1,1,20,20);
-	this.boxRingueGround = new Obj(this.scene, 'scenes/boxRingue-ground.obj');
-	this.boxRingueNets = new Obj(this.scene, 'scenes/boxRingue-net.obj');
-	this.boxRinguePosts = new Obj(this.scene, 'scenes/boxRingue-posts.obj');
+	this.boxRingueGround = new Obj(this.scene, 'scenes/3dObjects/boxRingue-ground.obj');
+	this.boxRingueNets = new Obj(this.scene, 'scenes/3dObjects/boxRingue-net.obj');
+	this.boxRinguePosts = new Obj(this.scene, 'scenes/3dObjects/boxRingue-posts.obj');
 
 };
 

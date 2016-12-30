@@ -13,13 +13,13 @@ function Cell(scene, x, y, type,id) {
     this.animation=null;
 
     if (type == 'queen') {
-        this.piece = new Obj(this.scene, 'scenes/queen.obj');
+        this.piece = new Obj(this.scene, 'scenes/3dObjects/queen.obj');
         this.pieceMaterial = this.scene.queenMaterial;
     } else if (type == 'drone') {
-        this.piece = new Obj(this.scene, 'scenes/drone.obj');
+        this.piece = new Obj(this.scene, 'scenes/3dObjects/drone.obj');
         this.pieceMaterial = this.scene.droneMaterial;
     } else if (type == 'pawn') {
-        this.piece = new Obj(this.scene, 'scenes/pawn.obj');
+        this.piece = new Obj(this.scene, 'scenes/3dObjects/pawn.obj');
         this.pieceMaterial = this.scene.pawnMaterial;
     }else{
       this.piece=new Piramid(this.scene,this.type);
@@ -97,13 +97,13 @@ Cell.prototype.updatePiece=function(type){
 
   this.type=type;
   if (type == 'queen') {
-      this.piece = new Obj(this.scene, 'scenes/queen.obj');
+      this.piece = new Obj(this.scene, 'scenes/3dObjects/queen.obj');
       this.pieceMaterial = this.scene.queenMaterial;
   } else if (type == 'drone') {
-      this.piece = new Obj(this.scene, 'scenes/drone.obj');
+      this.piece = new Obj(this.scene, 'scenes/3dObjects/drone.obj');
       this.pieceMaterial = this.scene.droneMaterial;
   } else if (type == 'pawn') {
-      this.piece = new Obj(this.scene, 'scenes/pawn.obj');
+      this.piece = new Obj(this.scene, 'scenes/3dObjects/pawn.obj');
       this.pieceMaterial = this.scene.pawnMaterial;
   }else{
     this.piece=new Piramid(this.scene,this.type);

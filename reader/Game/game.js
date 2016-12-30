@@ -4,6 +4,7 @@ function Game(scene,mode){
 
   this.gameBoard = new Board(scene,8,4);
   this.gameHistory = new GameHistory(scene);
+  this.counter = new Counter(scene);
 
   this.playing = 'player1'; //Para saber que jogador faz a jogada
   this.difficulty=this.scene.gameDifficultyList[this.scene.gameDifficulty.difficulty];
@@ -14,8 +15,8 @@ function Game(scene,mode){
     this.secondBot = false;
       break;
     case 2:
-    this.firstBot = true;
-    this.secondBot = false;
+    this.firstBot = false;
+    this.secondBot = true;
       break;
     case 3:
     this.firstBot=true;
@@ -36,6 +37,7 @@ function Game(scene,mode){
   this.botCurrentDeltaTime=0;
   this.botDeltaTime=100;
   this.endGame=0;
+
 };
 
 Game.prototype.initGame = function(bot1, bot2){
@@ -81,18 +83,11 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
 
 Game.prototype.display = function(){
 
-  /*console.log("COMEÇA");
-
-  for(var i=0;i<8;i++)
-  {
-    for(var j=0;j<4;j++)
-    {
-      console.log(this.gameBoard.board[i][j].type);
-    }
-    console.log(",");
-  }*/
-
   this.gameBoard.display();
+  this.scene.pushMatrix();
+  this.scene.translate(3,3,3);
+  this.counter.display();
+  this.scene.popMatrix();
 };
 
 Game.prototype.update = function(currTime){
