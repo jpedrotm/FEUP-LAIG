@@ -74,6 +74,8 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
         }
       }
 
+      this.gameBoard.move='notAMove';
+
     }
     this.readyToMakeAMove=0;
   }
