@@ -325,19 +325,23 @@ XMLscene.prototype.replay=function(){
 };
 
 XMLscene.prototype.stopReplay=function(){
-  this.replaying=false;
-  this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,new Point(35,20,0,null),new Point(0,0,0,null),new Point(40,5,0,null),new Point(-15,5,0,null));
+  if(this.replaying){
+    this.replaying=false;
+    this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,new Point(35,20,0,null),new Point(0,0,0,null),new Point(40,5,0,null),new Point(-15,5,0,null));
+  }
 };
 
 XMLscene.prototype.pauseReplay=function(){
 
-  if(this.replayPaused===true)
-  {
-    this.replayPaused=false;
-  }
-  else if(this.replayPaused===false)
-  {
-    this.replayPaused=true;
+  if(this.replaying){
+    if(this.replayPaused===true)
+    {
+      this.replayPaused=false;
+    }
+    else if(this.replayPaused===false)
+    {
+      this.replayPaused=true;
+    }
   }
 
 };
@@ -469,7 +473,7 @@ XMLscene.prototype.updateReplay=function(time){
       console.log("COORDS SECOND: "+secondCell.x+","+secondCell.y);
       console.log("INDICE: "+this.currReplayTurn);
 
-      this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation=new moveAnimation(this,initialPointAnimation,finalPointAnimation,firstCell.x,firstCell.y);
+      this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation=new moveAnimation(this,initialPointAnimation,finalPointAnimation,firstCell.x,firstCell.y,2);
       this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animate=true;
 
       //this.gameCameraAnimation=new cameraAnimation(this,this.replayHistory.getLastPlayerTurn());
@@ -553,8 +557,6 @@ XMLscene.prototype.update = function(currTime) {
   {
     this.updateReplay(currTime-this.lastTime);
   }
-
-  //this.moveAnimation.updateAnimation(currTime-this.lastTime);
 
     /*if (this.graph.isValid) {
         this.graph.updateAnimation(this.graph.root, currTime - this.lastTime);

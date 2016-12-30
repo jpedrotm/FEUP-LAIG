@@ -1,4 +1,4 @@
-function moveAnimation(scene,initialPoint,finalPoint,xi,yi) {
+function moveAnimation(scene,initialPoint,finalPoint,xi,yi,span) {
 
   this.scene=scene;
 
@@ -20,7 +20,13 @@ function moveAnimation(scene,initialPoint,finalPoint,xi,yi) {
 
   this.ended=false;
 
-  this.span=this.height;
+  if(span===null){
+    this.span=this.height;
+  }
+  else{
+    this.span=span;
+  }
+
   this.halfSpan=this.span/2;
 
   this.currTime = 0;
