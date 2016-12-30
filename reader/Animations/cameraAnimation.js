@@ -28,6 +28,8 @@ cameraAnimation.prototype.updateAnimation=function(time){
 
   if (this.currTime >= this.span) {
 
+    this.scene.cameraAnimation=null;
+
       this.ended = true;
 
       return;

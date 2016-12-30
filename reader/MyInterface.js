@@ -33,8 +33,11 @@ MyInterface.prototype.init = function(application) {
 
 	this.gameSituation=this.gui.addFolder('Play Situation');
 	this.gameSituation.add(this.scene,'undo').name('Undo');
-	this.gameSituation.add(this,'replay').name('Replay');
+	this.gameSituation.add(this.scene,'replay').name('Replay');
 	this.gameSituation.add(this,'quitGame').name('Quit');
+
+	this.replaySituation=this.gui.addFolder('Replay Situation');
+	this.replaySituation.add(this.scene,'stopReplay').name('Stop Replay');
 
   return true;
 };
@@ -96,12 +99,6 @@ MyInterface.prototype.cpuVscpu=function(){
 	}
 };
 
-MyInterface.prototype.replay=function(){
-
-};
-
 MyInterface.prototype.quitGame=function(){
-	if(this.scene.gameMode){
-
-	}
+		this.scene.quitGame();
 };

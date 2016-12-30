@@ -1,36 +1,41 @@
-function cameraTrasitionsAnimation(scene,initialPosition,initialTarget,finalPosition,finalTarget){
+function cameraTransitionsAnimation(scene,initialPosition,initialTarget,finalPosition,finalTarget){
 
   this.scene=scene;
-  this.span=3;
-  this.x=0;
-  this.y=20;
-  this.z=0;
+  this.span=6;
   this.initialPosition=initialPosition;
   this.initialTarget=initialTarget;
   this.finalPosition=finalPosition;
   this.finalTarget=finalTarget;
-
-  this.radius=40;
-  this.degToRad=Math.PI/180;
-  if(finalPerspective.x<initialPerspective.x)
-  {
-    this.rotationAngle=-Math.PI/2;
-  }
-  else if(finalPerspective.x>initialPerspective.x)
-  {
-    this.rotationAngle=Math.PI/2;
-  }
-
   this.currTime=0;
-  this.ended=false;
+
+  console.log("INIT POSITION: "+this.initialPosition.x+","+this.initialPosition.y+","+this.initialPosition.z);
+  console.log("INIT TARGET: "+this.initialTarget.x+","+this.initialTarget.y+","+this.initialTarget.z);
+
+  this.currXPosition;
+  this.currYPosition;
+  this.currZPosition;
+
+  this.currXTarget;
+  this.currYTarget;
+  this.currZTarget;
+
+  this.vetorTarget=new Point(this.finalTarget.x-this.initialTarget.x,this.finalTarget.y-this.initialTarget.y,this.finalTarget.z-this.initialTarget.z,null);
+  this.vetorPosition=new Point(this.finalPosition.x-this.initialPosition.x,this.finalPosition.y-this.initialPosition.y,this.finalPosition.z-this.initialPosition.z,null);
+
+  console.log("INIT VETOR POSITION: "+this.vetorPosition.x+","+this.vetorPosition.y+","+this.vetorPosition.z);
+  console.log("INIT VETOR TARGET: "+this.vetorTarget.x+","+this.vetorTarget.y+","+this.vetorTarget.z);
 
 };
 
 cameraTransitionsAnimation.prototype.updateAnimation=function(time){
 
+  console.log("UPDATING");
+
   this.currTime += time / 1000;
 
   if (this.currTime >= this.span) {
+
+    this.scene.cameraTransitionsAnimation=null;
 
       this.ended = true;
 
@@ -39,15 +44,21 @@ cameraTransitionsAnimation.prototype.updateAnimation=function(time){
 
       var percentage = this.currTime / this.span;
 
-      this.currAngle = this.rotationAngle * percentage;
+      console.log("PERCENTAGE: "+percentage);
 
-      this.x = this.radius * Math.sin(this.initialAngle + this.currAngle);
-      this.z = this.radius * Math.cos(this.initialAngle + this.currAngle);
+      this.currXPosition=this.initialPosition.x+percentage*this.vetorPosition.x;
+      this.currYPosition=this.initialPosition.y+percentage*this.vetorPosition.y;
+      this.currZPosition=this.initialPosition.z+percentage*this.vetorPosition.z;
 
-      console.log("x,y,z: "+this.x+","+this.y+","+this.z);
+      this.currXTarget=this.initialTarget.x+percentage*this.vetorTarget.x;
+      this.currYTarget=this.initialTarget.y+percentage*this.vetorTarget.y;
+      this.currZTarget=this.initialTarget.z+percentage*this.vetorTarget.z;
 
-      this.scene.camera.setPosition(vec3.fromValues(this.x,this.y,this.z));
+      console.log("Position x,y,z: "+this.currXPosition+","+this.currYPosition+","+this.currZPosition);
+      console.log("Target x,y,z: "+this.currXTarget+","+this.currYTarget+","+this.currZTarget);
 
+      this.scene.camera.setPosition(vec3.fromValues(this.currXPosition,this.currYPosition,this.currZPosition));
+      this.scene.camera.setTarget(vec3.fromValues(this.currXTarget,this.currYTarget,this.currZTarget));
   }
 
 };
