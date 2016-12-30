@@ -132,7 +132,6 @@ Board.prototype.display=function(){
       this.scene.pushMatrix();
       this.scene.translate(dist*j,0,0);
       this.board[i][j].display();
-
       this.scene.popMatrix();
     }
 
@@ -141,17 +140,6 @@ Board.prototype.display=function(){
   }
 
   this.scene.popMatrix();
-
-  /*console.log("COMEÇA");
-
-  for(var i=0;i<8;i++)
-  {
-    for(var j=0;j<4;j++)
-    {
-      console.log(this.board[i][j].type);
-    }
-    console.log(",");
-  }*/
 
 };
 

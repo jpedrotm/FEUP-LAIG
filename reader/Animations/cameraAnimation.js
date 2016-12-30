@@ -42,7 +42,7 @@ cameraAnimation.prototype.updateAnimation=function(time){
       this.x = this.radius * Math.sin(this.initialAngle + this.currAngle);
       this.z = this.radius * Math.cos(this.initialAngle + this.currAngle);
 
-      console.log("x,y,z: "+this.x+","+this.y+","+this.z);
+      //console.log("x,y,z: "+this.x+","+this.y+","+this.z);
 
       this.scene.camera.setPosition(vec3.fromValues(this.x,this.y,this.z));
 

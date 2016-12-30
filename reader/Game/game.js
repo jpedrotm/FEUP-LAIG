@@ -5,7 +5,7 @@ function Game(scene,mode){
   this.scene.makeTransition();
 
   this.gameBoard = new Board(scene,8,4);
-  this.gameHistory = new GameHistory(scene);
+  this.gameHistory = new GameHistory(scene,8,4);
 
   this.playing = 'player1'; //Para saber que jogador faz a jogada
   this.difficulty=this.scene.gameDifficultyList[this.scene.gameDifficulty.difficulty];
@@ -189,7 +189,7 @@ Game.prototype.insertTurnGameHistory=function(){
   this.gameHistory.numberTurns++;
   this.gameHistory.playerTurns.push(this.playing);
   this.gameHistory.pointsPlayers.push(new playersPoints(this.firstPlayerPoints,this.secondPlayerPoints));
-  this.gameHistory.movesMade.push(new Moves(this.gameBoard.firstCell,this.gameBoard.secondCell));
+  this.gameHistory.movesMade.push(new Moves(new Point2D(this.gameBoard.firstCell.x,this.gameBoard.firstCell.y),new Point2D(this.gameBoard.secondCell.x,this.gameBoard.secondCell.y)));
   this.gameHistory.boards.push(this.gameBoard.getCopyBoard());
 
   console.log("Players points: "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p1+" , "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p2);
