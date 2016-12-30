@@ -375,7 +375,7 @@ XMLscene.prototype.display = function() {
         this.lights[0].update();
         this.updateLights();
         //this.graph.display();
-    };
+    }
 
     this.environment.display();
 

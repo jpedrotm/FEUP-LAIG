@@ -201,9 +201,9 @@ Board.prototype.movePiece = function(validMoves,player,bot,xi,yi,xf,yf){
     this.animateCell=true;
 
     console.log("asdasdasdasda");
-    return 1;
+    return points;
   }
-  return 0;
+  return -1;
 
 };
 

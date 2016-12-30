@@ -6,7 +6,8 @@ function Game(scene,mode){
 
   this.gameBoard = new Board(scene,8,4);
   this.gameHistory = new GameHistory(scene);
-  this.counter = new Counter(scene);
+  this.counterOne = new Counter(scene);
+  this.counterTwo = new Counter(scene);
 
   this.playing = 'player1'; //Para saber que jogador faz a jogada
   this.difficulty=this.scene.gameDifficultyList[this.scene.gameDifficulty.difficulty];
@@ -52,7 +53,7 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
   if(this.readyToMakeAMove){
     var validMove = this.gameBoard.movePiece(this.currentValidMoves,this.playing,bot,xi,yi,xf,yf);
     console.log(validMove);
-    if(validMove){
+    if(validMove > -1){
 
       this.insertTurnGameHistory();
 
@@ -66,11 +67,13 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
       if(this.firstBot === false){
         if(this.playing==='player2')
         {
+          this.counterTwo.add(validMove);
           console.log("player changed");
           this.playing='player1';
         }
         else if(this.playing==='player1')
         {
+          this.counterOne.add(validMove);
           console.log("player changed");
           this.playing='player2';
         }
@@ -87,8 +90,12 @@ Game.prototype.display = function(){
 
   this.gameBoard.display();
   this.scene.pushMatrix();
-  this.scene.translate(3,3,3);
-  this.counter.display();
+  this.scene.scale(0.7,0.7,0.7);
+  this.scene.translate(-10,3,8);
+  this.scene.rotate(Math.PI/2,0,1,0);
+  this.counterOne.display();
+    this.scene.translate(14,0,0);
+  this.counterTwo.display();
   this.scene.popMatrix();
 };
 
@@ -112,7 +119,7 @@ Game.prototype.update = function(currTime){
           this.playBot();
       }
     }else{
-      if(this.firstBot === true && this.botCurrentDeltaTime > this.botDeltaTime){
+      if(this.firstBot === true){
         if(this.playing==='player2')
         {
           console.log("player changed");
@@ -123,12 +130,8 @@ Game.prototype.update = function(currTime){
           console.log("player changed");
           this.playing='player2';
         }
-        this.botCurrentDeltaTime=0;
         this.playBot();
       }
-      console.log(this.botCurrentDeltaTime);
-      this.botCurrentDeltaTime++;
-
     }
   }
 

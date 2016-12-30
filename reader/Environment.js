@@ -5,7 +5,7 @@ function Environment(scene) {
 
 	this.initEnvironment();
 
-};
+}
 
 Environment.prototype.initEnvironment=function(){
 
@@ -72,7 +72,9 @@ Environment.prototype.initEnvironment=function(){
 	this.boxRingueGround = new Obj(this.scene, 'scenes/3dObjects/boxRingue-ground.obj');
 	this.boxRingueNets = new Obj(this.scene, 'scenes/3dObjects/boxRingue-net.obj');
 	this.boxRinguePosts = new Obj(this.scene, 'scenes/3dObjects/boxRingue-posts.obj');
-
+	this.playerText = new Obj(this.scene, 'scenes/3dObjects/player.obj');
+	this.oneText = new Obj(this.scene, 'scenes/3dObjects/numbers/1.obj');
+	this.twoText = new Obj(this.scene, 'scenes/3dObjects/numbers/2.obj');
 };
 
 /**
@@ -153,21 +155,50 @@ Environment.prototype.display=function(){
 
 	this.scene.pushMatrix();
 
-	this.scene.translate(-15,5,0);
-	this.scene.rotate(Math.PI/2,0,1,0);
+		this.scene.scale(0.7,0.7,0.7);
+		this.scene.translate(-10,5,0);
+		this.scene.rotate(Math.PI/2,0,1,0);
 
-	this.scene.pushMatrix();
-	this.scene.rotate(Math.PI,0,0,1);
-	this.scene.translate(0,0,0.14);
-	this.scene.scale(9,5,1);
-	this.scene.planeAppearance.apply();
-	this.plane.display();
-	this.scene.popMatrix();
+		this.scene.pushMatrix();
+			this.scene.rotate(Math.PI,0,0,1);
+			this.scene.translate(0,0,0.14);
+			this.scene.scale(9,5,1);
+			this.scene.planeAppearance.apply();
+			this.plane.display();
+		this.scene.popMatrix();
 
-	this.scene.pushMatrix();
-	this.scene.backgroundAppearance.apply();
-	this.backgroundMenu.display();
-	this.scene.popMatrix();
+		this.scene.pushMatrix();
+			this.scene.backgroundAppearance.apply();
+			this.backgroundMenu.display();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+			this.scene.translate(0,1.5,0);
+			this.scene.scale(1.8,0.5,1);
+			this.backgroundMenu.display();
+		this.scene.popMatrix();
+
+
+		this.scene.pushMatrix();
+			this.scene.translate(-7.25,1,0.1);
+			this.scene.scale(0.025,0.025,0.025);
+			this.scene.pushMatrix();
+				this.scene.translate(60,0,0);
+				this.oneText.display();
+			this.scene.popMatrix();
+			this.playerText.display();
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+			this.scene.translate(6.75,1,0.1);
+			this.scene.scale(0.025,0.025,0.025);
+			this.scene.pushMatrix();
+				this.scene.translate(60,0,0);
+				this.twoText.display();
+			this.scene.popMatrix();
+			this.playerText.display();
+		this.scene.popMatrix();
+
 
 	this.scene.popMatrix();
 

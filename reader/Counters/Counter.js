@@ -29,9 +29,9 @@ Counter.prototype.add = function (points) {
     this.dozens+=1;
     this.units=2;
   }
-
-	this.unitsObj = new Obj(this.scene, 'scene/3dObjects/numbers/' + this.units + '.obj');
-	this.dozensObj = new Obj(this.scene, 'scene/3dObjects/numbers/' + this.dozens + '.obj');
+	
+	this.unitsObj = new Obj(this.scene, 'scenes/3dObjects/numbers/' + this.units + '.obj');
+	this.dozensObj = new Obj(this.scene, 'scenes/3dObjects/numbers/' + this.dozens + '.obj');
 
 };
 
