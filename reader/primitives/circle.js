@@ -1,6 +1,8 @@
 /**
- * Circle.
- * @constructor
+ * Circle class
+ * @param {CGFscene} scene  CGFscene
+ * @param {int} slices number of slices
+ * @param {int} size
  */
 function Circle(scene, slices, size) {
     CGFobject.call(this, scene);
@@ -50,21 +52,26 @@ Circle.prototype.initBuffers = function() {
 
     this.indices.push(0, i - 1, count - 1);
 
-    this.initialTexCoords=this.texCoords;
+    this.initialTexCoords = this.texCoords;
 
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();
 };
 
+/**
+ * Updates circle texture coordinates
+ * @param  {int} length_s
+ * @param  {int} length_t 
+ */
 Circle.prototype.updateTexCoords = function(length_s, length_t) {
 
-  if(length_s != 1 || length_t != 1){
-    for (let i = 0; i < this.initialTexCoords.length; i += 2) {
-        this.texCoords[i] = this.initialTexCoords[i] / length_s;
-        this.texCoords[i + 1] = this.initialTexCoords[i + 1] / length_t;
+    if (length_s != 1 || length_t != 1) {
+        for (let i = 0; i < this.initialTexCoords.length; i += 2) {
+            this.texCoords[i] = this.initialTexCoords[i] / length_s;
+            this.texCoords[i + 1] = this.initialTexCoords[i + 1] / length_t;
+        }
     }
-  }
 
-  this.updateTexCoordsGLBuffers();
+    this.updateTexCoordsGLBuffers();
 };

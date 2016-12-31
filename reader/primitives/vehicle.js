@@ -1,3 +1,7 @@
+/**
+ * Vehicle class
+ * @param {CGFscene} scene
+ */
 function Vehicle(scene) {
     CGFobject.call(this, scene);
     this.scene = scene;

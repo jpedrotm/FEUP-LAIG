@@ -1,6 +1,11 @@
 /**
- * noBasesCylinder.
- * @constructor
+ * noBasesCylinder class, Cylinder without base and top
+ * @param {CGFScene} scene  CGFScene
+ * @param {int} base   base radious
+ * @param {int} top    top radious
+ * @param {int} height
+ * @param {int} slices
+ * @param {int} stacks
  */
 function noBasesCylinder(scene, base, top, height, slices, stacks) {
     CGFobject.call(this, scene);

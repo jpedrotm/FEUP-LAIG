@@ -1,3 +1,12 @@
+/**
+ * Patch class
+ * @param {CGFscene} scene
+ * @param {int} degree1 Order in the u direction
+ * @param {int} degree2 Order in the v direction
+ * @param {int} partsX Parts in the u direction
+ * @param {int} partsY Parts in the v direction
+ * @param {Array} controlPoints All control points for the patch
+ */
 function Patch(scene, degree1, degree2, partsX, partsY, controlPoints) {
 
     this.scene = scene;

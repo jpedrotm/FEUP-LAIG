@@ -1,3 +1,11 @@
+/**
+ * Plane calss
+ * @param {CGFscene} scene
+ * @param {int} dimX   Dimension on x
+ * @param {int} dimY   Dimension on Y
+ * @param {int} partsX number of parts on X
+ * @param {int} partsY number of parts on y
+ */
 function Plane(scene, dimX, dimY, partsX, partsY) {
 
     var knots1 = this.getKnotsVector(1);
