@@ -117,12 +117,14 @@ Game.prototype.controlTransitions=function(){
   else if(this.mode===2){
     if(this.playing==='player1')
     {
+      this.scene.makingTransition=true;
       return true;
     }
     else if(this.playing==='player2')
     {
       if(this.scene.makingTransition===true)
       {
+        console.log("RETURNING FALSE");
         return false;
       }
       else{
@@ -145,6 +147,7 @@ Game.prototype.controlTransitions=function(){
     return true;
   }
 }
+
 };
 
 Game.prototype.update = function(currTime){
@@ -161,6 +164,11 @@ Game.prototype.update = function(currTime){
   this.gameBoard.update(currTime);
 
   var canPlay=this.controlTransitions();
+
+  console.log("MAKING TRANSITION: "+this.scene.makingTransition);
+  console.log("CAN PLAY: "+canPlay);
+  console.log("MODE: "+this.mode);
+  console.log("PLAYER: "+this.playing);
 
   if(canPlay){
     console.log("PLAY");
