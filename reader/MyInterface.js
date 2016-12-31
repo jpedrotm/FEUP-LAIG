@@ -86,6 +86,9 @@ MyInterface.prototype.addLight = function(i, id) {
 
 };
 
+/**
+* Function responsible for the input of the button in interface for the play mode PlayerVsPlayer.
+*/
 MyInterface.prototype.PlayerVsPlayer = function() {
     if (!this.scene.gameMode) {
         this.scene.game = new Game(this.scene, 1);
@@ -93,6 +96,9 @@ MyInterface.prototype.PlayerVsPlayer = function() {
     }
 };
 
+/**
+* Function responsible for the input of the button in interface for the play mode PlayerVsCPU.
+*/
 MyInterface.prototype.PlayerVsCPU = function() {
     if (!this.scene.gameMode) {
         this.scene.game = new Game(this.scene, 2);
@@ -100,6 +106,9 @@ MyInterface.prototype.PlayerVsCPU = function() {
     }
 };
 
+/**
+* Function responsible for the input of the button in interface for the play mode cpuVscpu.
+*/
 MyInterface.prototype.cpuVscpu = function() {
     if (!this.scene.gameMode) {
         this.scene.game = new Game(this.scene, 3);
@@ -107,6 +116,9 @@ MyInterface.prototype.cpuVscpu = function() {
     }
 };
 
+/**
+* Function responsible for the input of the button in interface to quit the game.
+*/
 MyInterface.prototype.quitGame = function() {
     this.scene.quitGame();
 };

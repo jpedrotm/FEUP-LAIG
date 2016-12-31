@@ -1,6 +1,6 @@
 /**
  * Environment class, contains the scene environment objects
- * @param {[type]} scene [description]
+ * @param {CGFscene} scene
  */
 function Environment(scene) {
 
@@ -295,6 +295,10 @@ Environment.prototype.display = function() {
 
 };
 
+/**
+* Function responsible to swith the scene by receiving the scene do set.
+* @param {number} currEnvironment
+*/
 Environment.prototype.setScene = function(currEnvironment) {
     this.currEnvironment = currEnvironment;
 };

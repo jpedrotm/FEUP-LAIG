@@ -80,6 +80,8 @@ XMLscene.prototype.init = function(application) {
     this.initialTarget;
     this.finalTarget;
     this.cameraTransitionsAnimation=null;
+
+    //flags para controlo de transição entre turnos e modos da aplicação
     this.makingTransition=false;
     this.freeMode=false;
 
@@ -113,6 +115,9 @@ XMLscene.prototype.init = function(application) {
     this.setPickEnabled(true);
 };
 
+/**
+* Activates the animation of the camera for the transitions between modes (Menu, Play and Replay).
+*/
 XMLscene.prototype.makeTransition=function(){
 
   if(this.gameMode)
@@ -218,6 +223,7 @@ XMLscene.prototype.graphLights = function() {
 
 
 };
+
 /**
  * Function called in display to verify if a light should be on or off.
  */
@@ -233,6 +239,7 @@ XMLscene.prototype.updateLights = function() {
     }
 
 };
+
 /**
  * Function called every time that the keys m/M are pressed, to switch the material of each component.
  */
@@ -314,6 +321,10 @@ XMLscene.prototype.switchView = function() {
 
 };
 
+/**
+* Function called when clicked the key v/V and it's responsible to update the freeMode variable and according to the flag, it makes possible or not
+  to the player move the camera.
+*/
 XMLscene.prototype.updateFreeMode=function(){
 
   if(this.gameMode && !this.makingTransition){
@@ -347,6 +358,9 @@ XMLscene.prototype.updateFreeMode=function(){
 
 };
 
+/**
+* Function called when pressed the button Undo of the interface. It makes possible to the player play again his turn.
+*/
 XMLscene.prototype.undo=function(){
 
   if(this.gameMode){
@@ -355,6 +369,9 @@ XMLscene.prototype.undo=function(){
 
 };
 
+/**
+* Function called when pressed the button Replay of the interface. The variables responsible for the replay are initialized.
+*/
 XMLscene.prototype.replay=function(){
 
   if(!this.gameMode && this.replayHistory!=null)
@@ -365,12 +382,19 @@ XMLscene.prototype.replay=function(){
 
 };
 
+/**
+* Function called when pressed the button Stop Relay of the interface. It stops the replay, returning to the menu.
+*/
 XMLscene.prototype.stopReplay=function(){
   if(this.replaying){
     this.replaying=false;
     this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,new Point(35,20,0,null),new Point(0,0,0,null),new Point(40,5,0,null),new Point(-15,5,0,null));
   }
 };
+
+/**
+* Function called when pressed the button Pause Replay of the interface. It pauses de display of the replay.
+*/
 
 XMLscene.prototype.pauseReplay=function(){
 
@@ -387,6 +411,9 @@ XMLscene.prototype.pauseReplay=function(){
 
 };
 
+/**
+* Function called when pressed the button Quit Game of the interface. Verifys the winner and returns to the menu.
+*/
 XMLscene.prototype.quitGame=function(){
 
   //Colocar aqui a tabuleta a dizer o vencedor em vez dos prints por a tabuleta a dizer o vencedor e a mostrar os pontos
@@ -463,6 +490,9 @@ XMLscene.prototype.display = function() {
 
 };
 
+/**
+* Display the board of the replay.
+*/
 XMLscene.prototype.displayReplay=function(){
 
   var dist=1.1;
@@ -498,6 +528,10 @@ XMLscene.prototype.displayReplay=function(){
 
 };
 
+/**
+* Updates the replay variables.
+* @param {number} time
+*/
 XMLscene.prototype.updateReplay=function(time){
 
   if(this.replaying && !this.replayPaused)
@@ -555,6 +589,10 @@ XMLscene.prototype.updateReplay=function(time){
 
 };
 
+/**
+* Updates the animations of the camera.
+* @param {number} time
+*/
 XMLscene.prototype.updateCameras=function(time){
 
   if(this.gameMode){
