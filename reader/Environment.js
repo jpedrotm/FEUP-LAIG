@@ -288,6 +288,7 @@ Environment.prototype.display = function() {
 				this.scene.pushMatrix();
 					this.scene.translate(0,-20,0);
 					this.scene.rotate(Math.PI / 2,-1, 0, 0);
+					this.scene.sandAppearance.apply();
 					this.sand.display();
 				this.scene.popMatrix();
     }
