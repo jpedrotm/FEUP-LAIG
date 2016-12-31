@@ -66,7 +66,7 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
       this.firstPlayerPoints=this.gameBoard.playerOnePoints;
       this.secondPlayerPoints=this.gameBoard.playerTwoPoints;
 
-      if(this.firstBot === false){
+
         if(this.playing==='player2')
         {
           this.counterTwo.add(validMove);
@@ -79,7 +79,7 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
           console.log("player changed");
           this.playing='player2';
         }
-      }
+
 
       this.gameBoard.move='notAMove';
 
@@ -169,16 +169,6 @@ Game.prototype.update = function(currTime){
         }
       }else{
         if(this.firstBot === true){
-          if(this.playing==='player2')
-          {
-            console.log("player changed");
-            this.playing='player1';
-          }
-          else if(this.playing==='player1')
-          {
-            console.log("player changed");
-            this.playing='player2';
-          }
           this.playBot();
         }
       }
@@ -282,54 +272,6 @@ Game.prototype.undo=function(){
 
     this.switchTurn=true;
   }
-
-};
-
-
-Game.prototype.verifyEndGame = function() {
-  var playerOneWon=1;
-  var playerTwoWon=1;
-  var i=0;
-  var j=0;
-  for(i = 0; i < this.gameBoard.board.length/2; i++){
-    for(j = 0; j < this.gameBoard.board[0].length; j++){
-      if(this.gameBoard.board[i][j].type!='empty')
-        playerOneWon=0;
-    }
-  }
-  for(i = 4; i < this.gameBoard.board.length; i++){
-    for(j = 0; j < this.gameBoard.board[0].length; j++){
-      if(this.gameBoard.board[i][j].type!='empty')
-        playerTwoWon=0;
-    }
-  }
-  if(playerTwoWon){
-    this.endGame = 2;
-  }else if(playerOneWon){
-    this.endGame = 1;
-  }else{
-    this.endGame = 0;
-  }
-
-  if(this.endGame!=0)
-  {
-    this.scene.makeTransition();
-
-    this.scene.gameMode=false;
-
-    this.scene.replayHistory=this.gameHistory;
-
-    this.game=null;
-  }
-
-};
-    console.log("NUMBER OF TURNS: " + this.gameHistory.numberTurns);
-        console.log("WILL PLAY: " + this.playing);
-
-        this.gameHistory.deleteLastTurn();
-
-        this.switchTurn = true;
-    }
 
 };
 
