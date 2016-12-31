@@ -79,7 +79,8 @@ XMLscene.prototype.init = function(application) {
     this.finalPosition;
     this.initialTarget;
     this.finalTarget;
-    this.cameraTransitionsAnimation = null;
+    this.cameraTransitionsAnimation=null;
+    this.makingTransition=false;
 
     //indice replay for pause option
     this.currReplayTurn = 0;
@@ -519,10 +520,15 @@ XMLscene.prototype.updateCameras = function(time) {
         }
     }
 
-    if (this.cameraTransitionsAnimation != null) {
-        console.log("Transition");
-        this.cameraTransitionsAnimation.updateAnimation(time);
+    if(this.gameCameraAnimation!=null)
+    {
+      this.gameCameraAnimation.updateAnimation(time);
     }
+
+  if(this.cameraTransitionsAnimation!=null)
+  {
+    this.cameraTransitionsAnimation.updateAnimation(time);
+  }
 
 };
 

@@ -4,43 +4,49 @@ function Game(scene, mode) {
 
     this.scene.makeTransition();
 
-    this.gameBoard = new Board(scene, 8, 4);
-    this.gameHistory = new GameHistory(scene, 8, 4);
-    this.counterOne = new Counter(scene);
-    this.counterTwo = new Counter(scene);
+  this.mode=mode;
+
+  if(this.mode===2)
+  {
+    this.scene.makingTransition=true;
+  }
+
+  this.gameBoard = new Board(scene,8,4);
+  this.gameHistory = new GameHistory(scene,8,4);
+  this.counterOne = new Counter(scene);
+  this.counterTwo = new Counter(scene);
+  this.counterTime=new Counter(scene);
 
     this.playing = 'player1'; //Para saber que jogador faz a jogada
     this.difficulty = this.scene.gameDifficultyList[this.scene.gameDifficulty.difficulty];
 
-    switch (mode) {
-        case 1:
-            this.firstBot = false;
-            this.secondBot = false;
-            break;
-        case 2:
-            this.firstBot = false;
-            this.secondBot = true;
-            break;
-        case 3:
-            this.firstBot = true;
-            this.secondBot = true;
-            break;
-        default:
-            return;
-    }
-    this.firstPlayerPoints = 0;
-    this.secondPlayerPoints = 0;
-    this.readyToMakeAMove = 0;
-    this.currentValidMoves = [];
-    this.bot1played = 0;
-    this.bot2played = 0;
-    this.firstCell = new Point2D(-1, -1);
-    this.secondCell = new Point2D(-1, -1);
-    this.switchTurn = false;
-    this.botCurrentDeltaTime = 0;
-    this.botDeltaTime = 100;
-    this.endGame = 0;
+  switch (mode) {
+    case 1:
+    this.firstBot = false;
+    this.secondBot = false;
+      break;
+    case 2:
+    this.firstBot = false;
+    this.secondBot = true;
+      break;
+    case 3:
+    this.firstBot=true;
+    this.secondBot=true;
+      break;
+    default:
+    return;
+  }
+  this.firstPlayerPoints=0;
+  this.secondPlayerPoints=0;
+  this.readyToMakeAMove=0;
+  this.currentValidMoves=[];
+  this.bot1played=0;
+  this.bot2played=0;
+  this.firstCell=new Point2D(-1,-1);
+  this.secondCell=new Point2D(-1,-1);
+  this.switchTurn = false;
 
+  this.currBotTime=0;
 };
 
 Game.prototype.initGame = function(bot1, bot2) {
@@ -60,10 +66,20 @@ Game.prototype.movePiece = function(bot, xi, yi, xf, yf) {
             this.firstPlayerPoints = this.gameBoard.playerOnePoints;
             this.secondPlayerPoints = this.gameBoard.playerTwoPoints;
 
-            console.log("player one points:");
-            console.log(this.firstPlayerPoints);
-            console.log("player two points:");
-            console.log(this.secondPlayerPoints);
+      if(this.firstBot === false){
+        if(this.playing==='player2')
+        {
+          this.counterTwo.add(validMove);
+          console.log("player changed");
+          this.playing='player1';
+        }
+        else if(this.playing==='player1')
+        {
+          this.counterOne.add(validMove);
+          console.log("player changed");
+          this.playing='player2';
+        }
+      }
 
             if (this.playing === 'player2') {
                 this.counterTwo.add(validMove);
@@ -87,40 +103,96 @@ Game.prototype.movePiece = function(bot, xi, yi, xf, yf) {
 
 Game.prototype.display = function() {
 
-    this.gameBoard.display();
-    this.scene.pushMatrix();
-    this.scene.scale(0.7, 0.7, 0.7);
-    this.scene.translate(-10, 3, 8);
-    this.scene.rotate(Math.PI / 2, 0, 1, 0);
-    this.counterOne.display();
-    this.scene.translate(14, 0, 0);
-    this.counterTwo.display();
-    this.scene.popMatrix();
+  this.gameBoard.display();
+  this.scene.pushMatrix();
+  this.scene.scale(0.7,0.7,0.7);
+  this.scene.translate(-10,3,8);
+  this.scene.rotate(Math.PI/2,0,1,0);
+  this.counterOne.display();
+    this.scene.translate(14,0,0);
+  this.counterTwo.display();
+  this.scene.popMatrix();
+
+  this.scene.pushMatrix();
+  this.scene.rotate(Math.PI/2,0,1,0);
+  this.scene.translate(-1,6,-7);
+  this.counterTime.display();
+  this.scene.popMatrix();
+
 };
 
-Game.prototype.update = function(currTime) {
+Game.prototype.controlTransitions=function(){
+  if(this.mode===1){
+    return true;
+  }
+  else if(this.mode===2){
+    if(this.playing==='player1')
+    {
+      return true;
+    }
+    else if(this.playing==='player2')
+    {
+      if(this.scene.makingTransition===true)
+      {
+        return false;
+      }
+      else{
+        this.scene.makingTransition=true;
+        console.log("VAI FAZER MOVIMENTO");
+
+        return true;
+      }
+    }
+  }
+  else if(this.mode===3){ //mode 3 é o modo cpu vs cpu
+  if(this.scene.makingTransition===true)
+  {
+    return false;
+  }
+  else{
+    this.scene.makingTransition=true;
+    console.log("VAI FAZER MOVIMENTO");
+
+    return true;
+  }
+}
+};
+
+Game.prototype.update = function(currTime){
 
     this.verifyEndGame();
 
     this.gameBoard.update(currTime);
 
-    /*console.log("Player one points: "+this.firstPlayerPoints);
-    console.log("Player two points: "+this.secondPlayerPoints);
-    console.log("PLAYING: "+this.playing);*/
-    if (this.endGame === 0) {
-        if (this.firstBot === false && this.secondBot === false) {
-            this.playPlayer();
-        } else if (this.firstBot === false && this.secondBot === true) {
-            if (this.playing == 'player1') {
-                this.playPlayer();
-            } else {
-                if (!this.bot1played)
-                    this.playBot();
-            }
-        } else {
-            if (this.firstBot === true)
-                this.playBot();
+  var canPlay=this.controlTransitions();
+
+  if(canPlay){
+    console.log("PLAY");
+    if(this.endGame === 0){
+      if(this.firstBot === false && this.secondBot === false){
+        this.playPlayer();
+      }else if(this.firstBot === false && this.secondBot === true){
+        if(this.playing == 'player1'){
+          this.playPlayer();
+        }else{
+          if(!this.bot1played)
+            this.playBot();
         }
+      }else{
+        if(this.firstBot === true){
+          if(this.playing==='player2')
+          {
+            console.log("player changed");
+            this.playing='player1';
+          }
+          else if(this.playing==='player1')
+          {
+            console.log("player changed");
+            this.playing='player2';
+          }
+          this.playBot();
+        }
+      }
     }
 
 
@@ -144,16 +216,15 @@ Game.prototype.playPlayer = function() {
     }
 };
 
-Game.prototype.playBot = function() {
-    if (this.firstBot === false && this.secondBot === true) {
-        this.bot1played = 1;
-    }
-    this.readyToMakeAMove = 0;
-    var tempBoard = this.gameBoard.getBoard();
-    var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + 2 + ')';
-    getPrologRequest(request, this.botMove.bind(this));
-
-
+Game.prototype.playBot = function(){
+  if(this.firstBot ===false && this.secondBot === true){
+    this.bot1played=1;
+  }
+  this.readyToMakeAMove=0;
+  var tempBoard = this.gameBoard.getBoard();
+  var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + 2 + ')';
+  console.log(request);
+  getPrologRequest(request, this.botMove.bind(this));
 };
 
 Game.prototype.botMove = function(move) {
@@ -179,13 +250,13 @@ Game.prototype.insertTurnGameHistory = function() {
     this.gameHistory.movesMade.push(new Moves(new Point2D(this.gameBoard.firstCell.x, this.gameBoard.firstCell.y), new Point2D(this.gameBoard.secondCell.x, this.gameBoard.secondCell.y)));
     this.gameHistory.boards.push(this.gameBoard.getCopyBoard());
 
-    console.log("Players points: " + this.gameHistory.pointsPlayers[this.gameHistory.numberTurns - 1].p1 + " , " + this.gameHistory.pointsPlayers[this.gameHistory.numberTurns - 1].p2);
-    console.log("Turns made: " + this.gameHistory.numberTurns);
-    console.log("Player turn: " + this.gameHistory.playerTurns[this.gameHistory.numberTurns - 1]);
-    console.log("Move made in turn: " + this.gameHistory.movesMade[this.gameHistory.numberTurns - 1].initial.x +
-        "," + this.gameHistory.movesMade[this.gameHistory.numberTurns - 1].initial.y +
-        ";" + this.gameHistory.movesMade[this.gameHistory.numberTurns - 1].final.x + "," +
-        this.gameHistory.movesMade[this.gameHistory.numberTurns - 1].final.y);
+  /*console.log("Players points: "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p1+" , "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p2);
+  console.log("Turns made: "+this.gameHistory.numberTurns);
+  console.log("Player turn: "+this.gameHistory.playerTurns[this.gameHistory.numberTurns-1]);
+  console.log("Move made in turn: "+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].initial.x+
+              ","+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].initial.y+
+              ";"+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.x+","+
+              this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.y);*/
 
 };
 
@@ -196,14 +267,14 @@ Game.prototype.undo = function() {
 
         this.gameBoard.board = this.gameHistory.getLastBoard();
 
-        console.log("COMEÇA");
-
-        for (var i = 0; i < 8; i++) {
-            for (var j = 0; j < 4; j++) {
-                console.log(this.gameBoard.board[i][j].type);
-            }
-            console.log(",");
-        }
+    for(var i=0;i<8;i++)
+    {
+      for(var j=0;j<4;j++)
+      {
+        console.log(this.gameBoard.board[i][j].type);
+      }
+      console.log(",");
+    }
 
         var pointsPlayers = this.gameHistory.getLastPointsPlayers();
 
@@ -242,11 +313,24 @@ Game.prototype.verifyEndGame = function() {
                 playerTwoWon = 0;
         }
     }
-    if (playerTwoWon) {
-        this.endGame = 2;
-    } else if (playerOneWon) {
-        this.endGame = 1;
-    } else {
-        this.endGame = 0;
-    }
+  }
+  if(playerTwoWon){
+    this.endGame = 2;
+  }else if(playerOneWon){
+    this.endGame = 1;
+  }else{
+    this.endGame = 0;
+  }
+
+  if(this.endGame!=0)
+  {
+    this.scene.makeTransition();
+
+    this.scene.gameMode=false;
+
+    this.scene.replayHistory=this.gameHistory;
+
+    this.game=null;
+  }
+
 };
