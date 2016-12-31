@@ -1,3 +1,11 @@
+/**
+* Constructor of the class linearAnimation.
+* @param {scene} CGFscene
+* @param {string} id
+* @param {number} span
+* @param {string} type
+* @param {array} controlPoints
+*/
 function linearAnimation(scene, id, span, type, controlPoints) {
 
     Animation.call(this, scene, id, span, type);
@@ -27,6 +35,9 @@ function linearAnimation(scene, id, span, type, controlPoints) {
 linearAnimation.prototype = Object.create(Animation.prototype);
 linearAnimation.prototype.constructor = linearAnimation;
 
+/**
+* Initialize the variables by calculating the vectors and the times of each control point connection.
+*/
 linearAnimation.prototype.initVariables = function() {
 
     var tmpDis = 0;
@@ -58,10 +69,17 @@ linearAnimation.prototype.initVariables = function() {
 
 };
 
+/**
+* Returns a copy of the animation.
+*/
 linearAnimation.prototype.getAnimationCopy = function(){
   return new linearAnimation(this.scene,this.id,this.span,this.type,this.controlPoints);
 };
 
+/**
+* Update the animation.
+* @param {number} time
+*/
 linearAnimation.prototype.updateAnimation = function(time) {
 
   if(!this.inUse)
@@ -130,6 +148,9 @@ linearAnimation.prototype.updateAnimation = function(time) {
 
 };
 
+/**
+* Applys the tranformations in the scene according to the updates made in the animation.
+*/
 linearAnimation.prototype.displayAnimation = function(){
 
   if(!this.inUse)
@@ -148,6 +169,9 @@ linearAnimation.prototype.displayAnimation = function(){
 
 };
 
+/**
+* Reset the values of the animation.
+*/
 linearAnimation.prototype.resetAnimation = function(){
 
   this.currTime=0;

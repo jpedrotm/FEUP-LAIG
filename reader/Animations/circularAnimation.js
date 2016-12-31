@@ -1,3 +1,14 @@
+/**
+* Constructor of the class circularAnimation.
+* @param {scene} CGFscene
+* @param {string} id
+* @param {number} span
+* @param {string} type
+* @param {Point} center
+* @param {number} radius
+* @param {number} initialAngle
+* @param {number} rotationAngle
+*/
 function circularAnimation(scene, id, span, type, center, radius, initialAngle, rotationAngle) {
     Animation.call(this, scene, id, span, type);
     this.center = center;
@@ -19,10 +30,17 @@ function circularAnimation(scene, id, span, type, center, radius, initialAngle, 
 circularAnimation.prototype = Object.create(Animation.prototype);
 circularAnimation.prototype.constructor = circularAnimation;
 
+/**
+* Returns a copy of the animation.
+*/
 circularAnimation.prototype.getAnimationCopy = function() {
     return new circularAnimation(this.scene, this.id, this.span, this.type, this.center, this.radius, this.initialAngle / this.radAng, this.rotationAngle / this.radAng);
 };
 
+/**
+* Update the animation.
+* @param {number} time
+*/
 circularAnimation.prototype.updateAnimation = function(time) {
 
     console.log("AQUI");
@@ -46,6 +64,9 @@ circularAnimation.prototype.updateAnimation = function(time) {
 
 };
 
+/**
+* Applys the tranformations in the scene according to the updates made in the animation.
+*/
 circularAnimation.prototype.displayAnimation = function() {
 
     var x = this.radius * Math.sin(this.initialAngle + this.currAngle);
@@ -59,6 +80,9 @@ circularAnimation.prototype.displayAnimation = function() {
 
 };
 
+/**
+* Reset the values of the animation.
+*/
 circularAnimation.prototype.resetAnimation = function() {
 
     this.currTime = 0;
