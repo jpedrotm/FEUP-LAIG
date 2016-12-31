@@ -477,6 +477,13 @@ XMLscene.prototype.updateReplay=function(time){
       this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation=new moveAnimation(this,initialPointAnimation,finalPointAnimation,firstCell.x,firstCell.y,2);
       this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animate=true;
 
+      var playersPoints=this.replayHistory.getPointsPlayers(this.currReplayTurn);
+      var playerPoints1=playersPoints.p1;
+      var playerPoints2=playersPoints.p2;
+
+      console.log("PLAYER 1 points: "+playerPoints1);
+      console.log("PLAYER 2 points: "+playerPoints2);
+
       //this.gameCameraAnimation=new cameraAnimation(this,this.replayHistory.getLastPlayerTurn());
       this.updateReplaying=false;
     }
