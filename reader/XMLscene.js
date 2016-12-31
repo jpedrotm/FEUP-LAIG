@@ -99,6 +99,12 @@ XMLscene.prototype.init = function(application) {
     this.gameDifficultyList["Easy"]=1;
     this.gameDifficultyList["Hard"]=2;
 
+
+    this.gameEnvironment = new gameEnvironment();
+    this.environmentList = new Array();
+    this.environmentList["Box"] = 1;
+    this.environmentList["Boat"] = 2;
+    this.currEnvironment = "Box";
     //ambiente de jogo
     this.environment=new Environment(this);
 
@@ -573,4 +579,8 @@ XMLscene.prototype.update = function(currTime) {
 
 var gameDifficulty=function(){
 	this.difficulty = "Easy";
+};
+
+var gameEnvironment = function() {
+    this.environmentScene = "Box";
 };

@@ -4,7 +4,7 @@
  */
 function MyInterface() {
 
-	CGFinterface.call(this);
+    CGFinterface.call(this);
 };
 
 MyInterface.prototype = Object.create(CGFinterface.prototype);
@@ -16,90 +16,90 @@ MyInterface.prototype.constructor = MyInterface;
  */
 MyInterface.prototype.init = function(application) {
 
-	CGFinterface.prototype.init.call(this, application);
+    CGFinterface.prototype.init.call(this, application);
 
-	this.gui = new dat.GUI();
+    this.gui = new dat.GUI();
 
-	this.lights = this.gui.addFolder('Lights');
-  this.lights.open();
+    this.lights = this.gui.addFolder('Lights');
+    this.lights.open();
 
-	this.defaultControls = [];
+    this.defaultControls = [];
 
-	this.menuSituation=this.gui.addFolder('Menu Situation');
-	this.menuSituation.add(this,'PlayerVsPlayer').name('Player vs Player');
-	this.menuSituation.add(this,'PlayerVsCPU').name('Player vs CPU');
-	this.menuSituation.add(this,'cpuVscpu').name('CPU vs CPU');
-	this.menuSituation.add(this.scene.gameDifficulty,'difficulty',Object.keys(this.scene.gameDifficultyList));
+    this.menuSituation = this.gui.addFolder('Menu Situation');
+    this.menuSituation.add(this, 'PlayerVsPlayer').name('Player vs Player');
+    this.menuSituation.add(this, 'PlayerVsCPU').name('Player vs CPU');
+    this.menuSituation.add(this, 'cpuVscpu').name('CPU vs CPU');
+    this.menuSituation.add(this.scene.gameDifficulty, 'difficulty', Object.keys(this.scene.gameDifficultyList));
 
-	this.gameSituation=this.gui.addFolder('Play Situation');
-	this.gameSituation.add(this.scene,'undo').name('Undo');
-	this.gameSituation.add(this.scene,'replay').name('Replay');
-	this.gameSituation.add(this,'quitGame').name('Quit');
+    this.gameSituation = this.gui.addFolder('Play Situation');
+    this.gameSituation.add(this.scene, 'undo').name('Undo');
+    this.gameSituation.add(this.scene, 'replay').name('Replay');
+    this.gameSituation.add(this, 'quitGame').name('Quit');
+    this.gameSituation.add(this.scene.gameEnvironment, 'environmentScene', Object.keys(this.scene.environmentList));
 
-	this.replaySituation=this.gui.addFolder('Replay Situation');
-	this.replaySituation.add(this.scene,'stopReplay').name('Stop Replay');
-	this.replaySituation.add(this.scene,'pauseReplay').name('Pause Replay');
+    this.replaySituation = this.gui.addFolder('Replay Situation');
+    this.replaySituation.add(this.scene, 'stopReplay').name('Stop Replay');
+    this.replaySituation.add(this.scene, 'pauseReplay').name('Pause Replay');
 
-  return true;
+    return true;
 };
 
 /**
-* Function that receives the inputs of the keyboard.
-* @param {Event} event
-*/
+ * Function that receives the inputs of the keyboard.
+ * @param {Event} event
+ */
 MyInterface.prototype.processKeyDown = function(event) {
 
 
-	switch (event.keyCode)
-	{
-		case(77):
-			this.scene.switchMaterials();
-			break;
-    case (86):
-      this.scene.switchView();
-      break;
-		case(109):
-			this.scene.switchMaterials();
-			break;
-		case (118):
-	    this.scene.switchView();
-			break;
+    switch (event.keyCode) {
+        case (77):
+            this.scene.switchMaterials();
+            break;
+        case (86):
+            this.scene.switchView();
+            break;
+        case (109):
+            this.scene.switchMaterials();
+            break;
+        case (118):
+            this.scene.switchView();
+            break;
 
-	};
+    };
 };
 
 /**
-* Adds the lights to the interface by receiving the indice and the id of the light to be added.
-* @param {number} i
-* @param {number} id
-*/
+ * Adds the lights to the interface by receiving the indice and the id of the light to be added.
+ * @param {number} i
+ * @param {number} id
+ */
 MyInterface.prototype.addLight = function(i, id) {
 
-	this.lights.add(this.scene.infoLights, i, this.scene.infoLights[i]).name(id);
+    this.lights.add(this.scene.infoLights, i, this.scene.infoLights[i]).name(id);
 
 };
 
-MyInterface.prototype.PlayerVsPlayer=function(){
-	if(!this.scene.gameMode){
-	this.scene.game=new Game(this.scene,1);
-	this.scene.gameMode=true;
-}
+MyInterface.prototype.PlayerVsPlayer = function() {
+    if (!this.scene.gameMode) {
+        this.scene.game = new Game(this.scene, 1);
+        this.scene.gameMode = true;
+    }
 };
 
-MyInterface.prototype.PlayerVsCPU=function(){
-	if(!this.scene.gameMode){
-	this.scene.game=new Game(this.scene,2);
-	this.scene.gameMode=true;
-	}
+MyInterface.prototype.PlayerVsCPU = function() {
+    if (!this.scene.gameMode) {
+        this.scene.game = new Game(this.scene, 2);
+        this.scene.gameMode = true;
+    }
 };
 
-MyInterface.prototype.cpuVscpu=function(){
-	if(!this.scene.gameMode){
-	this.scene.game=new Game(this.scene,3);
-	this.scene.gameMode=true;
-	}
+MyInterface.prototype.cpuVscpu = function() {
+    if (!this.scene.gameMode) {
+        this.scene.game = new Game(this.scene, 3);
+        this.scene.gameMode = true;
+    }
 };
 
-MyInterface.prototype.quitGame=function(){
-		this.scene.quitGame();
+MyInterface.prototype.quitGame = function() {
+    this.scene.quitGame();
 };
