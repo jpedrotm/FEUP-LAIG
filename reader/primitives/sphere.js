@@ -1,6 +1,9 @@
 /**
- * Sphere.
- * @constructor
+ * Sphere class
+ * @param {CGFscene} scene
+ * @param {int} radius
+ * @param {int} slices
+ * @param {int} stacks 
  */
 function Sphere(scene, radius, slices, stacks) {
     CGFobject.call(this, scene);

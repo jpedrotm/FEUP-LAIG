@@ -1,3 +1,8 @@
+/**
+ * MySceneGraph class
+ * @param {string} filename dsx file name
+ * @param {CFGscene} scene
+ */
 function MySceneGraph(filename, scene) {
     this.loadedOk = null;
     // Establish bidirectional references between scene and graph
@@ -231,6 +236,11 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 };
 
 
+/**
+ * Verifies if a light exist
+ * @param  {int} id   light id
+ * @param  {string} type light type
+ */
 MySceneGraph.prototype.existsLight = function(id, type) {
 
     if (type == "spot") {
@@ -767,7 +777,7 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
           var tmpTexture=this.textures[textureref][1];
 
           console.log("CHESSBOARRRRRDDDDD: "+tmpTexture);
-        
+
           this.objects[id]= new Chessboard(this.scene,du,dv,tmpTexture,su,sv,c1RGBA,c2RGBA,csRGBA);
 
         }
@@ -775,6 +785,9 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
 };
 
+/**
+ * Parses animations from dsx file
+ */
 MySceneGraph.prototype.parserToAnimations = function(rootElement) {
 
     var animations = rootElement.getElementsByTagName("animations");
