@@ -1,3 +1,8 @@
+/**
+ * MySceneGraph class
+ * @param {string} filename dsx file name
+ * @param {CFGscene} scene
+ */
 function MySceneGraph(filename, scene) {
     this.loadedOk = null;
     // Establish bidirectional references between scene and graph
@@ -230,7 +235,11 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 
 };
 
-
+/**
+ * Verifies if a light exist
+ * @param  {int} id   light id
+ * @param  {string} type light type
+ */
 MySceneGraph.prototype.existsLight = function(id, type) {
 
     if (type == "spot") {
@@ -732,49 +741,52 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
         var chessboard = primitive[i].getElementsByTagName("chessboard");
 
-        if(chessboard.length == 1) {
+        if (chessboard.length == 1) {
 
-          var du = chessboard[0].attributes.getNamedItem("du").value;
-          var dv = chessboard[0].attributes.getNamedItem("dv").value;
-          var textureref = chessboard[0].attributes.getNamedItem("textureref").value;
-          var su = chessboard[0].attributes.getNamedItem("su").value;
-          var sv = chessboard[0].attributes.getNamedItem("sv").value;
+            var du = chessboard[0].attributes.getNamedItem("du").value;
+            var dv = chessboard[0].attributes.getNamedItem("dv").value;
+            var textureref = chessboard[0].attributes.getNamedItem("textureref").value;
+            var su = chessboard[0].attributes.getNamedItem("su").value;
+            var sv = chessboard[0].attributes.getNamedItem("sv").value;
 
-          var c1 = chessboard[0].getElementsByTagName("c1");
-          var c1r =c1[0].attributes.getNamedItem("r").value*1.0;
-          var c1g =c1[0].attributes.getNamedItem("g").value*1.0;
-          var c1b =c1[0].attributes.getNamedItem("b").value*1.0;
-          var c1a =c1[0].attributes.getNamedItem("a").value*1.0;
+            var c1 = chessboard[0].getElementsByTagName("c1");
+            var c1r = c1[0].attributes.getNamedItem("r").value * 1.0;
+            var c1g = c1[0].attributes.getNamedItem("g").value * 1.0;
+            var c1b = c1[0].attributes.getNamedItem("b").value * 1.0;
+            var c1a = c1[0].attributes.getNamedItem("a").value * 1.0;
 
-          var c1RGBA = new RGBA(c1r,c1g,c1b,c1a);
+            var c1RGBA = new RGBA(c1r, c1g, c1b, c1a);
 
-          var c2 = chessboard[0].getElementsByTagName("c2");
-          var c2r =c2[0].attributes.getNamedItem("r").value*1.0;
-          var c2g =c2[0].attributes.getNamedItem("g").value*1.0;
-          var c2b =c2[0].attributes.getNamedItem("b").value*1.0;
-          var c2a =c2[0].attributes.getNamedItem("a").value*1.0;
+            var c2 = chessboard[0].getElementsByTagName("c2");
+            var c2r = c2[0].attributes.getNamedItem("r").value * 1.0;
+            var c2g = c2[0].attributes.getNamedItem("g").value * 1.0;
+            var c2b = c2[0].attributes.getNamedItem("b").value * 1.0;
+            var c2a = c2[0].attributes.getNamedItem("a").value * 1.0;
 
-          var c2RGBA = new RGBA(c2r,c2g,c2b,c2a);
+            var c2RGBA = new RGBA(c2r, c2g, c2b, c2a);
 
-          var cs = chessboard[0].getElementsByTagName("cs");
-          var csr =cs[0].attributes.getNamedItem("r").value*1.0;
-          var csg =cs[0].attributes.getNamedItem("g").value*1.0;
-          var csb =cs[0].attributes.getNamedItem("b").value*1.0;
-          var csa =cs[0].attributes.getNamedItem("a").value*1.0;
+            var cs = chessboard[0].getElementsByTagName("cs");
+            var csr = cs[0].attributes.getNamedItem("r").value * 1.0;
+            var csg = cs[0].attributes.getNamedItem("g").value * 1.0;
+            var csb = cs[0].attributes.getNamedItem("b").value * 1.0;
+            var csa = cs[0].attributes.getNamedItem("a").value * 1.0;
 
-          var csRGBA = new RGBA(csr,csg,csb,csa);
+            var csRGBA = new RGBA(csr, csg, csb, csa);
 
-          var tmpTexture=this.textures[textureref][1];
+            var tmpTexture = this.textures[textureref][1];
 
-          console.log("CHESSBOARRRRRDDDDD: "+tmpTexture);
-        
-          this.objects[id]= new Chessboard(this.scene,du,dv,tmpTexture,su,sv,c1RGBA,c2RGBA,csRGBA);
+            console.log("CHESSBOARRRRRDDDDD: " + tmpTexture);
+
+            this.objects[id] = new Chessboard(this.scene, du, dv, tmpTexture, su, sv, c1RGBA, c2RGBA, csRGBA);
 
         }
     }
 
 };
 
+/**
+ * Parses animations from dsx file
+ */
 MySceneGraph.prototype.parserToAnimations = function(rootElement) {
 
     var animations = rootElement.getElementsByTagName("animations");

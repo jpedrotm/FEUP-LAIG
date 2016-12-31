@@ -1,8 +1,14 @@
 /**
- * Component.
- * @constructor
+ * Component class
+ * @param {CGFscene} scene
+ * @param {array} transformations
+ * @param {array} materials
+ * @param {array} texture
+ * @param {array} childrenComponent
+ * @param {array} childrenPrimitive
+ * @param {array} componentAnimations
  */
-function Component(scene, transformations, materials, texture, childrenComponent, childrenPrimitive,componentAnimations) {
+function Component(scene, transformations, materials, texture, childrenComponent, childrenPrimitive, componentAnimations) {
     CGFobject.call(this, scene);
 
     this.fatherTexture;
@@ -15,11 +21,10 @@ function Component(scene, transformations, materials, texture, childrenComponent
     this.appearance = new CGFappearance(this.scene);
     this.animations = componentAnimations;
 
-    if(this.animations.length != 0)
-    {
-      console.log("LENGTHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH "+this.animations.length);
-      this.currAnimation=0;
-      this.animations[this.currAnimation].inUse=true;
+    if (this.animations.length != 0) {
+        console.log("LENGTHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH " + this.animations.length);
+        this.currAnimation = 0;
+        this.animations[this.currAnimation].inUse = true;
     }
 
     this.currMatIndice = 0;
@@ -119,48 +124,51 @@ Component.prototype.getAppearance = function() {
     return this.appearance;
 }
 
-Component.prototype.animate = function(dTime){
+/**
+ * Animates component
+ * @param  {int} dTime interval
+ */
+Component.prototype.animate = function(dTime) {
 
-  if(this.animations.length != 0){
+    if (this.animations.length != 0) {
 
-    if(this.animations[this.currAnimation].inUse)
-    {
-      this.animations[this.currAnimation].updateAnimation(dTime);
+        if (this.animations[this.currAnimation].inUse) {
+            this.animations[this.currAnimation].updateAnimation(dTime);
+        } else {
+
+            this.animations[this.currAnimation].resetAnimation();
+
+            this.updateCurrAnimation();
+
+            this.animations[this.currAnimation].inUse = true;
+
+        }
+
     }
-    else
-    {
-
-      this.animations[this.currAnimation].resetAnimation();
-
-      this.updateCurrAnimation();
-
-      this.animations[this.currAnimation].inUse=true;
-
-    }
-
-  }
 
 };
 
+/**
+ * Updates current Animation
+ */
 Component.prototype.updateCurrAnimation = function() {
 
-  if(this.currAnimation == this.animations.length-1)
-  {
-    this.currAnimation=0;
-  }
-  else {
-    this.currAnimation++;
-  }
+    if (this.currAnimation == this.animations.length - 1) {
+        this.currAnimation = 0;
+    } else {
+        this.currAnimation++;
+    }
 
 };
 
 
+/**
+ * Displays Component
+ */
+Component.prototype.display = function() {
 
-Component.prototype.display = function(){
-
-  if(this.animations.length != 0)
-  {
-    this.animations[this.currAnimation].displayAnimation();
-  }
+    if (this.animations.length != 0) {
+        this.animations[this.currAnimation].displayAnimation();
+    }
 
 };
