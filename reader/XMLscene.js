@@ -81,6 +81,7 @@ XMLscene.prototype.init = function(application) {
     this.finalTarget;
     this.cameraTransitionsAnimation=null;
     this.makingTransition=false;
+    this.freeMode=false;
 
     //indice replay for pause option
     this.currReplayTurn=0;
@@ -283,7 +284,7 @@ XMLscene.prototype.graphViews = function() {
     var tempIndice = this.graph.viewsIndice;
 
     this.camera = this.graph.perspectives[tempIndice].camera;
-    this.interface.setActiveCamera(this.camera);
+    //this.interface.setActiveCamera(this.camera);
 
 };
 /**
@@ -303,7 +304,40 @@ XMLscene.prototype.switchView = function() {
     tempIndice = this.graph.viewsIndice;
 
     this.camera = this.graph.perspectives[tempIndice].camera;
-    this.interface.setActiveCamera(this.camera);
+    //this.interface.setActiveCamera(this.camera);
+
+};
+
+XMLscene.prototype.updateFreeMode=function(){
+
+  if(this.gameMode && !this.makingTransition){
+    var position;
+    var target;
+    if(this.game.playing==='player1')
+    {
+      position=vec3.fromValues(0,30,-35);
+      target=vec3.fromValues(0,0,0);
+    }
+    else if(this.game.playing==='player2')
+    {
+      position=vec3.fromValues(0,30,35);
+      target=vec3.fromValues(0,0,0);
+    }
+    if(!this.freeMode)
+    {
+      this.camera.setPosition(position);
+      this.camera.setTarget(target);
+      this.interface.setActiveCamera(this.camera);
+      this.setPickEnabled(false);
+      this.freeMode=true;
+    }
+    else if(this.freeMode){
+      this.camera=new CGFcamera(24*Math.PI/180, 0.1, 500, position,target);
+      this.setPickEnabled(true);
+      this.freeMode=false;
+    }
+
+  }
 
 };
 
@@ -511,20 +545,6 @@ XMLscene.prototype.updateReplay=function(time){
       return;
     }
 
-    /*if(this.animateCell)
-    {
-
-      if(this.board[this.firstCell.y][this.firstCell.x].animate==false)
-      {
-        this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
-        this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
-        this.cleanSelections();
-
-        this.animateCell=false;
-      }
-
-    }*/
-
   }
 
 };
@@ -564,9 +584,9 @@ XMLscene.prototype.update = function(currTime) {
     this.updateReplay(currTime-this.lastTime);
   }
 
-    /*if (this.graph.isValid) {
-        this.graph.updateAnimation(this.graph.root, currTime - this.lastTime);
-    }*/
+  if (this.graph.isValid) {
+      this.graph.updateAnimation(this.graph.root, currTime - this.lastTime);
+  }
 
     this.lastTime = currTime;
 };

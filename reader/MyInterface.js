@@ -52,16 +52,22 @@ MyInterface.prototype.processKeyDown = function(event) {
 
 	switch (event.keyCode)
 	{
-		case(77):
+		case(70): //f
+		this.scene.updateFreeMode();
+		break;
+		case(77): //M
 			this.scene.switchMaterials();
 			break;
-    case (86):
+    case (86): //V
       this.scene.switchView();
       break;
-		case(109):
+		case(102): //F
+			this.scene.updateFreeMode();
+			break;
+		case(109): //m
 			this.scene.switchMaterials();
 			break;
-		case (118):
+		case (118)://v
 	    this.scene.switchView();
 			break;
 
