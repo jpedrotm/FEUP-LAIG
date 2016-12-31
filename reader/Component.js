@@ -1,6 +1,13 @@
+
 /**
- * Component.
- * @constructor
+ * Component class
+ * @param {CGFscene} scene
+ * @param {array} transformations
+ * @param {array} materials
+ * @param {array} texture
+ * @param {array} childrenComponent
+ * @param {array} childrenPrimitive
+ * @param {array} componentAnimations
  */
 function Component(scene, transformations, materials, texture, childrenComponent, childrenPrimitive,componentAnimations) {
     CGFobject.call(this, scene);
@@ -118,7 +125,10 @@ Component.prototype.getChildrenPrimitive = function() {
 Component.prototype.getAppearance = function() {
     return this.appearance;
 }
-
+/**
+* Animates component
+* @param  {int} dTime interval
+*/
 Component.prototype.animate = function(dTime){
 
   if(this.animations.length != 0){
@@ -141,7 +151,9 @@ Component.prototype.animate = function(dTime){
   }
 
 };
-
+/**
+ * Updates current Animation
+ */
 Component.prototype.updateCurrAnimation = function() {
 
   if(this.currAnimation == this.animations.length-1)
@@ -155,7 +167,9 @@ Component.prototype.updateCurrAnimation = function() {
 };
 
 
-
+/**
+ * Displays Component
+ */
 Component.prototype.display = function(){
 
   if(this.animations.length != 0)

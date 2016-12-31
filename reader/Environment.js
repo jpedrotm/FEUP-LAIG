@@ -1,3 +1,7 @@
+/**
+ * Environment class, contains the scene environment objects
+ * @param {[type]} scene [description]
+ */
 function Environment(scene) {
 
 	this.scene = scene;
@@ -6,7 +10,9 @@ function Environment(scene) {
 	this.initEnvironment();
 
 }
-
+/**
+ * Loads Environment objects
+ */
 Environment.prototype.initEnvironment=function(){
 
 	//Texturas e materiais
