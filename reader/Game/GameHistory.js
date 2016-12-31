@@ -1,5 +1,5 @@
 /**
- * GameHistory class
+ * GameHistory constructor.
  * @param {CGFscene} scene
  * @param {int} height
  * @param {int} width
@@ -18,7 +18,10 @@ function GameHistory(scene,height,width) {
 
 };
 
-
+/**
+* Get the moves made in the current turn.
+* @param {number} turn
+*/
 GameHistory.prototype.getMoves=function(turn){
 
   for(var i=0;i<this.numberTurns;i++)
@@ -31,18 +34,33 @@ GameHistory.prototype.getMoves=function(turn){
   return this.movesMade[turn];
 };
 
+/**
+* Get the points of both players in the current turn.
+* @param {number} turn
+*/
 GameHistory.prototype.getPointsPlayers=function(turn){
   return this.pointsPlayers[turn];
 };
 
+/**
+* Get the board of the current turn.
+* @param {number} turn
+*/
 GameHistory.prototype.getBoard=function(turn){
   return this.boards[turn];
 };
 
+/**
+* Get the player of the current turn.
+* @param {number} turn
+*/
 GameHistory.prototype.getPlayerTurn=function(turn){
   return this.playerTurns[turn];
 };
 
+/**
+* Get the moves made in the last turn of the game history.
+*/
 GameHistory.prototype.getLastMoves=function(){
   if(this.numberTurns>0)
   {
@@ -50,6 +68,9 @@ GameHistory.prototype.getLastMoves=function(){
   }
 };
 
+/**
+* Get the points of the players in the last turn of the game history.
+*/
 GameHistory.prototype.getLastPointsPlayers=function(){
   if(this.numberTurns>0)
   {
@@ -57,6 +78,9 @@ GameHistory.prototype.getLastPointsPlayers=function(){
   }
 };
 
+/**
+* Get the board in the last turn of the game history.
+*/
 GameHistory.prototype.getLastBoard=function(){
 
   if(this.numberTurns>0)
@@ -66,6 +90,9 @@ GameHistory.prototype.getLastBoard=function(){
 
 };
 
+/**
+* Get theplayer in the last turn of the game history.
+*/
 GameHistory.prototype.getLastPlayerTurn=function(){
 
   if(this.numberTurns>0)
@@ -75,7 +102,9 @@ GameHistory.prototype.getLastPlayerTurn=function(){
 
 };
 
-
+/**
+* Delete the last turn saved.
+*/
 GameHistory.prototype.deleteLastTurn=function(){
 
   this.numberTurns--;
