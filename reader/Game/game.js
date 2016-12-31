@@ -178,124 +178,124 @@ Game.prototype.update = function(currTime) {
                 }
             }
         }
+    }
+
+};
+
+Game.prototype.playPlayer = function() {
+    this.readyToMakeAMove = 0;
+    var selectedCell = this.gameBoard.verifyMovementBoard(this.playing);
+    if (selectedCell == 1) {
+        console.log(this.playing);
 
 
-    };
-
-    Game.prototype.playPlayer = function() {
-        this.readyToMakeAMove = 0;
-        var selectedCell = this.gameBoard.verifyMovementBoard(this.playing);
-        if (selectedCell == 1) {
-            console.log(this.playing);
-
-
-            var tempBoard = this.gameBoard.getBoard();
-            var request = 'validMoves([' + tempBoard + '],' + this.gameBoard.board[this.gameBoard.currY][this.gameBoard.currX].type + ',' + this.gameBoard.currX + ',' + this.gameBoard.currY + ',' + this.playing + ')';
-            getPrologRequest(request, this.updateValidMoves.bind(this));
-
-        } else if (selectedCell == 2) {
-            this.readyToMakeAMove = 1;
-            this.movePiece('player', 0, 0, 0, 0);
-            this.bot1played = 0;
-        }
-    };
-
-    Game.prototype.playBot = function() {
-        if (this.firstBot === false && this.secondBot === true) {
-            this.bot1played = 1;
-        }
-        this.readyToMakeAMove = 0;
         var tempBoard = this.gameBoard.getBoard();
-        var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + this.difficulty + ')';
-        console.log(request);
-        getPrologRequest(request, this.botMove.bind(this));
-    };
+        var request = 'validMoves([' + tempBoard + '],' + this.gameBoard.board[this.gameBoard.currY][this.gameBoard.currX].type + ',' + this.gameBoard.currX + ',' + this.gameBoard.currY + ',' + this.playing + ')';
+        getPrologRequest(request, this.updateValidMoves.bind(this));
 
-    Game.prototype.botMove = function(move) {
-        var botMove = JSON.parse(move.target.response);
-        console.log(botMove);
+    } else if (selectedCell == 2) {
         this.readyToMakeAMove = 1;
-        this.movePiece('bot', botMove[0], botMove[1], botMove[2], botMove[3]);
-    };
+        this.movePiece('player', 0, 0, 0, 0);
+        this.bot1played = 0;
+    }
+};
 
-    Game.prototype.updateValidMoves = function(moves) {
-        this.currentValidMoves = JSON.parse(moves.target.response);
-        for (var i = 0; i < this.currentValidMoves.length; i++) {
-            this.gameBoard.board[this.currentValidMoves[i][3]][this.currentValidMoves[i][2]].setSelected();
+Game.prototype.playBot = function() {
+    if (this.firstBot === false && this.secondBot === true) {
+        this.bot1played = 1;
+    }
+    this.readyToMakeAMove = 0;
+    var tempBoard = this.gameBoard.getBoard();
+    var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + this.difficulty + ')';
+    console.log(request);
+    getPrologRequest(request, this.botMove.bind(this));
+};
+
+Game.prototype.botMove = function(move) {
+    var botMove = JSON.parse(move.target.response);
+    console.log(botMove);
+    this.readyToMakeAMove = 1;
+    this.movePiece('bot', botMove[0], botMove[1], botMove[2], botMove[3]);
+};
+
+Game.prototype.updateValidMoves = function(moves) {
+    this.currentValidMoves = JSON.parse(moves.target.response);
+    for (var i = 0; i < this.currentValidMoves.length; i++) {
+        this.gameBoard.board[this.currentValidMoves[i][3]][this.currentValidMoves[i][2]].setSelected();
+    }
+
+};
+
+Game.prototype.insertTurnGameHistory = function() {
+
+    this.gameHistory.numberTurns++;
+    this.gameHistory.playerTurns.push(this.playing);
+    this.gameHistory.pointsPlayers.push(new playersPoints(this.firstPlayerPoints, this.secondPlayerPoints));
+    this.gameHistory.movesMade.push(new Moves(new Point2D(this.gameBoard.firstCell.x, this.gameBoard.firstCell.y), new Point2D(this.gameBoard.secondCell.x, this.gameBoard.secondCell.y)));
+    this.gameHistory.boards.push(this.gameBoard.getCopyBoard());
+
+    /*console.log("Players points: "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p1+" , "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p2);
+    console.log("Turns made: "+this.gameHistory.numberTurns);
+    console.log("Player turn: "+this.gameHistory.playerTurns[this.gameHistory.numberTurns-1]);
+    console.log("Move made in turn: "+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].initial.x+
+                ","+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].initial.y+
+                ";"+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.x+","+
+                this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.y);*/
+
+};
+
+Game.prototype.undo = function() {
+
+    if (this.gameHistory.numberTurns > 0 && !this.gameBoard.makingAMove) {
+        //falta atualizar pontuações
+
+        this.gameBoard.board = this.gameHistory.getLastBoard();
+
+        for (var i = 0; i < 8; i++) {
+            for (var j = 0; j < 4; j++) {
+                console.log(this.gameBoard.board[i][j].type);
+            }
+            console.log(",");
         }
 
-    };
+        var pointsPlayers = this.gameHistory.getLastPointsPlayers();
 
-    Game.prototype.insertTurnGameHistory = function() {
+        this.firstPlayerPoints = pointsPlayers.p1;
+        this.secondPlayerPoints = pointsPlayers.p2;
+        this.playing = this.gameHistory.getLastPlayerTurn();
 
-        this.gameHistory.numberTurns++;
-        this.gameHistory.playerTurns.push(this.playing);
-        this.gameHistory.pointsPlayers.push(new playersPoints(this.firstPlayerPoints, this.secondPlayerPoints));
-        this.gameHistory.movesMade.push(new Moves(new Point2D(this.gameBoard.firstCell.x, this.gameBoard.firstCell.y), new Point2D(this.gameBoard.secondCell.x, this.gameBoard.secondCell.y)));
-        this.gameHistory.boards.push(this.gameBoard.getCopyBoard());
+        console.log("UNDO---------------------------------------------------------");
+        console.log("p1: " + pointsPlayers.p1);
+        console.log("p2: " + pointsPlayers.p2);
+        console.log("NUMBER OF TURNS: " + this.gameHistory.numberTurns);
+        console.log("WILL PLAY: " + this.playing);
 
-        /*console.log("Players points: "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p1+" , "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p2);
-        console.log("Turns made: "+this.gameHistory.numberTurns);
-        console.log("Player turn: "+this.gameHistory.playerTurns[this.gameHistory.numberTurns-1]);
-        console.log("Move made in turn: "+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].initial.x+
-                    ","+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].initial.y+
-                    ";"+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.x+","+
-                    this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.y);*/
+        this.gameHistory.deleteLastTurn();
 
-    };
+        this.switchTurn = true;
+    }
 
-    Game.prototype.undo = function() {
-
-        if (this.gameHistory.numberTurns > 0 && !this.gameBoard.makingAMove) {
-            //falta atualizar pontuações
-
-            this.gameBoard.board = this.gameHistory.getLastBoard();
-
-            for (var i = 0; i < 8; i++) {
-                for (var j = 0; j < 4; j++) {
-                    console.log(this.gameBoard.board[i][j].type);
-                }
-                console.log(",");
-            }
-
-            var pointsPlayers = this.gameHistory.getLastPointsPlayers();
-
-            this.firstPlayerPoints = pointsPlayers.p1;
-            this.secondPlayerPoints = pointsPlayers.p2;
-            this.playing = this.gameHistory.getLastPlayerTurn();
-
-            console.log("UNDO---------------------------------------------------------");
-            console.log("p1: " + pointsPlayers.p1);
-            console.log("p2: " + pointsPlayers.p2);
-            console.log("NUMBER OF TURNS: " + this.gameHistory.numberTurns);
-            console.log("WILL PLAY: " + this.playing);
-
-            this.gameHistory.deleteLastTurn();
-
-            this.switchTurn = true;
-        }
-
-    };
+};
 
 
-    Game.prototype.verifyEndGame = function() {
-        var playerOneWon = 1;
-        var playerTwoWon = 1;
-        var i = 0;
-        var j = 0;
-        for (i = 0; i < this.gameBoard.board.length / 2; i++) {
-            for (j = 0; j < this.gameBoard.board[0].length; j++) {
-                if (this.gameBoard.board[i][j].type != 'empty')
-                    playerOneWon = 0;
-            }
-        }
-        for (i = 4; i < this.gameBoard.board.length; i++) {
-            for (j = 0; j < this.gameBoard.board[0].length; j++) {
-                if (this.gameBoard.board[i][j].type != 'empty')
-                    playerTwoWon = 0;
-            }
+Game.prototype.verifyEndGame = function() {
+    var playerOneWon = 1;
+    var playerTwoWon = 1;
+    var i = 0;
+    var j = 0;
+    for (i = 0; i < this.gameBoard.board.length / 2; i++) {
+        for (j = 0; j < this.gameBoard.board[0].length; j++) {
+            if (this.gameBoard.board[i][j].type != 'empty')
+                playerOneWon = 0;
         }
     }
+    for (i = 4; i < this.gameBoard.board.length; i++) {
+        for (j = 0; j < this.gameBoard.board[0].length; j++) {
+            if (this.gameBoard.board[i][j].type != 'empty')
+                playerTwoWon = 0;
+        }
+    }
+
     if (playerTwoWon) {
         this.endGame = 2;
     } else if (playerOneWon) {
