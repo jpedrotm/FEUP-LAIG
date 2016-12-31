@@ -1,3 +1,8 @@
+/**
+ * Game class
+ * @param {CGFscene} scene
+ * @param {int} mode defines game mode, player vs player, player vs bot, bot vs bot
+ */
 function Game(scene,mode){
 
   this.scene=scene;
@@ -49,11 +54,24 @@ function Game(scene,mode){
   this.currBotTime=0;
 };
 
+/**
+ * Inits game bots
+ * @param  {boolean} bot1
+ * @param  {boolean} bot2
+ */
 Game.prototype.initGame = function(bot1, bot2){
   this.firstBot=bot1;
   this.secodBot=bot2;
 };
 
+/**
+ * moves piece to given coordinates
+ * @param  {string} bot indentifies if player is a bot
+ * @param  {int} xi
+ * @param  {int} yi
+ * @param  {int} xf
+ * @param  {int} yf
+ */
 Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
 
   if(this.readyToMakeAMove){
@@ -89,7 +107,9 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
 
 };
 
-
+/**
+ * Displays game board, timer and scores
+ */
 Game.prototype.display = function(){
 
   this.gameBoard.display();
@@ -110,6 +130,9 @@ Game.prototype.display = function(){
 
 };
 
+/**
+ * Controls player transitions
+ */
 Game.prototype.controlTransitions=function(){
   if(this.mode===1){
     return true;
@@ -150,6 +173,10 @@ Game.prototype.controlTransitions=function(){
 
 };
 
+/**
+ * Updates Game
+ * @param  {int} currTime elapsed time in miliseconds
+ */
 Game.prototype.update = function(currTime){
 
   this.verifyEndGame();
@@ -192,6 +219,9 @@ Game.prototype.update = function(currTime){
 
 };
 
+/**
+ * makes a player move and asks prolog for valid moves
+ */
 Game.prototype.playPlayer = function() {
   this.readyToMakeAMove=0;
   var selectedCell = this.gameBoard.verifyMovementBoard(this.playing);
@@ -210,6 +240,9 @@ Game.prototype.playPlayer = function() {
   }
 };
 
+/**
+ * makes a bot play and sends a request to prolog for the move
+ */
 Game.prototype.playBot = function(){
   if(this.firstBot ===false && this.secondBot === true){
     this.bot1played=1;
@@ -221,6 +254,9 @@ Game.prototype.playBot = function(){
   getPrologRequest(request, this.botMove.bind(this));
 };
 
+/**
+  * receives a valid move form prolog
+ */
 Game.prototype.botMove = function(move){
   var botMove = JSON.parse(move.target.response);
   console.log(botMove);
@@ -228,6 +264,10 @@ Game.prototype.botMove = function(move){
   this.movePiece('bot',botMove[0],botMove[1],botMove[2],botMove[3]);
 };
 
+/**
+ * Updates valid Moves
+ * @param  {array} moves
+ */
 Game.prototype.updateValidMoves = function(moves){
   this.currentValidMoves = JSON.parse(moves.target.response);
   for(var i=0; i<this.currentValidMoves.length;i++){
@@ -236,6 +276,9 @@ Game.prototype.updateValidMoves = function(moves){
 
 };
 
+/**
+ * addes a turn to game history
+ */
 Game.prototype.insertTurnGameHistory=function(){
 
   this.gameHistory.numberTurns++;
@@ -254,6 +297,10 @@ Game.prototype.insertTurnGameHistory=function(){
 
 };
 
+/**
+ * adds undo functionality
+ *
+ */
 Game.prototype.undo=function(){
 
   if(this.gameHistory.numberTurns>0 && !this.gameBoard.makingAMove)
@@ -290,7 +337,9 @@ Game.prototype.undo=function(){
 
 };
 
-
+/**
+ * Verifies end game by checking if one side of the board is empty
+ */
 Game.prototype.verifyEndGame = function() {
     var playerOneWon = 1;
     var playerTwoWon = 1;

@@ -1,3 +1,9 @@
+/**
+ * Board class, deals with all board related issues
+ * @param {CGFscene} scene
+ * @param {int} height
+ * @param {int} width
+ */
 function Board(scene,height,width) {
 
   CGFobject.call(this, scene);
@@ -20,8 +26,12 @@ function Board(scene,height,width) {
 
   this.initBoard();
 
-};
+}
 
+/**
+ * Updates board and verifies if it is ready to make a move
+ * @param  {int} time
+ */
 Board.prototype.update=function(time){
 
   for(var i=0;i<this.height;i++)
@@ -37,6 +47,9 @@ Board.prototype.update=function(time){
 
 };
 
+/**
+ * Initializes Board
+ */
 Board.prototype.initBoard=function(){
 
   var tmpId=1;
@@ -56,6 +69,10 @@ Board.prototype.initBoard=function(){
 
 };
 
+/**
+ * Sets board pieces according to argument
+ * @param {array} board new board display
+ */
 Board.prototype.setBoard=function(board){
 
   var tmpId=1;
@@ -72,6 +89,9 @@ Board.prototype.setBoard=function(board){
 
 };
 
+/**
+ * Returns the board in a single string to be passed into prolog
+ */
 Board.prototype.getBoard=function(){
 
   var tmpBoard=[];
@@ -88,6 +108,9 @@ Board.prototype.getBoard=function(){
 
 };
 
+/**
+ * Returns a copy o the board
+ */
 Board.prototype.getCopyBoard=function(){
 
   var tmpId=1;
@@ -109,6 +132,9 @@ Board.prototype.getCopyBoard=function(){
 
 };
 
+/**
+ * Displays board
+ */
 Board.prototype.display=function(){
 
   var dist=1.1;
@@ -142,7 +168,16 @@ Board.prototype.display=function(){
 
 };
 
-
+/**
+ * Makes a move if it is a valid move
+ * @param  {array} validMoves array with valid moves
+ * @param  {string} player     identifies which player made the move
+ * @param  {string} bot        identifies if player is a bot
+ * @param  {int} xi         initial cell x
+ * @param  {int} yi         initial cell y
+ * @param  {int} xf         final cell x
+ * @param  {int} yf         final cell y
+ */
 Board.prototype.movePiece = function(validMoves,player,bot,xi,yi,xf,yf){
 
   var validPlay=0;
@@ -195,6 +230,9 @@ Board.prototype.movePiece = function(validMoves,player,bot,xi,yi,xf,yf){
 
 };
 
+/**
+ * Verifies if board is ready to be updated
+ */
 Board.prototype.verifyReadyToUpdateBoard=function(){
 
   if(this.animateCell)
@@ -213,6 +251,9 @@ Board.prototype.verifyReadyToUpdateBoard=function(){
 
 };
 
+/**
+ * Cleans cells selection
+ */
 Board.prototype.cleanSelections = function(){
 
   for(var i = 0; i<this.board.length; i++){
@@ -223,6 +264,11 @@ Board.prototype.cleanSelections = function(){
 
 };
 
+/**
+ * Verifies the type of the piece in given cell
+ * @param  {int} x x coordinate
+ * @param  {int} y y coordinate
+ */
 Board.prototype.verifyPiece=function(x,y){
 
   if((x==0 && y==0) || (x==1 && y==0) || (x==0 && y==1) || (x==this.width-1 && y==this.height-1) || (x==this.width-1 && y==this.height-2) || (x==this.width-2 && y==this.height-1))
@@ -250,6 +296,10 @@ Board.prototype.verifyPiece=function(x,y){
 
 };
 
+/**
+ * Verifies if final cell if valid and returns its coordinates
+ * @param  {string} player
+ */
 Board.prototype.verifyMovementBoard=function(player){
 
   if (this.scene.pickMode === false) {
@@ -294,6 +344,11 @@ Board.prototype.verifyMovementBoard=function(player){
 
 };
 
+/**
+ * Gets coordinates to move
+ * @param  {int} id
+ * @param  {string} player
+ */
 Board.prototype.getCoordsToMove=function(id, player){
 
   if(this.move==='notAMove')
@@ -329,18 +384,27 @@ Board.prototype.getCoordsToMove=function(id, player){
 
 };
 
+/**
+ * Returns first selected cell
+ */
 Board.prototype.getFirstCell = function(){
 
   return this.firstCell;
 
 };
 
+/**
+ * Returns second selected cell
+ */
 Board.prototype.getSecondCell = function(){
 
   return this.secondCell;
 
 };
 
+/**
+ * Verifies if second cell is the same as the first
+ */
 Board.prototype.verifyIfSameCell=function(){
 
   if(this.firstCell.x===this.currX && this.firstCell.y===this.currY)
@@ -374,7 +438,10 @@ Board.prototype.verifyIfSameCell=function(){
 };
 
 
-
+/**
+ * Sets board
+ * @param {array} board
+ */
 Board.prototype.setBoard=function(board){
 
   var tmpId=1;
@@ -395,6 +462,10 @@ Board.prototype.setBoard=function(board){
 
 };
 
+
+/**
+ * returns boad
+ */
 Board.prototype.getBoard=function(){
 
   var tmpBoard=[];
@@ -411,6 +482,9 @@ Board.prototype.getBoard=function(){
 
 };
 
+/**
+ * updates makingAMove flag
+ */
 Board.prototype.updateMakingAMove=function(){
 
   if(this.move==='notAMove')

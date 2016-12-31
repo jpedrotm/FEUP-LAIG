@@ -1,3 +1,11 @@
+/**
+ * Cell class
+ * @param {CGFscene} scene
+ * @param {int} x
+ * @param {int} y
+ * @param {string} type
+ * @param {int} id
+ */
 function Cell(scene, x, y, type,id) {
     CGFobject.call(this, scene);
 
@@ -33,6 +41,11 @@ function Cell(scene, x, y, type,id) {
 Cell.prototype = Object.create(CGFobject.prototype);
 Cell.prototype.constructor = Cell;
 
+/**
+ * Returns cell color
+ * @param  {int} x
+ * @param  {int} y
+ */
 Cell.prototype.getColorCell=function(x,y){
 
   if(x%2==y%2)
@@ -45,6 +58,9 @@ Cell.prototype.getColorCell=function(x,y){
 
 };
 
+/**
+ * Displays cell
+ */
 Cell.prototype.display=function(){
 
   this.scene.pushMatrix();
@@ -76,6 +92,10 @@ Cell.prototype.display=function(){
 
 };
 
+/**
+ * Updates cell animation
+ * @param  {int} time
+ */
 Cell.prototype.update=function(time){
 
   //console.log("UPDATE CELL");
@@ -98,6 +118,10 @@ Cell.prototype.update=function(time){
 
 };
 
+/**
+ * Updates cell piece to given type
+ * @param  {string} type
+ */
 Cell.prototype.updatePiece=function(type){
 
   this.type=type;
@@ -116,10 +140,16 @@ Cell.prototype.updatePiece=function(type){
 
 };
 
+/**
+ * Sets selected cell
+ */
 Cell.prototype.setSelected=function(){
   this.selected=1;
 };
 
+/**
+ * Unsets selected cell
+ */
 Cell.prototype.unsetSelected=function(){
   this.selected=0;
   this.getColorCell(this.x, this.y);

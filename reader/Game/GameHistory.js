@@ -1,3 +1,9 @@
+/**
+ * GameHistory class
+ * @param {CGFscene} scene
+ * @param {int} height
+ * @param {int} width
+ */
 function GameHistory(scene,height,width) {
 
   this.scene=scene;
@@ -11,6 +17,7 @@ function GameHistory(scene,height,width) {
   this.boards=[]; //Apenas tens os board quando alterados
 
 };
+
 
 GameHistory.prototype.getMoves=function(turn){
 
