@@ -1,6 +1,15 @@
 /**
- * Triangle.
- * @constructor
+ * Triangle class
+ * @param {CGFscene} scene
+ * @param {int} x1
+ * @param {int} y1
+ * @param {int} z1
+ * @param {int} x2
+ * @param {int} y2
+ * @param {int} z2
+ * @param {int} x3
+ * @param {int} y3
+ * @param {int} z3
  */
 function Triangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
     CGFobject.call(this, scene);

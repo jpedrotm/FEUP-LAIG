@@ -1,3 +1,8 @@
+/**
+ *  Class counter, displays player score
+ *  @param CGFscene
+ */
+
 function Counter(scene) {
 
     CGFobject.call(this, scene);
@@ -28,6 +33,11 @@ function Counter(scene) {
 Counter.prototype = Object.create(CGFobject.prototype);
 Counter.prototype.constructor = Counter;
 
+/**
+ * Updates the dozens and units counter
+ * @param {int} points amount of points to be added
+ */
+
 Counter.prototype.add = function(points) {
 
     if ((this.units + points) < 10 && points > 0) {
@@ -44,6 +54,10 @@ Counter.prototype.add = function(points) {
 
 };
 
+
+/**
+ * displays the counters and deals with their animation
+ */
 Counter.prototype.display = function() {
 
     if (this.animateUnits === true) {
