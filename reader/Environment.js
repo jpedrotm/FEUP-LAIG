@@ -75,11 +75,18 @@ Environment.prototype.initEnvironment = function() {
     this.scene.shipAppearance.setSpecular(139 / 255, 69 / 255, 19 / 255, 1);
     this.scene.shipAppearance.setShininess(1);
 
+		this.scene.sandAppearance = new CGFappearance(this.scene);
+		this.scene.sandAppearance.setAmbient(1.0, 1.0, 1.0, 1);
+		this.scene.sandAppearance.setDiffuse(1.0, 1.0, 1.0, 1);
+		this.scene.sandAppearance.setSpecular(1.0, 1.0, 1.0, 1);
+		this.scene.sandAppearance.setShininess(20);
+		this.scene.sandAppearance.loadTexture('/reader/scenes/img/sand.jpg');
 
     //Objetos
     this.wall = new Plane(this.scene, 1, 1, 20, 20);
     this.backgroundMenu = new Cube(this.scene, 10, 6, 0.2);
     this.plane = new Plane(this.scene, 1, 1, 20, 20);
+		this.sand = new Plane(this.scene, 1000, 1000, 20, 20);
     this.ground = new Plane(this.scene, 1, 1, 20, 20);
     this.groundRingue = new Plane(this.scene, 1, 1, 20, 20);
     this.boxRingueGround = new Obj(this.scene, 'scenes/3dObjects/boxRingue-ground.obj');
@@ -277,6 +284,12 @@ Environment.prototype.display = function() {
         this.scene.rotate(Math.PI, 0, 1, 1);
         this.ship.display();
         this.scene.popMatrix();
+
+				this.scene.pushMatrix();
+					this.scene.translate(0,-20,0);
+					this.scene.rotate(Math.PI / 2,-1, 0, 0);
+					this.sand.display();
+				this.scene.popMatrix();
     }
 
 };
