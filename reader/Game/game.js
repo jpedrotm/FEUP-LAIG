@@ -122,7 +122,7 @@ Game.prototype.update = function(currTime) {
                 this.playBot();
         }
     }
-}
+
 
 };
 
