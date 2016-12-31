@@ -4,6 +4,13 @@ function Game(scene,mode){
 
   this.scene.makeTransition();
 
+  this.mode=mode;
+
+  if(this.mode===2)
+  {
+    this.scene.makingTransition=true;
+  }
+
   this.gameBoard = new Board(scene,8,4);
   this.gameHistory = new GameHistory(scene,8,4);
   this.counterOne = new Counter(scene);
@@ -38,10 +45,8 @@ function Game(scene,mode){
   this.firstCell=new Point2D(-1,-1);
   this.secondCell=new Point2D(-1,-1);
   this.switchTurn = false;
-  this.botCurrentDeltaTime=0;
-  this.botDeltaTime=100;
-  this.endGame=0;
 
+  this.currBotTime=0;
 };
 
 Game.prototype.initGame = function(bot1, bot2){
@@ -61,10 +66,6 @@ Game.prototype.movePiece=function(bot,xi,yi,xf,yf){
       this.firstPlayerPoints=this.gameBoard.playerOnePoints;
       this.secondPlayerPoints=this.gameBoard.playerTwoPoints;
 
-      console.log("player one points:");
-      console.log(this.firstPlayerPoints);
-      console.log("player two points:");
-      console.log(this.secondPlayerPoints);
       if(this.firstBot === false){
         if(this.playing==='player2')
         {
@@ -109,38 +110,77 @@ Game.prototype.display = function(){
 
 };
 
+Game.prototype.controlTransitions=function(){
+  if(this.mode===1){
+    return true;
+  }
+  else if(this.mode===2){
+    if(this.playing==='player1')
+    {
+      return true;
+    }
+    else if(this.playing==='player2')
+    {
+      if(this.scene.makingTransition===true)
+      {
+        return false;
+      }
+      else{
+        this.scene.makingTransition=true;
+        console.log("VAI FAZER MOVIMENTO");
+
+        return true;
+      }
+    }
+  }
+  else if(this.mode===3){ //mode 3 é o modo cpu vs cpu
+  if(this.scene.makingTransition===true)
+  {
+    return false;
+  }
+  else{
+    this.scene.makingTransition=true;
+    console.log("VAI FAZER MOVIMENTO");
+
+    return true;
+  }
+}
+};
+
 Game.prototype.update = function(currTime){
 
   this.verifyEndGame();
 
   this.gameBoard.update(currTime);
 
-  /*console.log("Player one points: "+this.firstPlayerPoints);
-  console.log("Player two points: "+this.secondPlayerPoints);
-  console.log("PLAYING: "+this.playing);*/
-  if(this.endGame === 0){
-    if(this.firstBot === false && this.secondBot === false){
-      this.playPlayer();
-    }else if(this.firstBot === false && this.secondBot === true){
-      if(this.playing == 'player1'){
+  var canPlay=this.controlTransitions();
+
+  if(canPlay){
+    console.log("PLAY");
+    if(this.endGame === 0){
+      if(this.firstBot === false && this.secondBot === false){
         this.playPlayer();
+      }else if(this.firstBot === false && this.secondBot === true){
+        if(this.playing == 'player1'){
+          this.playPlayer();
+        }else{
+          if(!this.bot1played)
+            this.playBot();
+        }
       }else{
-        if(!this.bot1played)
+        if(this.firstBot === true){
+          if(this.playing==='player2')
+          {
+            console.log("player changed");
+            this.playing='player1';
+          }
+          else if(this.playing==='player1')
+          {
+            console.log("player changed");
+            this.playing='player2';
+          }
           this.playBot();
-      }
-    }else{
-      if(this.firstBot === true){
-        if(this.playing==='player2')
-        {
-          console.log("player changed");
-          this.playing='player1';
         }
-        else if(this.playing==='player1')
-        {
-          console.log("player changed");
-          this.playing='player2';
-        }
-        this.playBot();
       }
     }
   }
@@ -172,9 +212,8 @@ Game.prototype.playBot = function(){
   this.readyToMakeAMove=0;
   var tempBoard = this.gameBoard.getBoard();
   var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + 2 + ')';
+  console.log(request);
   getPrologRequest(request, this.botMove.bind(this));
-
-
 };
 
 Game.prototype.botMove = function(move){
@@ -200,13 +239,13 @@ Game.prototype.insertTurnGameHistory=function(){
   this.gameHistory.movesMade.push(new Moves(new Point2D(this.gameBoard.firstCell.x,this.gameBoard.firstCell.y),new Point2D(this.gameBoard.secondCell.x,this.gameBoard.secondCell.y)));
   this.gameHistory.boards.push(this.gameBoard.getCopyBoard());
 
-  console.log("Players points: "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p1+" , "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p2);
+  /*console.log("Players points: "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p1+" , "+this.gameHistory.pointsPlayers[this.gameHistory.numberTurns-1].p2);
   console.log("Turns made: "+this.gameHistory.numberTurns);
   console.log("Player turn: "+this.gameHistory.playerTurns[this.gameHistory.numberTurns-1]);
   console.log("Move made in turn: "+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].initial.x+
               ","+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].initial.y+
               ";"+this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.x+","+
-              this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.y);
+              this.gameHistory.movesMade[this.gameHistory.numberTurns-1].final.y);*/
 
 };
 
@@ -217,8 +256,6 @@ Game.prototype.undo=function(){
     //falta atualizar pontuações
 
     this.gameBoard.board=this.gameHistory.getLastBoard();
-
-    console.log("COMEÇA");
 
     for(var i=0;i<8;i++)
     {
@@ -273,4 +310,16 @@ Game.prototype.verifyEndGame = function() {
   }else{
     this.endGame = 0;
   }
+
+  if(this.endGame!=0)
+  {
+    this.scene.makeTransition();
+
+    this.scene.gameMode=false;
+
+    this.scene.replayHistory=this.gameHistory;
+
+    this.game=null;
+  }
+
 };

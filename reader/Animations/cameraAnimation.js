@@ -15,6 +15,7 @@ function cameraAnimation(scene,Player){
   this.radius=40;
   this.degToRad=Math.PI/180;
   this.rotationAngle=180*this.degToRad;
+  this.firstTime=true;
 
   this.currTime=0;
   this.ended=false;
@@ -38,9 +39,12 @@ cameraAnimation.prototype.updateAnimation=function(time){
 
   if (this.currTime >= this.span) {
 
-    this.scene.cameraAnimation=null;
+    if(this.firstTime){
+      this.scene.makingTransition=false;
+      this.firstTime=false;  
+    }
 
-      this.ended = true;
+    this.ended = true;
 
       return;
   } else {
@@ -51,8 +55,6 @@ cameraAnimation.prototype.updateAnimation=function(time){
 
       this.x = this.radius * Math.sin(this.initialAngle + this.currAngle);
       this.z = this.radius * Math.cos(this.initialAngle + this.currAngle);
-
-      //console.log("x,y,z: "+this.x+","+this.y+","+this.z);
 
       this.scene.camera.setPosition(vec3.fromValues(this.x,this.y,this.z));
 

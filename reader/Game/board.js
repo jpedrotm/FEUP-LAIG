@@ -99,7 +99,6 @@ Board.prototype.getCopyBoard=function(){
 
     for(var j=0;j<this.width;j++)
     {
-      console.log("Piece("+j+","+i+"): "+this.board[i][j].type);
       tmpBoard[i].push(new Cell(this.scene,i,j,this.board[i][j].type,tmpId));
       tmpId++;
     }
@@ -155,14 +154,16 @@ Board.prototype.movePiece = function(validMoves,player,bot,xi,yi,xf,yf){
     }
   }
 
+  var span=null;
 
   if(bot == 'bot'){
     this.firstCell.x=xi;
     this.firstCell.y=yi;
     this.secondCell.x=xf;
     this.secondCell.y=yf;
+    span=4;
     validPlay=1;
-      console.log("asdasdasdasda");
+      //console.log("asdasdasdasda");
   }
 
   if(validPlay==1){
@@ -183,12 +184,11 @@ Board.prototype.movePiece = function(validMoves,player,bot,xi,yi,xf,yf){
     var initialPointAnimation=new Point2D(this.firstCell.x*1.1,this.firstCell.y*1.1);
     var finalPointAnimation=new Point2D(this.secondCell.x*1.1,this.secondCell.y*1.1);
 
-    this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y,null);
+    this.board[this.firstCell.y][this.firstCell.x].animation=new moveAnimation(this.scene,initialPointAnimation,finalPointAnimation,this.firstCell.x,this.firstCell.y,span);
     this.board[this.firstCell.y][this.firstCell.x].animate=true;
 
     this.animateCell=true;
 
-    console.log("asdasdasdasda");
     return points;
   }
   return -1;
@@ -255,7 +255,6 @@ Board.prototype.verifyMovementBoard=function(player){
   if (this.scene.pickMode === false) {
     var selection = 0;
 		if (this.scene.pickResults !== null && this.scene.pickResults.length > 0) {
-      console.log("size: "+this.scene.pickResults.length);
 			for (var i=0; i< this.scene.pickResults.length; i++) {
 				var obj = this.scene.pickResults[i][0];
 				if (obj)
