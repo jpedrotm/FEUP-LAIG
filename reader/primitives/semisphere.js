@@ -1,6 +1,8 @@
 /**
- * Semisphere
- * @constructor
+ * Semisphere class
+ * @param {CGFscene} scene
+ * @param {int} slices
+ * @param {int} stacks
  */
 function Semisphere(scene, slices, stacks) {
     CGFobject.call(this, scene);

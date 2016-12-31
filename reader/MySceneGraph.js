@@ -1,3 +1,8 @@
+/**
+ * MySceneGraph class
+ * @param {string} filename dsx file name
+ * @param {CFGscene} scene
+ */
 function MySceneGraph(filename, scene) {
     this.loadedOk = null;
     // Establish bidirectional references between scene and graph
@@ -8,6 +13,8 @@ function MySceneGraph(filename, scene) {
     this.reader = new CGFXMLreader();
 
     //Estruturas de dados necessárias para o parser-----------------------------------------------------------
+    this.isValid = false;
+
     this.root;
     this.axis_length;
     //Parser das views
@@ -33,6 +40,10 @@ function MySceneGraph(filename, scene) {
 
     //primitives
     this.objects = {};
+
+    //Animations
+    this.animations = {};
+
     //components
     this.composedObjects = {};
 
@@ -91,8 +102,11 @@ MySceneGraph.prototype.parser = function(rootElement) {
     this.parserToMaterials(rootElement);
     this.parserToTransformations(rootElement);
     this.parserToPrimitives(rootElement);
+    this.parserToAnimations(rootElement);
     this.parserToComponents(rootElement);
     this.loadTextures(this.root, this.composedObjects[this.root].getTexture());
+
+    this.isValid = true;
 
 };
 /*
@@ -117,7 +131,6 @@ MySceneGraph.prototype.loadTextures = function(root, rootTexture) {
 /*
  * Loads the views from the dsx file
  */
-
 MySceneGraph.prototype.parserToViews = function(rootElement) {
 
     var views;
@@ -187,7 +200,6 @@ MySceneGraph.prototype.parserToViews = function(rootElement) {
 /*
  * Loads the illumination from the dsx file
  */
-
 MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 
 
@@ -224,6 +236,11 @@ MySceneGraph.prototype.parserToIllumination = function(rootElement) {
 };
 
 
+/**
+ * Verifies if a light exist
+ * @param  {int} id   light id
+ * @param  {string} type light type
+ */
 MySceneGraph.prototype.existsLight = function(id, type) {
 
     if (type == "spot") {
@@ -398,7 +415,6 @@ MySceneGraph.prototype.parserToLights = function(rootElement) {
 /*
  * Loads the textures from the dsx file
  */
-
 MySceneGraph.prototype.parserToTextures = function(rootElement) {
 
 
@@ -602,7 +618,6 @@ MySceneGraph.prototype.parserToTransformations = function(rootElement) {
 /*
  * Loads the primitives from the dsx file
  */
-
 MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
     var primitives = rootElement.getElementsByTagName("primitives");
@@ -681,10 +696,163 @@ MySceneGraph.prototype.parserToPrimitives = function(rootElement) {
 
                 this.objects[id] = new Torus(this.scene, inner, outer, slices, loops);
             }
+
+            var patch = primitive[i].getElementsByTagName("patch");
+
+            if (patch.length == 1) {
+
+                var orderU = patch[0].attributes.getNamedItem("orderU").value * 1.0;
+                var orderV = patch[0].attributes.getNamedItem("orderV").value * 1.0;
+                var partsU = patch[0].attributes.getNamedItem("partsU").value * 1.0;
+                var partsV = patch[0].attributes.getNamedItem("partsV").value * 1.0;
+
+                var controlPoints = patch[0].getElementsByTagName("controlpoint");
+                var controlPointArray = [];
+                for (let i = 0; i < controlPoints.length; i++) {
+
+                    var x = controlPoints[i].attributes.getNamedItem("x").value * 1.0;
+                    var y = controlPoints[i].attributes.getNamedItem("y").value * 1.0;
+                    var z = controlPoints[i].attributes.getNamedItem("z").value * 1.0;
+                    controlPointArray.push([x, y, z, 1]);
+
+
+                }
+
+                this.objects[id] = new Patch(this.scene, orderU, orderV, partsU, partsV, controlPointArray);
+            }
+
+            var plane = primitive[i].getElementsByTagName("plane");
+
+            if (plane.length == 1) {
+
+                var dimX = plane[0].attributes.getNamedItem("dimX").value * 1.0;
+                var dimY = plane[0].attributes.getNamedItem("dimY").value * 1.0;
+                var partsX = plane[0].attributes.getNamedItem("partsX").value * 1.0;
+                var partsY = plane[0].attributes.getNamedItem("partsY").value * 1.0;
+
+                this.objects[id] = new Plane(this.scene, dimX, dimY, partsX, partsY);
+            }
+
+            var vehicle = primitive[i].getElementsByTagName("vehicle");
+
+            if (vehicle.length == 1) {
+                this.objects[id] = new Vehicle(this.scene);
+            }
+        }
+
+        var chessboard = primitive[i].getElementsByTagName("chessboard");
+
+        if(chessboard.length == 1) {
+
+          var du = chessboard[0].attributes.getNamedItem("du").value;
+          var dv = chessboard[0].attributes.getNamedItem("dv").value;
+          var textureref = chessboard[0].attributes.getNamedItem("textureref").value;
+          var su = chessboard[0].attributes.getNamedItem("su").value;
+          var sv = chessboard[0].attributes.getNamedItem("sv").value;
+
+          var c1 = chessboard[0].getElementsByTagName("c1");
+          var c1r =c1[0].attributes.getNamedItem("r").value*1.0;
+          var c1g =c1[0].attributes.getNamedItem("g").value*1.0;
+          var c1b =c1[0].attributes.getNamedItem("b").value*1.0;
+          var c1a =c1[0].attributes.getNamedItem("a").value*1.0;
+
+          var c1RGBA = new RGBA(c1r,c1g,c1b,c1a);
+
+          var c2 = chessboard[0].getElementsByTagName("c2");
+          var c2r =c2[0].attributes.getNamedItem("r").value*1.0;
+          var c2g =c2[0].attributes.getNamedItem("g").value*1.0;
+          var c2b =c2[0].attributes.getNamedItem("b").value*1.0;
+          var c2a =c2[0].attributes.getNamedItem("a").value*1.0;
+
+          var c2RGBA = new RGBA(c2r,c2g,c2b,c2a);
+
+          var cs = chessboard[0].getElementsByTagName("cs");
+          var csr =cs[0].attributes.getNamedItem("r").value*1.0;
+          var csg =cs[0].attributes.getNamedItem("g").value*1.0;
+          var csb =cs[0].attributes.getNamedItem("b").value*1.0;
+          var csa =cs[0].attributes.getNamedItem("a").value*1.0;
+
+          var csRGBA = new RGBA(csr,csg,csb,csa);
+
+          var tmpTexture=this.textures[textureref][1];
+
+          console.log("CHESSBOARRRRRDDDDD: "+tmpTexture);
+
+          this.objects[id]= new Chessboard(this.scene,du,dv,tmpTexture,su,sv,c1RGBA,c2RGBA,csRGBA);
+
         }
     }
 
 };
+
+/**
+ * Parses animations from dsx file
+ */
+MySceneGraph.prototype.parserToAnimations = function(rootElement) {
+
+    var animations = rootElement.getElementsByTagName("animations");
+
+    if (animations == null) {
+        return "primitives not defined.";
+    }
+
+    var animation = animations[0].getElementsByTagName("animation");
+
+    for (var i = 0; i < animation.length; i++) {
+
+        var id = animation[i].attributes.getNamedItem("id").value;
+        var time = animation[i].attributes.getNamedItem("span").value;
+        var type = animation[i].attributes.getNamedItem("type").value;
+
+        if (type == "linear") {
+
+            controlPoint = animation[i].getElementsByTagName("controlpoint");
+
+            var controlPointArray = new Array();
+
+            console.log("PARSER ANIMATION: ");
+
+            for (var j = 0; j < controlPoint.length; j++) {
+                var xx = controlPoint[j].attributes.getNamedItem("xx").value * 1.0;
+                var yy = controlPoint[j].attributes.getNamedItem("yy").value * 1.0;
+                var zz = controlPoint[j].attributes.getNamedItem("zz").value * 1.0;
+
+                controlPointArray.push(new Point(xx, yy, zz, null));
+
+                console.log('POINTS: ' + xx + "," + yy + "," + zz);
+
+            }
+
+            console.log("LENGTH PARSER: " + controlPointArray.length);
+
+
+            this.animations[id] = new linearAnimation(this.scene, id, time, type, controlPointArray);
+
+            console.log(this.animations[id]);
+
+        } else if (type == "circular") {
+
+            console.log("CIRCULAR");
+
+            var centerx = animation[i].attributes.getNamedItem("centerx").value * 1.0;
+            var centery = animation[i].attributes.getNamedItem("centery").value * 1.0;
+            var centerz = animation[i].attributes.getNamedItem("centerz").value * 1.0;
+            var radius = animation[i].attributes.getNamedItem("radius").value * 1.0;
+            var startAng = animation[i].attributes.getNamedItem("startang").value * 1.0;
+            var rotAng = animation[i].attributes.getNamedItem("rotang").value * 1.0;
+
+            this.animations[id] = new circularAnimation(this.scene, id, time, type, new Point(centerx, centery, centerz, null), radius, startAng, rotAng);
+
+            console.log(this.animations[id]);
+
+        } else {
+            return "No such type of animation.";
+        }
+
+    }
+
+
+}
 
 /*
  * Loads the components from the dsx file
@@ -708,6 +876,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
         this.componentTexture;
         this.componentChildren = new Array();
         this.primitiveChildren = new Array();
+        this.componentAnimations = new Array();
 
         //this alows for the attributes of the component to not be ordered
         for (let attribute of component.children) {
@@ -842,6 +1011,17 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                         }
                     }
                     break;
+                case 'animation':
+                    let animations = attribute;
+                    for (let animation of animations.children) {
+
+                        var animationId = animation.attributes.getNamedItem("id").value;
+
+                        this.componentAnimations.push(this.animations[animationId].getAnimationCopy());
+
+                    }
+
+                    break;
             }
 
 
@@ -852,7 +1032,7 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
                 if (this.textureFlag) {
                     if (this.childrenFlag) {
                         console.log("read all components");
-                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren);
+                        this.composedObjects[id] = new Component(this.scene, this.transformationsArray, this.materialsArray, this.componentTexture, this.componentChildren, this.primitiveChildren, this.componentAnimations);
                     } else {
                         console.log("No children objects defined");
                     }
@@ -873,7 +1053,6 @@ MySceneGraph.prototype.parserToComponents = function(rootElement) {
 /*
  * Displays recursivly the components
  */
-
 MySceneGraph.prototype.displayComposedObjects = function(object) {
     for (let primitive of this.composedObjects[object].getChildrenPrimitive()) {
         var length_s = this.composedObjects[object].texture[2]; //length_s
@@ -891,6 +1070,7 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
     var fatherTexture = this.composedObjects[object].getTexture();
     for (let composedObject of this.composedObjects[object].getChildrenComponent()) {
         this.scene.pushMatrix();
+        this.composedObjects[composedObject].display();
         if (this.composedObjects[composedObject].getTransformations().length != 0) {
             for (transformation of this.composedObjects[composedObject].getTransformations()) {
                 this.scene.multMatrix(transformation);
@@ -910,6 +1090,15 @@ MySceneGraph.prototype.displayComposedObjects = function(object) {
         this.scene.popMatrix();
     }
 }
+
+MySceneGraph.prototype.updateAnimation = function(root, dTime) {
+
+    for (let composedObject of this.composedObjects[root].getChildrenComponent()) {
+        this.composedObjects[composedObject].animate(dTime);
+        this.updateAnimation(composedObject, dTime);
+
+    }
+};
 
 /*
  * Displays the scene
@@ -937,7 +1126,6 @@ MySceneGraph.prototype.display = function() {
 /*
  * Callback to be executed on any read error
  */
-
 MySceneGraph.prototype.onXMLError = function(message) {
     console.error("XML Loading Error: " + message);
     this.loadedOk = false;

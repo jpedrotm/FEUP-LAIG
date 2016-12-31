@@ -53,9 +53,34 @@ serialInclude(['../lib/CGF.js',
     'primitives/semisphere.js',
     'primitives/sphere.js',
     'primitives/torus.js',
+    'primitives/plane.js',
+    'primitives/patch.js',
+    'primitives/vehicle.js',
+    'Animations/animation.js',
+    'Animations/linearAnimation.js',
+    'Animations/circularAnimation.js',
+    'Animations/moveAnimation.js',
+    'Animations/cameraAnimation.js',
+    'Animations/cameraTransitionsAnimation.js',
     'MyInterface.js',
     'Component.js',
     'utils.js',
+    'Animations/animation.js',
+    'Animations/linearAnimation.js',
+    'Animations/circularAnimation.js',
+    'primitives/chessboard.js',
+    'primitives/cube.js',
+    'primitives/piramid.js',
+    'Objs/Obj.js',
+    'Objs/ObjObject.js',
+    'Game/cell.js',
+    'Game/board.js',
+    'Comunication/comunication.js',
+    'Game/GameHistory.js',
+    'Game/game.js',
+    'Environment.js',
+    'Counters/Counter.js',
+    'Counters/Timer.js',
 
     main = function() {
         // Standard application, scene and interface setup
@@ -73,7 +98,7 @@ serialInclude(['../lib/CGF.js',
         // get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml
         // or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor)
 
-        var filename = getUrlVars()['file'] || "testScene.dsx";
+        var filename = getUrlVars()['file'] || "MartianChess.dsx";
 
         // create and load graph, and associate it to scene.
         // Check console for loading errors
