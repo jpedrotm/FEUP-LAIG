@@ -20,47 +20,47 @@ XMLscene.prototype.init = function(application) {
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0)
 
-    this.woodMaterial=new CGFappearance(this);
-    this.woodMaterial.setAmbient(0.4,0.2,0,0.8);
-    this.woodMaterial.setDiffuse(0.4,0.2,0,0.8);
-    this.woodMaterial.setSpecular(0.4,0.2,0,0.8);
+    this.woodMaterial = new CGFappearance(this);
+    this.woodMaterial.setAmbient(0.4, 0.2, 0, 0.8);
+    this.woodMaterial.setDiffuse(0.4, 0.2, 0, 0.8);
+    this.woodMaterial.setSpecular(0.4, 0.2, 0, 0.8);
     this.woodMaterial.setShininess(10);
 
-    this.whiteWoodMaterial= new CGFappearance(this);
-    this.whiteWoodMaterial.setAmbient(0.71,0.61,0.29,0.8);
-    this.whiteWoodMaterial.setDiffuse(0.71,0.61,0.29,0.8);
-    this.whiteWoodMaterial.setSpecular(0.71,0.61,0.29,0.8);
+    this.whiteWoodMaterial = new CGFappearance(this);
+    this.whiteWoodMaterial.setAmbient(0.71, 0.61, 0.29, 0.8);
+    this.whiteWoodMaterial.setDiffuse(0.71, 0.61, 0.29, 0.8);
+    this.whiteWoodMaterial.setSpecular(0.71, 0.61, 0.29, 0.8);
     this.whiteWoodMaterial.setShininess(10);
 
     this.queenMaterial = new CGFappearance(this);
-    this.queenMaterial.setAmbient(0.8,0,0,1);
-    this.queenMaterial.setDiffuse(0.8,0,0,1);
-    this.queenMaterial.setSpecular(0.8,0,0,1);
+    this.queenMaterial.setAmbient(0.8, 0, 0, 1);
+    this.queenMaterial.setDiffuse(0.8, 0, 0, 1);
+    this.queenMaterial.setSpecular(0.8, 0, 0, 1);
     this.queenMaterial.setShininess(20);
 
     this.droneMaterial = new CGFappearance(this);
-    this.droneMaterial.setAmbient(0,0.8,0,1);
-    this.droneMaterial.setDiffuse(0,0.8,0,1);
-    this.droneMaterial.setSpecular(0,0.8,0,1);
+    this.droneMaterial.setAmbient(0, 0.8, 0, 1);
+    this.droneMaterial.setDiffuse(0, 0.8, 0, 1);
+    this.droneMaterial.setSpecular(0, 0.8, 0, 1);
     this.droneMaterial.setShininess(20);
 
     this.pawnMaterial = new CGFappearance(this);
-    this.pawnMaterial.setAmbient(0,0,0.8,1);
-    this.pawnMaterial.setDiffuse(0,0,0.8,1);
-    this.pawnMaterial.setSpecular(0,0,0.8,1);
+    this.pawnMaterial.setAmbient(0, 0, 0.8, 1);
+    this.pawnMaterial.setDiffuse(0, 0, 0.8, 1);
+    this.pawnMaterial.setSpecular(0, 0, 0.8, 1);
     this.pawnMaterial.setShininess(20);
 
     this.pickedMaterial = new CGFappearance(this);
-    this.pickedMaterial.setAmbient(0,0,0.0,1);
-    this.pickedMaterial.setDiffuse(0,0,0.0,1);
-    this.pickedMaterial.setSpecular(0,0,0.0,1);
+    this.pickedMaterial.setAmbient(0, 0, 0.0, 1);
+    this.pickedMaterial.setDiffuse(0, 0, 0.0, 1);
+    this.pickedMaterial.setSpecular(0, 0, 0.0, 1);
     this.pickedMaterial.setShininess(20);
 
 
     this.selectedMaterial = new CGFappearance(this);
-    this.selectedMaterial.setAmbient(0.1,0.1,0.1,1);
-    this.selectedMaterial.setDiffuse(0.1,0.1,0.1,1);
-    this.selectedMaterial.setSpecular(0.1,0.1,0.1,1);
+    this.selectedMaterial.setAmbient(0.1, 0.1, 0.1, 1);
+    this.selectedMaterial.setDiffuse(0.1, 0.1, 0.1, 1);
+    this.selectedMaterial.setSpecular(0.1, 0.1, 0.1, 1);
     this.selectedMaterial.setShininess(20);
 
     this.gl.clearDepth(100.0);
@@ -68,68 +68,70 @@ XMLscene.prototype.init = function(application) {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
     this.enableTextures(true);
-    this.infoLights=[];
-    this.lastTime=(new Date()).getTime();
+    this.infoLights = [];
+    this.lastTime = (new Date()).getTime();
     this.axis = new CGFaxis(this)
     this.setUpdatePeriod(30);
 
     //animações das camaras
-    this.gameCameraAnimation=null;
+    this.gameCameraAnimation = null;
     this.initialPosition;
     this.finalPosition;
     this.initialTarget;
     this.finalTarget;
-    this.cameraTransitionsAnimation=null;
+    this.cameraTransitionsAnimation = null;
 
     //indice replay for pause option
-    this.currReplayTurn=0;
+    this.currReplayTurn = 0;
 
     //Variaveis para estado do jogo
-    this.gameMode=false;
-    this.replaying=false;
-    this.replayPaused=false;
-    this.updateReplaying=true;
-    this.makingTransition=false;
-    this.replayHistory=null;
+    this.gameMode = false;
+    this.replaying = false;
+    this.replayPaused = false;
+    this.updateReplaying = true;
+    this.makingTransition = false;
+    this.replayHistory = null;
 
-    this.gameDifficulty= new gameDifficulty();
-    this.gameDifficultyList=new Array();
+    this.gameDifficulty = new gameDifficulty();
+    this.gameDifficultyList = new Array();
 
-    this.gameDifficultyList["Easy"]=1;
-    this.gameDifficultyList["Hard"]=2;
+    this.gameDifficultyList["Easy"] = 1;
+    this.gameDifficultyList["Hard"] = 2;
+
+    this.gameEnvironment = new gameEnvironment();
+    this.environmentList = new Array();
+
+    this.environmentList["Box"] = 1;
+    this.environmentList["Boat"] = 2;
+    this.currEnvironment = "Box";
 
     //ambiente de jogo
-    this.environment=new Environment(this);
+    this.environment = new Environment(this);
 
     this.game = null;
     this.setPickEnabled(true);
 };
 
-XMLscene.prototype.makeTransition=function(){
+XMLscene.prototype.makeTransition = function() {
 
-  if(this.gameMode)
-  {
-    if(this.game.playing==='player2')
-    {
-      this.initialPosition=new Point(0,30,35,null);
+    if (this.gameMode) {
+        if (this.game.playing === 'player2') {
+            this.initialPosition = new Point(0, 30, 35, null);
+        } else if (this.game.playing === 'player1') {
+            this.initialPosition = new Point(0, 30, -35, null);
+        }
+
+        this.initialTarget = new Point(0, 0, 0, null);
+        this.finalPosition = new Point(40, 5, 0, null);
+        this.finalTarget = new Point(-15, 5, 0, null);
+    } else {
+        this.initialPosition = new Point(40, 5, 0, null);
+        this.finalPosition = new Point(0, 30, -35, null);
+        this.initialTarget = new Point(-15, 5, 0, null);
+        this.finalTarget = new Point(0, 0, 0, null);
     }
-    else if(this.game.playing==='player1')
-    {
-      this.initialPosition=new Point(0,30,-35,null);
-    }
 
-    this.initialTarget=new Point(0,0,0,null);
-    this.finalPosition=new Point(40,5,0,null);
-    this.finalTarget=new Point(-15,5,0,null);
-  }
-  else {
-    this.initialPosition=new Point(40,5,0,null);
-    this.finalPosition=new Point(0,30,-35,null);
-    this.initialTarget=new Point(-15,5,0,null);
-    this.finalTarget=new Point(0,0,0,null);
-  }
-
-  this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,this.initialPosition,this.initialTarget,this.finalPosition,this.finalTarget);
+    this.cameraTransitionsAnimation = new cameraTransitionsAnimation(this, this.initialPosition, this.initialTarget, this.finalPosition, this.finalTarget);
 
 };
 
@@ -252,7 +254,7 @@ XMLscene.prototype.switchMaterials = function() {
 };
 
 XMLscene.prototype.initCameras = function() {
-    this.camera = new CGFcamera(60*Math.PI/180, 0.1, 500, vec3.fromValues(150, 150, 150), vec3.fromValues(0, 0, 0));
+    this.camera = new CGFcamera(60 * Math.PI / 180, 0.1, 500, vec3.fromValues(150, 150, 150), vec3.fromValues(0, 0, 0));
 };
 
 XMLscene.prototype.setDefaultAppearance = function() {
@@ -271,8 +273,8 @@ XMLscene.prototype.onGraphLoaded = function() {
     this.axis = new CGFaxis(this, this.graph.axis_length, 0.2);
     this.graphViews();
     this.graphLights();
-    this.camera.setPosition(vec3.fromValues(40,5,0));
-    this.camera.setTarget(vec3.fromValues(-15,5,0));
+    this.camera.setPosition(vec3.fromValues(40, 5, 0));
+    this.camera.setTarget(vec3.fromValues(-15, 5, 0));
 };
 /**
  * Function that loads the initial camera to XMLscene.
@@ -306,75 +308,67 @@ XMLscene.prototype.switchView = function() {
 
 };
 
-XMLscene.prototype.undo=function(){
+XMLscene.prototype.undo = function() {
 
-  if(this.gameMode){
-    this.game.undo();
-  }
+    if (this.gameMode) {
+        this.game.undo();
+    }
 
 };
 
-XMLscene.prototype.replay=function(){
+XMLscene.prototype.replay = function() {
 
-  if(!this.gameMode && this.replayHistory!=null)
-  {
-    this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,new Point(40,5,0,null),new Point(-15,5,0,null),new Point(35,20,0,null),new Point(0,0,0,null));
-    this.replaying=true;
-  }
+    if (!this.gameMode && this.replayHistory != null) {
+        this.cameraTransitionsAnimation = new cameraTransitionsAnimation(this, new Point(40, 5, 0, null), new Point(-15, 5, 0, null), new Point(35, 20, 0, null), new Point(0, 0, 0, null));
+        this.replaying = true;
+    }
 
 };
 
-XMLscene.prototype.stopReplay=function(){
-  if(this.replaying){
-    this.replaying=false;
-    this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,new Point(35,20,0,null),new Point(0,0,0,null),new Point(40,5,0,null),new Point(-15,5,0,null));
-  }
+XMLscene.prototype.stopReplay = function() {
+    if (this.replaying) {
+        this.replaying = false;
+        this.cameraTransitionsAnimation = new cameraTransitionsAnimation(this, new Point(35, 20, 0, null), new Point(0, 0, 0, null), new Point(40, 5, 0, null), new Point(-15, 5, 0, null));
+    }
 };
 
-XMLscene.prototype.pauseReplay=function(){
+XMLscene.prototype.pauseReplay = function() {
 
-  if(this.replaying){
-    if(this.replayPaused===true)
-    {
-      this.replayPaused=false;
+    if (this.replaying) {
+        if (this.replayPaused === true) {
+            this.replayPaused = false;
+        } else if (this.replayPaused === false) {
+            this.replayPaused = true;
+        }
     }
-    else if(this.replayPaused===false)
-    {
-      this.replayPaused=true;
-    }
-  }
 
 };
 
-XMLscene.prototype.quitGame=function(){
+XMLscene.prototype.quitGame = function() {
 
-  //Colocar aqui a tabuleta a dizer o vencedor em vez dos prints por a tabuleta a dizer o vencedor e a mostrar os pontos
+    //Colocar aqui a tabuleta a dizer o vencedor em vez dos prints por a tabuleta a dizer o vencedor e a mostrar os pontos
 
-  if(this.gameMode){
-    if(this.game.playing==='player1')
-    {
-      console.log('Player 2 Win !');
+    if (this.gameMode) {
+        if (this.game.playing === 'player1') {
+            console.log('Player 2 Win !');
+        } else if (this.game.playing === 'player2') {
+            console.log('Player 1 Win !');
+        }
+
+        this.makeTransition();
+
+        this.gameMode = false;
+
+        this.replayHistory = this.game.gameHistory;
+
+        this.game = null;
+
     }
-    else if(this.game.playing==='player2')
-    {
-      console.log('Player 1 Win !');
-    }
-
-    this.makeTransition();
-
-    this.gameMode=false;
-
-    this.replayHistory=this.game.gameHistory;
-
-    this.game=null;
-
-  }
 
 };
 
 XMLscene.prototype.display = function() {
-
-  this.clearPickRegistration();
+    this.clearPickRegistration();
 
     // ---- BEGIN Background, camera and axis setup
 
@@ -408,155 +402,141 @@ XMLscene.prototype.display = function() {
 
     this.environment.display();
 
-    if(this.gameMode)
-    {
-      this.pushMatrix();
-      this.game.display();
-      this.popMatrix();
+    if (this.gameMode) {
+        this.pushMatrix();
+        this.game.display();
+        this.popMatrix();
     }
 
-    if(this.replaying)
-    {
-      this.displayReplay();
+    if (this.replaying) {
+        this.displayReplay();
     }
 
 };
 
-XMLscene.prototype.displayReplay=function(){
+XMLscene.prototype.displayReplay = function() {
 
-  var dist=1.1;
-  var divDist=0.4;
+    var dist = 1.1;
+    var divDist = 0.4;
 
-  this.pushMatrix();
+    this.pushMatrix();
 
-  this.translate(-1.65,0,-4);
+    this.translate(-1.65, 0, -4);
 
-  for(var i=0;i<this.replayHistory.height;i++)
-  {
+    for (var i = 0; i < this.replayHistory.height; i++) {
 
-    if(i===4)
-    {
-      this.translate(0,0,divDist);
+        if (i === 4) {
+            this.translate(0, 0, divDist);
+        }
+
+        for (var j = 0; j < this.replayHistory.width; j++) {
+            this.pushMatrix();
+            this.translate(dist * j, 0, 0);
+            this.replayHistory.getBoard(this.currReplayTurn)[i][j].display();
+
+            this.popMatrix();
+        }
+
+        this.translate(0, 0, dist);
+
     }
 
-    for(var j=0;j<this.replayHistory.width;j++)
-    {
-      this.pushMatrix();
-      this.translate(dist*j,0,0);
-      this.replayHistory.getBoard(this.currReplayTurn)[i][j].display();
-
-      this.popMatrix();
-    }
-
-    this.translate(0,0,dist);
-
-  }
-
-  this.popMatrix();
+    this.popMatrix();
 
 
 };
 
-XMLscene.prototype.updateReplay=function(time){
+XMLscene.prototype.updateReplay = function(time) {
 
-  if(this.replaying && !this.replayPaused)
-  {
+    if (this.replaying && !this.replayPaused) {
 
-    var firstCell=this.replayHistory.getMoves(this.currReplayTurn).initial;
-    var secondCell=this.replayHistory.getMoves(this.currReplayTurn).final;
+        var firstCell = this.replayHistory.getMoves(this.currReplayTurn).initial;
+        var secondCell = this.replayHistory.getMoves(this.currReplayTurn).final;
 
-    if(this.updateReplaying){
-      var initialPointAnimation=new Point2D(firstCell.x*1.1,firstCell.y*1.1);
-      var finalPointAnimation=new Point2D(secondCell.x*1.1,secondCell.y*1.1);
+        if (this.updateReplaying) {
+            var initialPointAnimation = new Point2D(firstCell.x * 1.1, firstCell.y * 1.1);
+            var finalPointAnimation = new Point2D(secondCell.x * 1.1, secondCell.y * 1.1);
 
-      console.log("COORDS FIRST: "+firstCell.x+","+firstCell.y);
-      console.log("COORDS SECOND: "+secondCell.x+","+secondCell.y);
-      console.log("INDICE: "+this.currReplayTurn);
+            console.log("COORDS FIRST: " + firstCell.x + "," + firstCell.y);
+            console.log("COORDS SECOND: " + secondCell.x + "," + secondCell.y);
+            console.log("INDICE: " + this.currReplayTurn);
 
-      this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation=new moveAnimation(this,initialPointAnimation,finalPointAnimation,firstCell.x,firstCell.y,2);
-      this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animate=true;
+            this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation = new moveAnimation(this, initialPointAnimation, finalPointAnimation, firstCell.x, firstCell.y, 2);
+            this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animate = true;
 
-      //this.gameCameraAnimation=new cameraAnimation(this,this.replayHistory.getLastPlayerTurn());
-      this.updateReplaying=false;
+            //this.gameCameraAnimation=new cameraAnimation(this,this.replayHistory.getLastPlayerTurn());
+            this.updateReplaying = false;
+        }
+
+        for (var i = 0; i < this.replayHistory.height; i++) {
+            for (var j = 0; j < this.replayHistory.width; j++) {
+                this.replayHistory.getBoard(this.currReplayTurn)[i][j].update(time);
+            }
+        }
+
+        if (this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation.ended) {
+            this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation = null;
+            this.currReplayTurn++;
+            this.updateReplaying = true;
+        }
+
+        if (this.currReplayTurn === this.replayHistory.numberTurns) {
+            this.replaying = false;
+            console.log("ACABOU REPLAY");
+            this.cameraTransitionsAnimation = new cameraTransitionsAnimation(this, new Point(35, 20, 0, null), new Point(0, 0, 0, null), new Point(40, 5, 0, null), new Point(-15, 5, 0, null));
+            return;
+        }
+
+        /*if(this.animateCell)
+        {
+
+          if(this.board[this.firstCell.y][this.firstCell.x].animate==false)
+          {
+            this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
+            this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
+            this.cleanSelections();
+
+            this.animateCell=false;
+          }
+
+        }*/
+
     }
-
-    for(var i=0;i<this.replayHistory.height;i++)
-    {
-      for(var j=0;j<this.replayHistory.width;j++)
-      {
-        this.replayHistory.getBoard(this.currReplayTurn)[i][j].update(time);
-      }
-    }
-
-    if(this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation.ended)
-    {
-      this.replayHistory.getBoard(this.currReplayTurn)[firstCell.y][firstCell.x].animation=null;
-      this.currReplayTurn++;
-      this.updateReplaying=true;
-    }
-
-    if(this.currReplayTurn===this.replayHistory.numberTurns)
-    {
-      this.replaying=false;
-      console.log("ACABOU REPLAY");
-      this.cameraTransitionsAnimation=new cameraTransitionsAnimation(this,new Point(35,20,0,null),new Point(0,0,0,null),new Point(40,5,0,null),new Point(-15,5,0,null));
-      return;
-    }
-
-    /*if(this.animateCell)
-    {
-
-      if(this.board[this.firstCell.y][this.firstCell.x].animate==false)
-      {
-        this.board[this.secondCell.y][this.secondCell.x].updatePiece(this.board[this.firstCell.y][this.firstCell.x].type);
-        this.board[this.firstCell.y][this.firstCell.x].updatePiece('empty');
-        this.cleanSelections();
-
-        this.animateCell=false;
-      }
-
-    }*/
-
-  }
 
 };
 
-XMLscene.prototype.updateCameras=function(time){
+XMLscene.prototype.updateCameras = function(time) {
 
-  if(this.gameMode){
-    if(this.game.switchTurn)
-    {
-      this.gameCameraAnimation=new cameraAnimation(this,this.game.playing);
-      this.game.switchTurn=false;
+    if (this.gameMode) {
+        if (this.game.switchTurn) {
+            this.gameCameraAnimation = new cameraAnimation(this, this.game.playing);
+            this.game.switchTurn = false;
+        }
+
+        if (this.gameCameraAnimation != null) {
+            console.log("Updating");
+            this.gameCameraAnimation.updateAnimation(time);
+        }
     }
 
-    if(this.gameCameraAnimation!=null)
-    {
-      console.log("Updating");
-      this.gameCameraAnimation.updateAnimation(time);
+    if (this.cameraTransitionsAnimation != null) {
+        console.log("Transition");
+        this.cameraTransitionsAnimation.updateAnimation(time);
     }
-  }
-
-  if(this.cameraTransitionsAnimation!=null)
-  {
-    console.log("Transition");
-    this.cameraTransitionsAnimation.updateAnimation(time);
-  }
 
 };
 
 XMLscene.prototype.update = function(currTime) {
 
-  if(this.gameMode){
-    this.game.update(currTime-this.lastTime);
-  }
+    if (this.gameMode) {
+        this.game.update(currTime - this.lastTime);
+    }
 
-  this.updateCameras(currTime-this.lastTime);
+    this.updateCameras(currTime - this.lastTime);
 
-  if(this.replaying)
-  {
-    this.updateReplay(currTime-this.lastTime);
-  }
+    if (this.replaying) {
+        this.updateReplay(currTime - this.lastTime);
+    }
 
     /*if (this.graph.isValid) {
         this.graph.updateAnimation(this.graph.root, currTime - this.lastTime);
@@ -565,6 +545,10 @@ XMLscene.prototype.update = function(currTime) {
     this.lastTime = currTime;
 };
 
-var gameDifficulty=function(){
-	this.difficulty = "Easy";
+var gameDifficulty = function() {
+    this.difficulty = "Easy";
+};
+
+var gameEnvironment = function() {
+    this.environmentScene = "Box";
 };
