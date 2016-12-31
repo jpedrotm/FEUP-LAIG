@@ -211,7 +211,7 @@ Game.prototype.playBot = function(){
   }
   this.readyToMakeAMove=0;
   var tempBoard = this.gameBoard.getBoard();
-  var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + 2 + ')';
+  var request = 'botPlay([' + tempBoard + '],' + this.playing + ',' + this.difficulty + ')';
   console.log(request);
   getPrologRequest(request, this.botMove.bind(this));
 };
@@ -321,5 +321,52 @@ Game.prototype.verifyEndGame = function() {
 
     this.game=null;
   }
+
+};
+    console.log("NUMBER OF TURNS: " + this.gameHistory.numberTurns);
+        console.log("WILL PLAY: " + this.playing);
+
+        this.gameHistory.deleteLastTurn();
+
+        this.switchTurn = true;
+    }
+
+};
+
+
+Game.prototype.verifyEndGame = function() {
+    var playerOneWon = 1;
+    var playerTwoWon = 1;
+    var i = 0;
+    var j = 0;
+    for (i = 0; i < this.gameBoard.board.length / 2; i++) {
+        for (j = 0; j < this.gameBoard.board[0].length; j++) {
+            if (this.gameBoard.board[i][j].type != 'empty')
+                playerOneWon = 0;
+        }
+    }
+    for (i = 4; i < this.gameBoard.board.length; i++) {
+        for (j = 0; j < this.gameBoard.board[0].length; j++) {
+            if (this.gameBoard.board[i][j].type != 'empty')
+                playerTwoWon = 0;
+        }
+    }
+    if (playerTwoWon) {
+        this.endGame = 2;
+    } else if (playerOneWon) {
+        this.endGame = 1;
+    } else {
+        this.endGame = 0;
+    }
+
+    if (this.endGame != 0) {
+        this.scene.makeTransition();
+
+        this.scene.gameMode = false;
+
+        this.scene.replayHistory = this.gameHistory;
+
+        this.game = null;
+    }
 
 };
