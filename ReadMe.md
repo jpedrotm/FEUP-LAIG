@@ -20,13 +20,15 @@ We developed projects written in [JavaScript] (https://en.wikipedia.org/wiki/Jav
 ### Project 1 and 2
 
 This project's goal is to build a DSX parser. DSX means "Description of Scenes in XML" and its purpose is to build a scene using a file.
-It is structured using a Scene Graph and you can see how the tags work [here](./DSX_example.txt).
+It is structured using a Scene Graph and you can see how the tags work [here](./Projeto3/EspecDSX.txt).
+
+![](https://raw.githubusercontent.com/jpedrotm/FEUP-LAIG/master/Projeto1&2/res/laig1.gif)
 
 ***
 
 ### Project 3
 
-It was intended to create a 3D environment developed in WebGL to represent the game states of a [Prolog] (https://en.wikipedia.org/wiki/Prolog) board game and make use of a game interface [dat.gui](https://code.google.com/p/dat-gui/). We also developed a [parser](./project 3/graphics/Objs) to import .obj files into the scene.
+It was intended to create a 3D environment developed in WebGL to represent the game states of a [Prolog] (https://en.wikipedia.org/wiki/Prolog) board game and make use of a game interface [dat.gui](https://code.google.com/p/dat-gui/). We also developed a [parser](./Projeto3/reader/Objs) to import .obj files into the scene.
 
 
 Game Functionalitites:
