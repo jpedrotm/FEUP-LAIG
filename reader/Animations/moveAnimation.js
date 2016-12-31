@@ -1,3 +1,13 @@
+/**
+* Constructor of moveAnimation class that receives the scene and the points of the initial and final cell of the move in the board. The animation makes
+* the piece do like a triangle movement. Th height and the span of the animation depends of the distance between th cells.
+* @param {CGFscene} scene
+* @param {Point2D} initialPoint
+* @param {Point2D} finalPoint
+* @param {number} xi
+* @param {number} yi
+* @param {number} span
+*/
 function moveAnimation(scene,initialPoint,finalPoint,xi,yi,span) {
 
   this.scene=scene;
@@ -39,6 +49,10 @@ function moveAnimation(scene,initialPoint,finalPoint,xi,yi,span) {
 
 };
 
+/**
+* Update the animation.
+* @param {number} time
+*/
 moveAnimation.prototype.updateAnimation = function(time) {
 
     this.currTime += time / 1000;
@@ -88,6 +102,9 @@ moveAnimation.prototype.updateAnimation = function(time) {
 
 };
 
+/**
+* Applys the tranformations in the scene according to the updates made in the animation.
+*/
 moveAnimation.prototype.displayAnimation = function() {
 
   var x=this.initialPoint.x+this.x;
@@ -99,6 +116,9 @@ moveAnimation.prototype.displayAnimation = function() {
 
 };
 
+/**
+* Reset the variables of the animation.
+*/
 moveAnimation.prototype.resetAnimation = function() {
 
     this.currTime = 0;

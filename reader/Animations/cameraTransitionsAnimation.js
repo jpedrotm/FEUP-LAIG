@@ -1,3 +1,12 @@
+/**
+* Constructor of the class cameraTransitionsAnimation. This class is responsible to animate the camera by receiving the initial and final position
+* of the camera, and the initial and final target of the camera.
+* @param {CGFscene} scene
+* @param {Point} initialPosition
+* @param {Point} initialTarget
+* @param {Point} finalPosition
+* @param {Point} finalTarget
+*/
 function cameraTransitionsAnimation(scene,initialPosition,initialTarget,finalPosition,finalTarget){
 
   this.scene=scene;
@@ -27,6 +36,10 @@ function cameraTransitionsAnimation(scene,initialPosition,initialTarget,finalPos
 
 };
 
+/**
+* Update the animation of the camera.
+* @param {number} time
+*/
 cameraTransitionsAnimation.prototype.updateAnimation=function(time){
 
   this.currTime += time / 1000;

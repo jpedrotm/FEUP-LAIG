@@ -1,3 +1,9 @@
+/**
+* Constructor of cameraAnimation class that receives the scene and wich player is turn. This class is resposible to animate the camera during the game
+* for switching players turn.
+* @param {CGFscene} scene
+* @param {string} player
+*/
 function cameraAnimation(scene,Player){
 
   this.scene=scene;
@@ -22,6 +28,10 @@ function cameraAnimation(scene,Player){
 
 };
 
+/**
+* Updates the animation of the camera.
+* @param {number} time
+*/
 cameraAnimation.prototype.updateAnimation=function(time){
 
   this.currTime += time / 1000;
