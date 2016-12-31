@@ -8,6 +8,7 @@ function Game(scene,mode){
   this.gameHistory = new GameHistory(scene,8,4);
   this.counterOne = new Counter(scene);
   this.counterTwo = new Counter(scene);
+  this.counterTime=new Counter(scene);
 
   this.playing = 'player1'; //Para saber que jogador faz a jogada
   this.difficulty=this.scene.gameDifficultyList[this.scene.gameDifficulty.difficulty];
@@ -99,6 +100,13 @@ Game.prototype.display = function(){
     this.scene.translate(14,0,0);
   this.counterTwo.display();
   this.scene.popMatrix();
+
+  this.scene.pushMatrix();
+  this.scene.rotate(Math.PI/2,0,1,0);
+  this.scene.translate(-1,6,-7);
+  this.counterTime.display();
+  this.scene.popMatrix();
+
 };
 
 Game.prototype.update = function(currTime){
