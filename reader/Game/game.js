@@ -15,7 +15,7 @@ function Game(scene,mode){
   this.gameHistory = new GameHistory(scene,8,4);
   this.counterOne = new Counter(scene);
   this.counterTwo = new Counter(scene);
-  this.counterTime=new Counter(scene);
+  this.counterTime=new Timer(scene);
 
   this.playing = 'player1'; //Para saber que jogador faz a jogada
   this.difficulty=this.scene.gameDifficultyList[this.scene.gameDifficulty.difficulty];
@@ -45,7 +45,7 @@ function Game(scene,mode){
   this.firstCell=new Point2D(-1,-1);
   this.secondCell=new Point2D(-1,-1);
   this.switchTurn = false;
-
+  this.initialCurr=0;
   this.currBotTime=0;
 };
 
@@ -104,7 +104,7 @@ Game.prototype.display = function(){
 
   this.scene.pushMatrix();
   this.scene.rotate(Math.PI/2,0,1,0);
-  this.scene.translate(-1,6,-7);
+  this.scene.translate(1,6,-7);
   this.counterTime.display();
   this.scene.popMatrix();
 
@@ -150,6 +150,13 @@ Game.prototype.controlTransitions=function(){
 Game.prototype.update = function(currTime){
 
   this.verifyEndGame();
+  this.initialCurr+=currTime;
+
+  if(this.initialCurr > 1000){
+    this.counterTime.increase();
+    this.initialCurr=0;
+  }
+
 
   this.gameBoard.update(currTime);
 
