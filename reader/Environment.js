@@ -210,7 +210,7 @@ Environment.prototype.display = function() {
         this.scene.scale(0.025, 0.025, 0.025);
         this.scene.pushMatrix();
         this.scene.translate(60, 0, 0);
-        this.oneText.display();
+        this.twoText.display();
         this.scene.popMatrix();
         this.playerText.display();
         this.scene.popMatrix();
@@ -220,7 +220,7 @@ Environment.prototype.display = function() {
         this.scene.scale(0.025, 0.025, 0.025);
         this.scene.pushMatrix();
         this.scene.translate(60, 0, 0);
-        this.twoText.display();
+        this.oneText.display();
         this.scene.popMatrix();
         this.playerText.display();
         this.scene.popMatrix();

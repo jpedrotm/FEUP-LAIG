@@ -117,9 +117,9 @@ Game.prototype.display = function(){
   this.scene.scale(0.7,0.7,0.7);
   this.scene.translate(-10,3,8);
   this.scene.rotate(Math.PI/2,0,1,0);
-  this.counterOne.display();
-    this.scene.translate(14,0,0);
   this.counterTwo.display();
+    this.scene.translate(14,0,0);
+  this.counterOne.display();
   this.scene.popMatrix();
 
   this.scene.pushMatrix();
